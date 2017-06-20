@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sign_up">Zarejestruj się</string>
+    <string name="sign_in">Zaloguj się</string>
+    <string name="first_name">Imię</string>
+    <string name="last_name">Nazwisko</string>
+    <string name="password">Hasło</string>
+    <string name="reg_or_fb">lub:</string>
+    <string name="forgotPassword">Zapomniałeś hasła?</string>
+    <string name="resetPassword">Zmień hasło</string>
+
+    <string name="sign_up_fb">Zarejestruj się z Facebook</string>
+    <string name="sign_in_fb">Zaloguj się z Facebook</string>
+    <string name="sign_in_code">Zaloguj się używając kodu</string>
+    <string name="code">Kod</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Ustawienia</string>
+    <string name="logout">Wyloguj się</string>
+    <string name="events">Wydarzenia</string>
+    <string name="map">Mapa</string>
+    <string name="list">Lista</string>
+    <string name="title_activity_maps">Mapa</string>
+    <string name="eventName">Nazwa</string>
+    <string name="eventDescription">Opis</string>
+    <string name="eventsInLocation">Wydarzenia w pobliżu</string>
+    <string name="addNewEvent">Dodaj nowe wydarzenie</string>
+    <string name="search">Szukaj</string>
+    <string name="reject">ODRZUĆ</string>
+    <string name="accept">AKCEPTUJ</string>
+    <string name="filter">Filtruj</string>
+    <string name="cancel">anuluj</string>
+    <string name="EVENTS">WYDARZENIA</string>
+    <string name="downloading">Pobieranie...</string>
+    <string name="noInternet">Brak połączenia z Internetem</string>
+    <string name="refresh">Odśwież</string>
+    <string name="remove_filter">Usuń filtr</string>
+    <string name="join">DOŁĄCZ</string>
+    <string name="members">UCZESTNICY</string>
+    <string name="my_events">Moje wydarzenia</string>
+    <string name="send">WYŚLIJ</string>
+    <string name="update">AKTUALIZUJ WYDARZENIE</string>
+    <string name="updateLabel">AKTUALIZUJ WYDARZENIE</string>
+    <string name="identical_passwords">Hasło musi być identyczne w obydwu polach!</string>
+    <string name="add_event">DODAJ WYDARZENIE</string>
+    <string name="change_password">ZMIEŃ HASŁO</string>
+    <string name="connection_problem">Problem z połączeniem</string>
+    <string name="delete_event">USUŃ WYDARZENIE</string>
+    <string name="description">Opis</string>
+    <string name="birthday">Data urodzenia</string>
+    <string name="my_profile">Mój profil</string>
+    <string name="my_profile_label">MÓJ PROFIL</string>
+    <string name="new_password">Nowe hasło</string>
+    <string name="password_changed">Hasło zostało zmienione!</string>
+    <string name="repeat_new_password">Powtórz nowe hasło</string>
+    <string name="required_fields">Wypełnij wszystkie pola!</string>
+    <string name="save_profile">ZAPISZ PROFIL</string>
+    <string name="updateBtn">AKTUALIZUJ</string>
+    <string name="password_required">Hasło jest wymagane</string>
+    <string name="profile">PROFIL</string>
+    <string name="report">Zgłoś profil</string>
+    <string name="sex">Płeć</string>
+    <string name="max_members">Liczba uczestników</string>
+    <string name="date">Data</string>
+</resources>

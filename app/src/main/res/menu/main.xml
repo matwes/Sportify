@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/refresh"
+        android:orderInCategory="100"
+        android:title="@string/refresh"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/reload"/>
+    <item
+        android:id="@+id/change_view"
+        android:orderInCategory="200"
+        android:title="@string/list"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/map"/>
+
+    <item android:id="@+id/filter"
+        android:orderInCategory="300"
+        android:title="@string/filter"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/filter"/>
+
+</menu>
