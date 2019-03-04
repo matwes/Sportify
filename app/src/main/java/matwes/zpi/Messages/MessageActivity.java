@@ -1,9 +1,9 @@
-package matwes.zpi.Messages;
+package matwes.zpi.messages;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +11,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import matwes.zpi.AsyncTaskCompleteListener;
+import matwes.zpi.Common;
+import matwes.zpi.GetMethodAPI;
+import matwes.zpi.R;
+import matwes.zpi.RequestAPI;
+import matwes.zpi.domain.Message;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,15 +27,7 @@ import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import matwes.zpi.AsyncTaskCompleteListener;
-import matwes.zpi.Common;
-import matwes.zpi.Classes.Message;
-import matwes.zpi.GetMethodAPI;
-import matwes.zpi.R;
-import matwes.zpi.RequestAPI;
-
-public class MessageActivity extends AppCompatActivity implements AsyncTaskCompleteListener<String>
-{
+public class MessageActivity extends AppCompatActivity implements AsyncTaskCompleteListener<String> {
     private long eventId;
     private long userId;
     private ArrayList<Message> messages;
@@ -48,7 +47,7 @@ public class MessageActivity extends AppCompatActivity implements AsyncTaskCompl
 
         userId = Common.getCurrentUserId(this);
 
-        recyclerView = (RecyclerView) findViewById(R.id.messageList);
+        recyclerView = findViewById(R.id.messageList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
@@ -58,8 +57,8 @@ public class MessageActivity extends AppCompatActivity implements AsyncTaskCompl
         recyclerView.setAdapter(adapter);
         messageListener();
 
-        messageBox = (EditText) findViewById(R.id.messageBox);
-        Button sendButton = (Button) findViewById(R.id.btnSendMessage);
+        messageBox = findViewById(R.id.messageBox);
+        Button sendButton = findViewById(R.id.btnSendMessage);
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,12 +92,10 @@ public class MessageActivity extends AppCompatActivity implements AsyncTaskCompl
         }
     }
 
-    boolean getMessages() {
+    void getMessages() {
         if (Common.isOnline(this)) {
             new GetMethodAPI(this, this, false).execute(getLink());
-            return true;
         }
-        return false;
     }
 
     String getJsonToPostMessage() {
@@ -141,8 +138,7 @@ public class MessageActivity extends AppCompatActivity implements AsyncTaskCompl
         timer.purge();
     }
 
-    private String getLink()
-    {
-        return "https://zpiapi.herokuapp.com/events/" + eventId + "/messages?size=99";
+    private String getLink() {
+        return String.format(Common.URL + "/events/%d/messages?size=99", eventId);
     }
 }

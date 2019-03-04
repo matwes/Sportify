@@ -1,4 +1,4 @@
-package matwes.zpi.Events;
+package matwes.zpi.events;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,52 +11,41 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.model.LatLng;
+import matwes.zpi.Common;
+import matwes.zpi.R;
+import matwes.zpi.domain.Event;
+import matwes.zpi.eventDetails.EventDetailsActivity;
 
 import java.util.ArrayList;
 import java.util.Date;
 
-import matwes.zpi.Common;
-import matwes.zpi.Classes.Event;
-import matwes.zpi.EventDetails.EventDetailsActivity;
-import matwes.zpi.R;
-
-import static com.google.maps.android.SphericalUtil.computeDistanceBetween;
-
 /**
- * Created by mateu on 04.04.2017.
+ * Created by Mateusz Wesołowski
  */
 
-class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Holder>
-{
+class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Holder> {
     private Context context;
     private ArrayList<Event> events;
 
-    EventListAdapter(Context context, ArrayList<Event> events)
-    {
+    EventListAdapter(Context context, ArrayList<Event> events) {
         this.context = context;
         this.events = events;
     }
 
     @Override
-    public Holder onCreateViewHolder(ViewGroup parent, int viewType)
-    {
+    public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new Holder(LayoutInflater.from(context).inflate(R.layout.event_item, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(Holder holder, int position)
-    {
+    public void onBindViewHolder(Holder holder, int position) {
         final Event event = events.get(position);
-
-
-        System.out.println(event.getPlace().getCity());
         holder.title.setText(event.getName());
         holder.date.setText(event.getDateWithTimeString());
         holder.members.setText(event.getMembersStatus());
-        holder.place.setText(event.getPlace()!=null ? event.getPlace().getName() : "");
+        holder.place.setText(event.getPlace() != null ? event.getPlace().getName() : "");
         holder.icon.setImageResource(Common.getIcon(event.getSportName()));
-        if(event.getDateWithTime()==null || event.getDateWithTime().before(new Date())){
+        if (event.getDateWithTime() == null || event.getDateWithTime().before(new Date())) {
             holder.changeCardColor();
         }
 
@@ -76,24 +65,21 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Holder>
         return events.size();
     }
 
-    class Holder extends RecyclerView.ViewHolder
-    {
-        TextView title, date, members, place;
+    class Holder extends RecyclerView.ViewHolder {
+        TextView title, date, members = itemView.findViewById(R.id.tvEventMembers), place;
         ImageView icon;
         CardView eventCard;
 
         Holder(View itemView) {
             super(itemView);
-            title = (TextView) itemView.findViewById(R.id.tvEventName);
-            date = (TextView) itemView.findViewById(R.id.tvEventDate);
-            members = (TextView) itemView.findViewById(R.id.tvEventMembers);
-            place = (TextView) itemView.findViewById(R.id.tvEventPlace);
-            icon = (ImageView) itemView.findViewById(R.id.ivEventIcon);
-            eventCard = (CardView) itemView.findViewById(R.id.eventCard);
+            title = itemView.findViewById(R.id.tvEventName);
+            date = itemView.findViewById(R.id.tvEventDate);
+            place = itemView.findViewById(R.id.tvEventPlace);
+            icon = itemView.findViewById(R.id.ivEventIcon);
+            eventCard = itemView.findViewById(R.id.eventCard);
         }
 
-        void changeCardColor()
-        {
+        void changeCardColor() {
             eventCard.setBackgroundColor(Color.parseColor("#f44336"));
         }
     }

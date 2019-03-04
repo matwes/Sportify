@@ -6,17 +6,16 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 
 import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSession;
 
 /**
- * Created by mateu on 06.04.2017.
+ * Created by Mateusz Wesołowski
  */
 
 public class GetMethodAPI extends AsyncTask<String, Void, String> {
@@ -53,12 +52,13 @@ public class GetMethodAPI extends AsyncTask<String, Void, String> {
 
         String address = params[0];
         URL url;
-        HttpsURLConnection connection = null;
+        HttpURLConnection connection = null;
 
         try {
             url = new URL(address);
-            connection = (HttpsURLConnection) url.openConnection();
-            connection.setHostnameVerifier(hostnameVerifier);
+            connection = (HttpURLConnection) url.openConnection();
+            //connection.setHostnameVerifier(hostnameVerifier);
+            connection.setConnectTimeout(5000);
 
             String b = Common.getBearer(context);
             connection.setRequestProperty("Authentication", b);
@@ -77,7 +77,7 @@ public class GetMethodAPI extends AsyncTask<String, Void, String> {
             Log.i("GET", builder.toString());
 
             return builder.toString();
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
 
         } finally {

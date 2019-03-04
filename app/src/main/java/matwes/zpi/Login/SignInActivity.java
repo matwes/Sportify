@@ -1,4 +1,4 @@
-package matwes.zpi.Login;
+package matwes.zpi.login;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,32 +13,29 @@ import android.widget.TextView;
 import com.facebook.CallbackManager;
 import com.facebook.login.LoginManager;
 import com.facebook.login.widget.LoginButton;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import matwes.zpi.AsyncTaskCompleteListener;
 import matwes.zpi.Common;
 import matwes.zpi.MainActivity;
 import matwes.zpi.R;
 import matwes.zpi.RequestAPI;
 
-public class SignInActivity extends AppCompatActivity implements AsyncTaskCompleteListener<String>
-{
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class SignInActivity extends AppCompatActivity implements AsyncTaskCompleteListener<String> {
+    private static final String SIGN_IN = Common.URL + "/session";
     private EditText etEmail, etPassword;
     private CallbackManager callbackManager;
-    private static final String SIGN_IN = "https://zpiapi.herokuapp.com/session";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        etEmail = (EditText) findViewById(R.id.etEmailIn);
-        etPassword = (EditText) findViewById(R.id.etPasswordIn);
+        etEmail = findViewById(R.id.etEmailIn);
+        etPassword = findViewById(R.id.etPasswordIn);
 
-        TextView tvResetPassword = (TextView) findViewById(R.id.tvResetPassword);
+        TextView tvResetPassword = findViewById(R.id.tvResetPassword);
         tvResetPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,26 +43,25 @@ public class SignInActivity extends AppCompatActivity implements AsyncTaskComple
             }
         });
 
-        Button btnSignIn = (Button) findViewById(R.id.btnSignIn2);
+        Button btnSignIn = findViewById(R.id.btnSignIn2);
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Common.isEmailOk(etEmail.getText().toString())) {
+                if (Common.isEmailOk(etEmail.getText().toString())) {
                     new RequestAPI(v.getContext(), "POST", sessionString(), SignInActivity.this, true)
                             .execute(SIGN_IN);
-                }
-                else
+                } else
                     etEmail.setError("Invalid email address");
             }
         });
 
         callbackManager = CallbackManager.Factory.create();
 
-        LoginButton btnFbLogin = (LoginButton) findViewById(R.id.btnSignInFb);
+        LoginButton btnFbLogin = findViewById(R.id.btnSignInFb);
         btnFbLogin.setReadPermissions(Common.permission);
         btnFbLogin.registerCallback(callbackManager, new FbCallback(this, this));
 
-        Button btnSignInCode = (Button) findViewById(R.id.btnSignInByCode);
+        Button btnSignInCode = findViewById(R.id.btnSignInByCode);
         btnSignInCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,28 +72,41 @@ public class SignInActivity extends AppCompatActivity implements AsyncTaskComple
 
     @Override
     public void onTaskComplete(String result) {
-        if(result.equals("200"))
-        {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            Common.setLoginStatus(this, true);
-            startActivity(intent);
-        }
-        else
-        {
-            new AlertDialog.Builder(this)
-                    .setTitle("Error")
-                    .setMessage("Wrong email or password")
-                    .setCancelable(false)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                        }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
-            LoginManager.getInstance().logOut();
+        switch (result) {
+            case "200":
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                Common.setLoginStatus(this, true);
+                startActivity(intent);
+                break;
+            case "-1":
+                new AlertDialog.Builder(this, R.style.AlertDialogTheme)
+                        .setTitle("Błąd")
+                        .setMessage("Brak połączenia z serwerem.")
+                        .setCancelable(false)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+                LoginManager.getInstance().logOut();
+                break;
+            default:
+                new AlertDialog.Builder(this, R.style.AlertDialogTheme)
+                        .setTitle("Błąd")
+                        .setMessage("Niepoprawny login lub hasło")
+                        .setCancelable(false)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+                LoginManager.getInstance().logOut();
+                break;
         }
     }
 
@@ -107,8 +116,7 @@ public class SignInActivity extends AppCompatActivity implements AsyncTaskComple
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
-    protected String sessionString()
-    {
+    protected String sessionString() {
         JSONObject json = new JSONObject();
         try {
             json.put("email", etEmail.getText().toString());

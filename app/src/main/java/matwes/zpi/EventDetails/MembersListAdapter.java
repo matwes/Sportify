@@ -1,8 +1,7 @@
-package matwes.zpi.EventDetails;
+package matwes.zpi.eventDetails;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -12,27 +11,27 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 import matwes.zpi.AsyncTaskCompleteListener;
-import matwes.zpi.Classes.Member;
 import matwes.zpi.Common;
 import matwes.zpi.R;
 import matwes.zpi.RequestAPI;
+import matwes.zpi.domain.Member;
+
+import java.util.ArrayList;
+
 
 /**
- * Created by mateu on 03.05.2017.
+ * Created by Mateusz Wesołowski
  */
 
 class MembersListAdapter extends RecyclerView.Adapter<MembersListAdapter.Holder> {
+    private static final String URL = Common.URL + "/members/";
+    private static final String ACCEPTED = "{\"status\": \"ACCEPTED\"}";
+    private static final String REJECTED = "{\"status\": \"REJECTED\"}";
     private Context context;
     private ArrayList<Member> members;
     private boolean isOwner;
     private AsyncTaskCompleteListener<String> listener;
-
-    private static final String URL = "https://zpiapi.herokuapp.com/members/";
-    private static final String ACCEPTED = "{\"status\": \"ACCEPTED\"}";
-    private static final String REJECTED = "{\"status\": \"REJECTED\"}";
 
     MembersListAdapter(Context context, ArrayList<Member> members, boolean isOwner,
                        AsyncTaskCompleteListener<String> listener) {
@@ -77,11 +76,9 @@ class MembersListAdapter extends RecyclerView.Adapter<MembersListAdapter.Holder>
                                 holder.member.setTextColor(Color.RED);
                             }
                         });
-                    }
-                    else
+                    } else
                         holder.pending.setVisibility(View.VISIBLE);
-                }
-                else if(!member.getStatus().equals("ACCEPTED"))
+                } else if (!member.getStatus().equals("ACCEPTED"))
                     holder.member.setTextColor(Color.RED);
                 try {
                     holder.member.setText(member.getUser().getName());
@@ -107,19 +104,6 @@ class MembersListAdapter extends RecyclerView.Adapter<MembersListAdapter.Holder>
         return members.size();
     }
 
-    class Holder extends RecyclerView.ViewHolder {
-        TextView member;
-        Button accept, reject, pending;
-
-        Holder(View itemView) {
-            super(itemView);
-            member = (TextView) itemView.findViewById(R.id.tvMember);
-            accept = (Button) itemView.findViewById(R.id.btnMemberAccept);
-            reject = (Button) itemView.findViewById(R.id.btnMemberReject);
-            pending = (Button) itemView.findViewById(R.id.btnMemberPending);
-        }
-    }
-
     private void showAlert(String title, String message) {
         new AlertDialog
                 .Builder(context)
@@ -143,6 +127,19 @@ class MembersListAdapter extends RecyclerView.Adapter<MembersListAdapter.Holder>
             return (2017 - year) + " lat";
         } catch (Exception ex) {
             return "";
+        }
+    }
+
+    class Holder extends RecyclerView.ViewHolder {
+        TextView member;
+        Button accept, reject, pending;
+
+        Holder(View itemView) {
+            super(itemView);
+            member = itemView.findViewById(R.id.tvMember);
+            accept = itemView.findViewById(R.id.btnMemberAccept);
+            reject = itemView.findViewById(R.id.btnMemberReject);
+            pending = itemView.findViewById(R.id.btnMemberPending);
         }
     }
 }

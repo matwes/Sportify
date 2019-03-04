@@ -10,6 +10,7 @@
         <item name="colorButtonNormal">@color/colorAccent</item>
         <item name="buttonStyle">@style/ButtonText</item>
         <item name="android:windowAnimationStyle">@style/ActivityAnimation</item>
+        <item name="android:alertDialogTheme">@style/AlertDialogTheme</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -34,6 +35,12 @@
 
     <style name="WhiteTextInputLayout" parent="@android:style/TextAppearance">
         <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
 </resources>

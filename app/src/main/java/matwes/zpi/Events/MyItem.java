@@ -1,14 +1,13 @@
-package matwes.zpi.Events;
+package matwes.zpi.events;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
 /**
- * Created by mateu on 26.04.2017.
+ * Created by Mateusz Wesołowski
  */
 
-class MyItem implements ClusterItem
-{
+class MyItem implements ClusterItem {
     private final LatLng position;
     private final long id;
     private final int localId;
@@ -34,11 +33,11 @@ class MyItem implements ClusterItem
         return null;
     }
 
-    public long getId(){
+    public long getId() {
         return id;
     }
 
-    int getLocalId(){
+    int getLocalId() {
         return localId;
     }
 }

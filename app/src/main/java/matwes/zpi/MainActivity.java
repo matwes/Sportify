@@ -17,27 +17,25 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.facebook.login.LoginManager;
-
-import matwes.zpi.Events.AddEventActivity;
-import matwes.zpi.Events.EventsFragment;
-import matwes.zpi.Events.MapFragment;
-import matwes.zpi.Events.MyEventsFragment;
-import matwes.zpi.Login.WelcomeActivity;
-import matwes.zpi.Profile.MyProfileFragment;
+import matwes.zpi.events.AddEventActivity;
+import matwes.zpi.events.EventsFragment;
+import matwes.zpi.events.MapFragment;
+import matwes.zpi.events.MyEventsFragment;
+import matwes.zpi.login.WelcomeActivity;
+import matwes.zpi.profile.MyProfileFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private MenuItem itemChangeView;
     private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -45,13 +43,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         replaceFragment(new EventsFragment(), "LIST");
@@ -59,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -68,8 +66,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
+    public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
@@ -110,8 +107,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragment = new MyProfileFragment();
             tag = "MY";
             fabVisibility = View.GONE;
-        }
-        else if (id == R.id.nav_log_out) {
+        } else if (id == R.id.nav_log_out) {
             logout();
         }
 
@@ -120,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (fragment != null)
             replaceFragment(fragment, tag);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -143,6 +139,4 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         EventsFragment fragment = (EventsFragment) getSupportFragmentManager().findFragmentByTag("LIST");
         return (fragment != null && fragment.isVisible());
     }
-
-
 }

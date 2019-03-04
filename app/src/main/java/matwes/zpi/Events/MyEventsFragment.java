@@ -1,4 +1,4 @@
-package matwes.zpi.Events;
+package matwes.zpi.events;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,15 +13,15 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import matwes.zpi.Common;
+import matwes.zpi.R;
+import matwes.zpi.domain.Event;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import matwes.zpi.Common;
-import matwes.zpi.Classes.Event;
-import matwes.zpi.R;
-
 /**
- * Created by mateu on 25.05.2017.
+ * Created by Mateusz Wesołowski
  */
 
 public class MyEventsFragment extends MainFragment {
@@ -42,7 +42,7 @@ public class MyEventsFragment extends MainFragment {
 
         getActivity().setTitle(getString(R.string.my_events));
 
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
@@ -50,7 +50,7 @@ public class MyEventsFragment extends MainFragment {
         adapter = new EventListAdapter(view.getContext(), events);
         recyclerView.setAdapter(adapter);
 
-        swipe = (SwipeRefreshLayout) view.findViewById(R.id.swipeEvents);
+        swipe = view.findViewById(R.id.swipeEvents);
         swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

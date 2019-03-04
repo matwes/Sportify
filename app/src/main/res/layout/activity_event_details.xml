@@ -2,12 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/eventDetailView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     android:orientation="vertical"
-    tools:context="matwes.zpi.EventDetails.EventDetailsActivity"
-    android:id="@+id/eventDetailView">
+    tools:context="matwes.zpi.eventDetails.EventDetailsActivity">
 
 
     <android.support.v7.widget.CardView
@@ -44,8 +44,8 @@
                     android:id="@+id/eventSport"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
                     android:layout_below="@+id/eventMembers"
+                    android:layout_alignParentStart="true"
                     android:textColor="@color/colorPrimary"
                     android:textStyle="bold|italic"
                     tools:text="Nazwa sportu" />
@@ -57,13 +57,13 @@
                     android:layout_alignParentStart="true"
                     android:layout_marginBottom="10dp"
                     android:layout_toStartOf="@+id/eventMembers"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:textColor="@color/colorAccent"
                     android:textSize="24sp"
                     tools:layout_editor_absoluteX="174dp"
                     tools:layout_editor_absoluteY="16dp"
-                    tools:text="Nazwa eventu"
-                    android:ellipsize="end"
-                    android:maxLines="1"/>
+                    tools:text="Nazwa eventu" />
 
                 <TextView
                     android:id="@+id/eventMembers"
@@ -100,9 +100,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="6dp"
+        android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
-        android:layout_marginStart="40dp">
+        android:layout_marginBottom="6dp">
 
         <ImageView
             android:id="@+id/ivLocation"
@@ -133,14 +133,16 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <Button
             android:id="@+id/joinButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:text="@string/join"
             android:background="@drawable/button_join"
-            android:textColor="@color/white"/>
+            android:text="@string/join"
+            android:textColor="@color/white" />
+
         <FrameLayout
             android:id="@+id/frame"
             android:layout_width="match_parent"

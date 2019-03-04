@@ -1,4 +1,4 @@
-package matwes.zpi.Classes;
+package matwes.zpi.domain;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -6,8 +6,7 @@ import com.google.android.gms.maps.model.LatLng;
  * Created by mateu on 05.04.2017.
  */
 
-public class Place
-{
+public class Place {
     private String googleId;
     private String name;
     private String city;
@@ -44,8 +43,7 @@ public class Place
         return googleId;
     }
 
-    public LatLng getLatLng()
-    {
+    public LatLng getLatLng() {
         return new LatLng(latitude, longitude);
     }
 }

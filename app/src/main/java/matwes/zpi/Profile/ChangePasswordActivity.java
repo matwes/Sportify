@@ -1,10 +1,10 @@
-package matwes.zpi.Profile;
+package matwes.zpi.profile;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,9 +15,9 @@ import matwes.zpi.R;
 import matwes.zpi.RequestAPI;
 
 public class ChangePasswordActivity extends AppCompatActivity {
+    private static final String UPDATE_PROFILE = Common.URL + "/users/";
     private EditText newPassword;
     private EditText repeatPassword;
-    private static final String UPDATE_PROFILE = "https://zpiapi.herokuapp.com/users/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,9 +27,9 @@ public class ChangePasswordActivity extends AppCompatActivity {
         Intent intent = getIntent();
         final long userId = intent.getLongExtra("userId", -1);
 
-        newPassword = (EditText) findViewById(R.id.etNewPassword);
-        repeatPassword = (EditText) findViewById(R.id.etRepeatPassword);
-        Button changePassword = (Button) findViewById(R.id.btnChangePassword);
+        newPassword = findViewById(R.id.etNewPassword);
+        repeatPassword = findViewById(R.id.etRepeatPassword);
+        Button changePassword = findViewById(R.id.btnChangePassword);
 
         changePassword.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,8 +62,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         return true;
     }
 
-    private void showAlert(String title, String message, int icon)
-    {
+    private void showAlert(String title, String message, int icon) {
         new AlertDialog
                 .Builder(this)
                 .setTitle(title)

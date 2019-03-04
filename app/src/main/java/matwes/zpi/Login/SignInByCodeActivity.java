@@ -1,4 +1,4 @@
-package matwes.zpi.Login;
+package matwes.zpi.login;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,47 +10,42 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.facebook.login.LoginManager;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import matwes.zpi.AsyncTaskCompleteListener;
 import matwes.zpi.Common;
 import matwes.zpi.MainActivity;
 import matwes.zpi.R;
 import matwes.zpi.RequestAPI;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class SignInByCodeActivity
-        extends AppCompatActivity implements AsyncTaskCompleteListener<String>
-{
+        extends AppCompatActivity implements AsyncTaskCompleteListener<String> {
+    public static final String SIGN_IN = Common.URL + "/session/code";
     EditText etEmail, etCode;
-    public static final String SIGN_IN = "https://zpiapi.herokuapp.com/session/code";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in_by_code);
 
-        etEmail = (EditText) findViewById(R.id.etEmailInCode);
-        etCode = (EditText) findViewById(R.id.etCode);
+        etEmail = findViewById(R.id.etEmailInCode);
+        etCode = findViewById(R.id.etCode);
 
-        Button btnSignIn = (Button) findViewById(R.id.btnSignInByCode2);
+        Button btnSignIn = findViewById(R.id.btnSignInByCode2);
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Common.isEmailOk(etEmail.getText().toString())) {
+                if (Common.isEmailOk(etEmail.getText().toString())) {
                     new RequestAPI(v.getContext(), "POST", sessionCode(), SignInByCodeActivity.this, true)
                             .execute(SIGN_IN);
-                }
-                else
+                } else
                     etEmail.setError("Invalid email address");
             }
         });
     }
 
-    String sessionCode()
-    {
+    String sessionCode() {
         JSONObject json = new JSONObject();
         try {
             json.put("email", etEmail.getText().toString());
@@ -62,17 +57,13 @@ public class SignInByCodeActivity
     }
 
     @Override
-    public void onTaskComplete(String result)
-    {
-        if(result.equals("200"))
-        {
+    public void onTaskComplete(String result) {
+        if (result.equals("200")) {
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             Common.setLoginStatus(this, true);
             startActivity(intent);
-        }
-        else
-        {
+        } else {
             new AlertDialog.Builder(this)
                     .setTitle("Error")
                     .setMessage("Wrong email or code")

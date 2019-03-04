@@ -1,4 +1,4 @@
-package matwes.zpi.Events;
+package matwes.zpi.events;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,6 +11,11 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 
 import com.leavjenn.smoothdaterangepicker.date.SmoothDateRangePickerFragment;
+import matwes.zpi.AsyncTaskCompleteListener;
+import matwes.zpi.Common;
+import matwes.zpi.GetMethodAPI;
+import matwes.zpi.R;
+import matwes.zpi.domain.Event;
 
 import org.json.JSONObject;
 
@@ -18,31 +23,23 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
-
-import matwes.zpi.AsyncTaskCompleteListener;
-import matwes.zpi.Common;
-import matwes.zpi.Classes.Event;
-import matwes.zpi.GetMethodAPI;
-import matwes.zpi.R;
 
 /**
  * Created by mateu on 18.05.2017.
  */
 
 public abstract class MainFragment extends Fragment implements AsyncTaskCompleteListener<String> {
-    View parentView;
-
     public ArrayList<Event> events;
-
+    public boolean filtered;
+    View parentView;
+    String selectedCity;
     private Date maxDate, minDate;
     private Date maxDateSelected, minDateSelected;
-
     private String selectedSport;
-    String selectedCity;
-    public boolean filtered;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -69,10 +66,8 @@ public abstract class MainFragment extends Fragment implements AsyncTaskComplete
 
             updateList(Event.jsonEventsToList(json));
         } catch (Exception ignored) {
-
         }
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -98,15 +93,30 @@ public abstract class MainFragment extends Fragment implements AsyncTaskComplete
 
     void updateList(ArrayList<Event> e) {
         if (!filtered) {
+            boolean minDateChanged = false;
+            boolean maxDateChanged = false;
+
             minDate = new Date(Long.MAX_VALUE);
             maxDate = new Date(Long.MIN_VALUE);
 
             for (Event event : e) {
-                if (event.getDate().before(minDate))
+                if (event.getDate().before(minDate)) {
+                    minDateChanged = true;
                     minDate = event.getDate();
-                if (event.getDate().after(maxDate))
+                }
+                if (event.getDate().after(maxDate)) {
+                    maxDateChanged = true;
                     maxDate = event.getDate();
+                }
             }
+
+            if (!minDateChanged) {
+                minDate = new Date();
+            }
+            if (!maxDateChanged) {
+                maxDate = new Date();
+            }
+
             minDateSelected = minDate;
             maxDateSelected = maxDate;
         }
@@ -116,11 +126,12 @@ public abstract class MainFragment extends Fragment implements AsyncTaskComplete
             filterEvents(e);
         removeOldEvents(e);
         events.addAll(e);
+        Collections.sort(events);
     }
 
     void downloadEvents() {
         if (Common.isOnline(getContext()))
-            new GetMethodAPI(getContext(), this, true).execute("https://zpiapi.herokuapp.com/events?size=99");
+            new GetMethodAPI(getContext(), this, true).execute(Common.URL + "/events?size=99");
         else
             Snackbar.make(parentView, R.string.noInternet, Snackbar.LENGTH_LONG).show();
     }
@@ -177,7 +188,7 @@ public abstract class MainFragment extends Fragment implements AsyncTaskComplete
             if ((!event.getSportName().equals(selectedSport) && !selectedSport.equals("Wszystkie")) ||
                     event.getDate().before(minDateSelected) ||
                     event.getDate().after(maxDateSelected) ||
-                    (!event.getPlace().getCity().equals(selectedCity)&&!selectedCity.equals("Wszystkie miasta")))
+                    (!event.getPlace().getCity().equals(selectedCity) && !selectedCity.equals("Wszystkie miasta")))
                 i.remove();
         }
     }
@@ -186,7 +197,7 @@ public abstract class MainFragment extends Fragment implements AsyncTaskComplete
     public void onResume() {
         super.onResume();
         if (Common.isOnline(getContext()))
-            new GetMethodAPI(getContext(), this, false).execute("https://zpiapi.herokuapp.com/events?size=99");
+            new GetMethodAPI(getContext(), this, false).execute(Common.URL + "/events?size=99");
     }
 
     void removeOldEvents(ArrayList<Event> events) {

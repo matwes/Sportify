@@ -1,4 +1,4 @@
-package matwes.zpi.Login;
+package matwes.zpi.login;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -7,6 +7,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import matwes.zpi.Common;
 import matwes.zpi.MainActivity;
@@ -19,14 +21,13 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
-        if(Common.getLoginStatus(this))
-        {
+        if (Common.getLoginStatus(this)) {
             startActivity(new Intent(this, MainActivity.class));
             finish();
         }
 
-        Button login = (Button) findViewById(R.id.btnSignIn);
-        Button reg = (Button) findViewById(R.id.btnSignUp);
+        Button login = findViewById(R.id.btnSignIn);
+        Button reg = findViewById(R.id.btnSignUp);
 
         reg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,19 +44,33 @@ public class WelcomeActivity extends AppCompatActivity {
         });
         checkConnection();
 
+        final EditText serverAddress = findViewById(R.id.serverIp);
+        serverAddress.setText(Common.URL);
+        serverAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                serverAddress.setVisibility(View.VISIBLE);
+            }
+        });
+
+        Button changeAddress = findViewById(R.id.changeIp);
+        changeAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Common.URL = serverAddress.getText().toString();
+                Toast.makeText(getApplicationContext(), "Ip has changed", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    private void checkConnection()
-    {
-        if(!Common.isOnline(this))
-        {
+    private void checkConnection() {
+        if (!Common.isOnline(this)) {
             showDialog();
         }
     }
 
-    private void showDialog()
-    {
-        AlertDialog dialog = new AlertDialog.Builder(this)
+    private void showDialog() {
+        new AlertDialog.Builder(this)
                 .setTitle("Connection Required")
                 .setMessage("Make sure your wireless is on and connected")
                 .setCancelable(false)

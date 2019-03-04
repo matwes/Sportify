@@ -1,11 +1,10 @@
-package matwes.zpi.Classes;
+package matwes.zpi.domain;
 
 /**
  * Created by mateu on 19.04.2017.
  */
 
-public class Sport
-{
+public class Sport {
     private int id;
     private String name;
 

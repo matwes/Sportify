@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 
 public class Common {
     public static final String[] permission = {"email", "public_profile"};
+    public static String URL = "http://10.0.2.2:8080";
 
     public static boolean isEmailOk(String email) {
         Pattern emailPattern =
@@ -31,21 +32,14 @@ public class Common {
         editor.apply();
     }
 
-    public static long getCurrentUserId(Context context)
-    {
+    public static long getCurrentUserId(Context context) {
         SharedPreferences prefs = context.getSharedPreferences("EVENTS", Context.MODE_PRIVATE);
         return prefs.getInt("USER_ID", 0);
     }
-    static String getBearer(Context context)
-    {
+
+    static String getBearer(Context context) {
         SharedPreferences prefs = context.getSharedPreferences("EVENTS", Context.MODE_PRIVATE);
         return prefs.getString("BEARER", "");
-    }
-
-    public static String getLoginParam(Context context)
-    {
-        SharedPreferences prefs = context.getSharedPreferences("EVENTS", Context.MODE_PRIVATE);
-        return prefs.getString("LOGIN", "");
     }
 
     public static boolean getLoginStatus(Context context) {
@@ -58,8 +52,7 @@ public class Common {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
-    public static void showAlert(Context context, String title, String message, int icon)
-    {
+    public static void showAlert(Context context, String title, String message, int icon) {
         new AlertDialog
                 .Builder(context)
                 .setTitle(title)
@@ -125,25 +118,25 @@ public class Common {
                 result = 5;
                 break;
             case "Badminton":
-                result = 12;
+                result = 6;
                 break;
             case "Squash":
-                result = 13;
+                result = 7;
                 break;
             case "Golf":
-                result = 14;
+                result = 8;
                 break;
             case "Bieganie":
-                result = 15;
+                result = 9;
                 break;
             case "Pływanie":
-                result = 16;
+                result = 10;
                 break;
             case "Piłka ręczna":
-                result = 17;
+                result = 11;
                 break;
             case "Tenis":
-                result = 18;
+                result = 12;
                 break;
             default:
                 result = 1;

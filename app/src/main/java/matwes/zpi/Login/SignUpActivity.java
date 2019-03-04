@@ -1,4 +1,4 @@
-package matwes.zpi.Login;
+package matwes.zpi.login;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,45 +14,41 @@ import android.widget.LinearLayout;
 import com.facebook.CallbackManager;
 import com.facebook.login.LoginManager;
 import com.facebook.login.widget.LoginButton;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import matwes.zpi.AsyncTaskCompleteListener;
 import matwes.zpi.Common;
 import matwes.zpi.MainActivity;
 import matwes.zpi.R;
 import matwes.zpi.RequestAPI;
 
-public class SignUpActivity extends AppCompatActivity implements AsyncTaskCompleteListener<String>
-{
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class SignUpActivity extends AppCompatActivity implements AsyncTaskCompleteListener<String> {
+    private static final String SIGN_UP = Common.URL + "/users";
     private EditText etFirstName, etLastName, etEmail, etPassword;
     private CallbackManager callbackManager;
-    private static final String SIGN_UP = "https://zpiapi.herokuapp.com/users";
     private boolean facebook = true;
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        etFirstName = (EditText) findViewById(R.id.etFirstName);
-        etLastName = (EditText) findViewById(R.id.etLastName);
-        etEmail = (EditText) findViewById(R.id.etEmail);
-        etPassword = (EditText) findViewById(R.id.etPassword);
+        etFirstName = findViewById(R.id.etFirstName);
+        etLastName = findViewById(R.id.etLastName);
+        etEmail = findViewById(R.id.etEmail);
+        etPassword = findViewById(R.id.etPassword);
 
-        Button btnSignUp = (Button) findViewById(R.id.btnSignUp2);
+        Button btnSignUp = findViewById(R.id.btnSignUp2);
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Common.isEmailOk(etEmail.getText().toString())) {
+                if (Common.isEmailOk(etEmail.getText().toString())) {
                     new RequestAPI(v.getContext(), "POST", newUserString(), SignUpActivity.this, true)
                             .execute(SIGN_UP);
                     facebook = false;
-                }
-                else
+                } else
                     etEmail.setError("Wrong email");
             }
         });
@@ -60,7 +56,7 @@ public class SignUpActivity extends AppCompatActivity implements AsyncTaskComple
 
         callbackManager = CallbackManager.Factory.create();
 
-        LoginButton btnFbLogin = (LoginButton) findViewById(R.id.btnSignUpFb);
+        LoginButton btnFbLogin = findViewById(R.id.btnSignUpFb);
         btnFbLogin.setReadPermissions(Common.permission);
         btnFbLogin.registerCallback(callbackManager, new FbCallback(this, this));
     }
@@ -72,24 +68,19 @@ public class SignUpActivity extends AppCompatActivity implements AsyncTaskComple
     }
 
     @Override
-    public void onTaskComplete(String result)
-    {
-        if(result.equals("200"))
-        {
+    public void onTaskComplete(String result) {
+        if (result.equals("200")) {
             Class className;
-            if(facebook) {
+            if (facebook) {
                 className = MainActivity.class;
                 Common.setLoginStatus(this, true);
-            }
-            else
+            } else
                 className = SignInByCodeActivity.class;
-            
+
             Intent intent = new Intent(this, className);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
-        }
-        else
-        {
+        } else {
             final EditText input = new EditText(this);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams
                     (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -113,8 +104,7 @@ public class SignUpActivity extends AppCompatActivity implements AsyncTaskComple
         }
     }
 
-    protected String newUserString()
-    {
+    protected String newUserString() {
         JSONObject json = new JSONObject();
         try {
             json.put("email", etEmail.getText().toString());

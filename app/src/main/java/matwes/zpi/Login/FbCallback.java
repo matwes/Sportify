@@ -1,4 +1,4 @@
-package matwes.zpi.Login;
+package matwes.zpi.login;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -9,21 +9,20 @@ import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
+import matwes.zpi.AsyncTaskCompleteListener;
+import matwes.zpi.Common;
+import matwes.zpi.RequestAPI;
 
 import org.json.JSONObject;
 
-import matwes.zpi.AsyncTaskCompleteListener;
-import matwes.zpi.RequestAPI;
-
 /**
- * Created by mateu on 30.03.2017.
+ * Created by Mateusz Wesołowski
  */
 
-class FbCallback implements FacebookCallback<LoginResult>
-{
+class FbCallback implements FacebookCallback<LoginResult> {
+    private static final String SIGN_UP_FB = Common.URL + "/session/facebook";
     private Context context;
     private AsyncTaskCompleteListener<String> inter;
-    private static final String SIGN_UP_FB = "https://zpiapi.herokuapp.com/session/facebook";
 
     FbCallback(Context context, AsyncTaskCompleteListener<String> inter) {
         this.context = context;
@@ -31,8 +30,7 @@ class FbCallback implements FacebookCallback<LoginResult>
     }
 
     @Override
-    public void onSuccess(final LoginResult loginResult)
-    {
+    public void onSuccess(final LoginResult loginResult) {
         GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
             @Override
             public void onCompleted(JSONObject object, GraphResponse response) {
@@ -43,7 +41,7 @@ class FbCallback implements FacebookCallback<LoginResult>
         parameters.putString("fields", "id,name,email,gender");
         request.setParameters(parameters);
         request.executeAsync();
-        new RequestAPI(context, "POST", "{ \"token\": \""+loginResult.getAccessToken().getToken()+"\"}", inter, true)
+        new RequestAPI(context, "POST", "{ \"token\": \"" + loginResult.getAccessToken().getToken() + "\"}", inter, true)
                 .execute(SIGN_UP_FB);
     }
 

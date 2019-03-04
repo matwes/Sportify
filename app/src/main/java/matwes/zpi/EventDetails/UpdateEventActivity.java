@@ -1,14 +1,14 @@
-package matwes.zpi.EventDetails;
+package matwes.zpi.eventDetails;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.icu.util.Calendar;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,18 +27,18 @@ import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import matwes.zpi.AsyncTaskCompleteListener;
+import matwes.zpi.Common;
+import matwes.zpi.GetMethodAPI;
+import matwes.zpi.R;
+import matwes.zpi.RequestAPI;
+import matwes.zpi.domain.Event;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import matwes.zpi.AsyncTaskCompleteListener;
-import matwes.zpi.Common;
-import matwes.zpi.Classes.Event;
-import matwes.zpi.GetMethodAPI;
-import matwes.zpi.R;
-import matwes.zpi.RequestAPI;
-
 public class UpdateEventActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+    private static final String UPDATE_EVENT = Common.URL + "/events/";
     private long eventId;
     private AutoCompleteTextView autoCompleteTextView;
     private PlaceAutocompleteFragment placeAutocompleteFragment;
@@ -46,8 +46,6 @@ public class UpdateEventActivity extends AppCompatActivity implements GoogleApiC
     private String placeId = "";
     private String sDate, sTime;
     private ArrayAdapter<CharSequence> adapter;
-
-    private static final String UPDATE_EVENT = "https://zpiapi.herokuapp.com/events/";
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -60,10 +58,10 @@ public class UpdateEventActivity extends AppCompatActivity implements GoogleApiC
         Intent intent = getIntent();
         eventId = intent.getLongExtra("eventId", -1);
 
-        name = (EditText) findViewById(R.id.etEventName);
-        description = (EditText) findViewById(R.id.etEventDescription);
-        members = (EditText) findViewById(R.id.etEventMembers);
-        date = (EditText) findViewById(R.id.etEventDate);
+        name = findViewById(R.id.etEventName);
+        description = findViewById(R.id.etEventDescription);
+        members = findViewById(R.id.etEventMembers);
+        date = findViewById(R.id.etEventDate);
 
         getEvent();
 
@@ -96,7 +94,7 @@ public class UpdateEventActivity extends AppCompatActivity implements GoogleApiC
         });
 
         adapter = ArrayAdapter.createFromResource(this, R.array.sport_list, R.layout.spinner_item);
-        autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
+        autoCompleteTextView = findViewById(R.id.autoCompleteTextView);
         autoCompleteTextView.setAdapter(null);
         autoCompleteTextView.setKeyListener(null);
         autoCompleteTextView.setOnTouchListener(new View.OnTouchListener() {
@@ -107,7 +105,7 @@ public class UpdateEventActivity extends AppCompatActivity implements GoogleApiC
             }
         });
 
-        Button updateEvent = (Button) findViewById(R.id.btnAddEvent);
+        Button updateEvent = findViewById(R.id.btnAddEvent);
         updateEvent.setText(R.string.updateBtn);
         updateEvent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,7 +114,7 @@ public class UpdateEventActivity extends AppCompatActivity implements GoogleApiC
             }
         });
 
-        Button deleteEvent = (Button) findViewById(R.id.btnDelEvent);
+        Button deleteEvent = findViewById(R.id.btnDelEvent);
         deleteEvent.setVisibility(View.VISIBLE);
         deleteEvent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,7 +146,7 @@ public class UpdateEventActivity extends AppCompatActivity implements GoogleApiC
                 sTime = event.getTime();
                 sDate = event.getDateString();
             }
-        }, true).execute("https://zpiapi.herokuapp.com/events/" + eventId);
+        }, true).execute(String.format("%s/events/%d", Common.URL, eventId));
     }
 
     private void initGooglePlaceApi() {
@@ -201,6 +199,4 @@ public class UpdateEventActivity extends AppCompatActivity implements GoogleApiC
             }
         }, true).execute(UPDATE_EVENT + eventId);
     }
-
-
 }

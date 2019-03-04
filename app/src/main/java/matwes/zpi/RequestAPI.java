@@ -1,6 +1,5 @@
 package matwes.zpi;
 
-import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -12,17 +11,12 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.DataOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLSession;
 
 public class RequestAPI extends AsyncTask<String, Void, Integer> {
     private ProgressDialog progressDialog;
@@ -56,20 +50,12 @@ public class RequestAPI extends AsyncTask<String, Void, Integer> {
         int responseCode = -1;
 
         try {
-            HostnameVerifier hostnameVerifier = new HostnameVerifier() {
-                @SuppressLint("BadHostnameVerifier")
-                @Override
-                public boolean verify(String hostname, SSLSession session) {
-                    return true;
-                }
-            };
-
             URL url = new URL(params[0]);
-            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-            connection.setHostnameVerifier(hostnameVerifier);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
             connection.setRequestMethod(method);
             connection.setRequestProperty("Content-Type", "application/json");
+            connection.setConnectTimeout(5000);
             if (Common.getLoginStatus(context)) {
                 String b = Common.getBearer(context);
                 connection.setRequestProperty("Authentication", b);

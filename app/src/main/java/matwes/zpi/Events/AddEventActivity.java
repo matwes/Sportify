@@ -1,15 +1,15 @@
-package matwes.zpi.Events;
+package matwes.zpi.events;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.icu.util.Calendar;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,24 +26,20 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import matwes.zpi.AsyncTaskCompleteListener;
 import matwes.zpi.Common;
 import matwes.zpi.R;
 import matwes.zpi.RequestAPI;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class AddEventActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, AsyncTaskCompleteListener<String> {
-    private PlaceAutocompleteFragment placeAutocompleteFragment;
-    private EditText name, description, members, date;
+    private static final String CREATE_EVENT = Common.URL + "/events";
     String sDate, sTime;
     String placeId = "";
-
+    private EditText name, description, members, date;
     private AutoCompleteTextView autoCompleteTextView;
-
-    private static final String CREATE_EVENT = "https://zpiapi.herokuapp.com/events";
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -53,10 +49,10 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
 
         initGooglePlaceApi();
 
-        name = (EditText) findViewById(R.id.etEventName);
-        description = (EditText) findViewById(R.id.etEventDescription);
-        members = (EditText) findViewById(R.id.etEventMembers);
-        date = (EditText) findViewById(R.id.etEventDate);
+        name = findViewById(R.id.etEventName);
+        description = findViewById(R.id.etEventDescription);
+        members = findViewById(R.id.etEventMembers);
+        date = findViewById(R.id.etEventDate);
 
         final TimePickerDialog.OnTimeSetListener timePicker = new TimePickerDialog.OnTimeSetListener() {
             @Override
@@ -71,8 +67,8 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
                 new TimePickerDialog(AddEventActivity.this, timePicker, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
-                sDate = String.format("%02d-%02d-%02d", year, month+1, day);
-                date.setText(day + "-" + (month+1) + "-" + year);
+                sDate = String.format("%02d-%02d-%02d", year, month + 1, day);
+                date.setText(day + "-" + (month + 1) + "-" + year);
             }
         };
 
@@ -87,7 +83,7 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
         });
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.sport_list, R.layout.spinner_item);
-        autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
+        autoCompleteTextView = findViewById(R.id.autoCompleteTextView);
         autoCompleteTextView.setAdapter(adapter);
         autoCompleteTextView.setKeyListener(null);
         autoCompleteTextView.setOnTouchListener(new View.OnTouchListener() {
@@ -98,7 +94,7 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
             }
         });
 
-        Button addEvent = (Button) findViewById(R.id.btnAddEvent);
+        Button addEvent = findViewById(R.id.btnAddEvent);
         addEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,8 +111,8 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
                 .enableAutoManage(this, this)
                 .build();
 
-        placeAutocompleteFragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_fragment);
-        placeAutocompleteFragment.setHint("Enter location");
+        PlaceAutocompleteFragment placeAutocompleteFragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_fragment);
+        placeAutocompleteFragment.setHint("Miejsce");
         placeAutocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(com.google.android.gms.location.places.Place place) {
@@ -149,7 +145,7 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
 
     @Override
     public void onTaskComplete(String result) {
-        if(result.equals("200"))
+        if (result.equals("200"))
             finish();
         else
             showAlert(getString(R.string.required_fields));
@@ -171,11 +167,11 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        Log.i("NEW_EVENT", json.toString());
         new RequestAPI(this, "POST", json.toString(), this, true).execute(CREATE_EVENT);
     }
 
-    private void showAlert(String message)
-    {
+    private void showAlert(String message) {
         new AlertDialog
                 .Builder(this)
                 .setTitle("Error")

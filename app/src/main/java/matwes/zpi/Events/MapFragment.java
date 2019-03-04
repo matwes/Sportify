@@ -1,11 +1,16 @@
-package matwes.zpi.Events;
+package matwes.zpi.events;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,7 +21,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -29,6 +33,11 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
+import matwes.zpi.Common;
+import matwes.zpi.R;
+import matwes.zpi.domain.Event;
+import matwes.zpi.domain.Place;
+import matwes.zpi.eventDetails.EventDetailsActivity;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,20 +45,16 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import matwes.zpi.Common;
-import matwes.zpi.Classes.Event;
-import matwes.zpi.Classes.Place;
-import matwes.zpi.EventDetails.EventDetailsActivity;
-import matwes.zpi.R;
-
 /**
- * Created by mateu on 04.04.2017.
+ * Created by Mateusz Wesołowski
  */
 
 public class MapFragment extends MainFragment implements OnMapReadyCallback {
     private ClusterManager<MyItem> clusterManager;
     private GoogleMap googleMap;
-
+    private LocationManager locationManager;
+    private double latti;
+    private double longi;
 
     @Nullable
     @Override
@@ -57,14 +62,15 @@ public class MapFragment extends MainFragment implements OnMapReadyCallback {
         View view = inflater.inflate(R.layout.activity_maps, container, false);
         setHasOptionsMenu(true);
 
-        MapView mapView = (MapView) view.findViewById(R.id.mapView);
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        getLocation();
+        MapView mapView = view.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
 
         MapsInitializer.initialize(getActivity().getApplicationContext());
 
         mapView.getMapAsync(this);
-
         return view;
     }
 
@@ -75,23 +81,11 @@ public class MapFragment extends MainFragment implements OnMapReadyCallback {
         getEvents();
     }
 
-
-    private class EventRenderer extends DefaultClusterRenderer<MyItem> {
-
-        EventRenderer(Context context, GoogleMap map, ClusterManager<MyItem> clusterManager) {
-            super(context, map, clusterManager);
-        }
-
-        @Override
-        protected boolean shouldRenderAsCluster(Cluster<MyItem> cluster) {
-            return true;
-        }
-    }
-
     @Override
     public void onMapReady(final GoogleMap googleMap) {
         this.googleMap = googleMap;
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.03, 18.25), 6));
+        //googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.03, 18.25), 6));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latti, longi), 14));
 
         clusterManager = new ClusterManager<>(getContext(), googleMap);
         clusterManager.setRenderer(new EventRenderer(getContext(), googleMap, clusterManager));
@@ -154,11 +148,6 @@ public class MapFragment extends MainFragment implements OnMapReadyCallback {
         final ListAdapter arrayAdapter = new ArrayAdapter<Event>(getContext(), R.layout.dialog_list_row, list) {
             ViewHolder holder;
 
-            class ViewHolder {
-                ImageView icon;
-                TextView name, date, members;
-            }
-
             @NonNull
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -166,10 +155,10 @@ public class MapFragment extends MainFragment implements OnMapReadyCallback {
                 if (convertView == null) {
                     convertView = inflater.inflate(R.layout.dialog_list_row, null);
                     holder = new ViewHolder();
-                    holder.icon = (ImageView) convertView.findViewById(R.id.imageView2);
-                    holder.name = (TextView) convertView.findViewById(R.id.textView2);
-                    holder.date = (TextView) convertView.findViewById(R.id.textView4);
-                    holder.members = (TextView) convertView.findViewById(R.id.textView3);
+                    holder.icon = convertView.findViewById(R.id.imageView2);
+                    holder.name = convertView.findViewById(R.id.textView2);
+                    holder.date = convertView.findViewById(R.id.textView4);
+                    holder.members = convertView.findViewById(R.id.textView3);
                     convertView.setTag(holder);
                 } else
                     holder = (ViewHolder) convertView.getTag();
@@ -183,10 +172,15 @@ public class MapFragment extends MainFragment implements OnMapReadyCallback {
                 return convertView;
             }
 
+            class ViewHolder {
+                ImageView icon;
+                TextView name, date, members;
+            }
+
         };
 
         new AlertDialog.Builder(getContext())
-                .setTitle(items.size() + " " + getString(R.string.eventsInLocation))
+                .setTitle(String.format("%d %s", items.size(), getString(R.string.eventsInLocation)))
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -261,12 +255,38 @@ public class MapFragment extends MainFragment implements OnMapReadyCallback {
                 break;
             case "Gdańsk":
                 latLng = new LatLng(54.36, 18.63);
-                zoom =12;
+                zoom = 12;
                 break;
             default:
                 latLng = new LatLng(52.03, 18.25);
-                zoom=6;
+                zoom = 6;
         }
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+    }
+
+    private void getLocation() {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        } else {
+            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+            if (location != null) {
+                latti = location.getLatitude();
+                longi = location.getLongitude();
+            }
+        }
+    }
+
+    private class EventRenderer extends DefaultClusterRenderer<MyItem> {
+
+        EventRenderer(Context context, GoogleMap map, ClusterManager<MyItem> clusterManager) {
+            super(context, map, clusterManager);
+        }
+
+        @Override
+        protected boolean shouldRenderAsCluster(Cluster<MyItem> cluster) {
+            return true;
+        }
     }
 }

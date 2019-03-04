@@ -1,4 +1,6 @@
-package matwes.zpi.Classes;
+package matwes.zpi.domain;
+
+import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -15,7 +17,7 @@ import java.util.Locale;
  * Created by mateu on 05.04.2017.
  */
 
-public class Event {
+public class Event implements Comparable {
     private long id;
     private String name;
     private User creator;
@@ -45,9 +47,14 @@ public class Event {
     public String getSportName() {
         return sport.getName();
     }
-    public String getTime() {return time;}
 
-    public Sport getSport() {return sport;}
+    public String getTime() {
+        return time;
+    }
+
+    public Sport getSport() {
+        return sport;
+    }
 
     public int getSportId() {
         return sport.getId();
@@ -130,5 +137,12 @@ public class Event {
 
     public int getCreatorId() {
         return (int) creator.getId();
+    }
+
+    @Override
+    public int compareTo(@NonNull Object o) {
+        Date d1 = this.getDate();
+        Date d2 = ((Event) o).getDate();
+        return d1.compareTo(d2);
     }
 }

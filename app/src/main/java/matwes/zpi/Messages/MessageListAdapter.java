@@ -1,4 +1,4 @@
-package matwes.zpi.Messages;
+package matwes.zpi.messages;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,22 +6,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import matwes.zpi.R;
+import matwes.zpi.domain.Message;
+
 import java.util.ArrayList;
 
-import matwes.zpi.Classes.Message;
-import matwes.zpi.R;
-
 /**
- * Created by mateu on 30.05.2017.
+ * Created by Mateusz Wesołowski
  */
 
-public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.Holder>
-{
+public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.Holder> {
     private static final int MESSAGE_LEFT = 0;
     private static final int MESSAGE_RIGHT = 1;
-    private long userId;
-
     private final ArrayList<Message> messages;
+    private long userId;
 
     MessageListAdapter(final ArrayList<Message> messages, long userId) {
         this.userId = userId;
@@ -46,14 +44,14 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         Message message = messages.get(position);
         holder.messageTextView.setText(message.getMessage());
         holder.messageInfo.setText(message.getTime());
-        if(getItemViewType(position)==MESSAGE_LEFT)
+        if (getItemViewType(position) == MESSAGE_LEFT)
             holder.messageAuthor.setText(message.getAuthor());
     }
 
 
     @Override
     public int getItemViewType(final int position) {
-        boolean isLeftMessage = messages.get(position).getAuthorId()!=userId;
+        boolean isLeftMessage = messages.get(position).getAuthorId() != userId;
         if (isLeftMessage) {
             return MESSAGE_LEFT;
         } else {
@@ -70,12 +68,11 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
 
         TextView messageTextView, messageInfo, messageAuthor;
 
-        Holder(final View itemView)
-        {
+        Holder(final View itemView) {
             super(itemView);
-            messageTextView = (TextView) itemView.findViewById(R.id.message);
-            messageInfo = (TextView) itemView.findViewById(R.id.messageInfo);
-            messageAuthor = (TextView) itemView.findViewById(R.id.messageAuthor);
+            messageTextView = itemView.findViewById(R.id.message);
+            messageInfo = itemView.findViewById(R.id.messageInfo);
+            messageAuthor = itemView.findViewById(R.id.messageAuthor);
         }
     }
 }

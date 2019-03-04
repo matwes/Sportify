@@ -1,13 +1,10 @@
-package matwes.zpi.Classes;
-
-import java.util.ArrayList;
+package matwes.zpi.domain;
 
 /**
  * Created by mateu on 19.04.2017.
  */
 
-public class User
-{
+public class User {
     private long id;
     private String email;
     private String firstName;
@@ -23,19 +20,19 @@ public class User
     }
 
     public String getFirstName() {
-        return firstName==null?"":firstName;
+        return firstName == null ? "" : firstName;
     }
 
     public String getLastName() {
-        return lastName==null?"":lastName;
+        return lastName == null ? "" : lastName;
     }
 
     public String getSex() {
-        return sex==null?"":sex;
+        return sex == null ? "" : sex;
     }
 
     public String getDescription() {
-        return description==null?"":description;
+        return description == null ? "" : description;
     }
 
     public String getImage() {
@@ -46,14 +43,16 @@ public class User
         return languageCode;
     }
 
-    public String getBirthday() {return birthday==null?"":birthday;}
+    public String getBirthday() {
+        return birthday == null ? "" : birthday;
+    }
 
     public String getName() {
         String name = "";
-        if(firstName!=null)
-            name+=firstName;
-        if(lastName!=null)
-            name+=(" "+lastName);
+        if (firstName != null)
+            name += firstName;
+        if (lastName != null)
+            name += (" " + lastName);
         return name;
 
     }

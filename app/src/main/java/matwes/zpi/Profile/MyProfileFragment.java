@@ -1,7 +1,6 @@
-package matwes.zpi.Profile;
+package matwes.zpi.profile;
 
 import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.icu.util.Calendar;
 import android.os.Build;
@@ -17,36 +16,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import matwes.zpi.AsyncTaskCompleteListener;
+import matwes.zpi.Common;
+import matwes.zpi.GetMethodAPI;
+import matwes.zpi.R;
+import matwes.zpi.RequestAPI;
+import matwes.zpi.domain.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import matwes.zpi.AsyncTaskCompleteListener;
-import matwes.zpi.Classes.User;
-import matwes.zpi.Common;
-import matwes.zpi.EventDetails.UpdateEventActivity;
-import matwes.zpi.GetMethodAPI;
-import matwes.zpi.R;
-import matwes.zpi.RequestAPI;
-
 /**
- * Created by mateu on 01.06.2017.
+ * Created by Mateusz Wesołowski
  */
 
 public class MyProfileFragment extends Fragment {
+    private static final String UPDATE_PROFILE = Common.URL + "/users/";
     private EditText etFirstName, etLastName, etBirthDay, etDescription;
     private AutoCompleteTextView actvSex;
     private ArrayAdapter<CharSequence> adapter;
     private String sDate;
     private long userId;
-
-    private static final String UPDATE_PROFILE = "https://zpiapi.herokuapp.com/users/";
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -61,11 +56,11 @@ public class MyProfileFragment extends Fragment {
         getActivity().setTitle(getString(R.string.my_profile_label));
 
 
-        etFirstName = (EditText) view.findViewById(R.id.etFirstName);
-        etLastName = (EditText) view.findViewById(R.id.etLastName);
-        etBirthDay = (EditText) view.findViewById(R.id.etBirthDate);
-        etDescription = (EditText) view.findViewById(R.id.etDescription);
-        actvSex = (AutoCompleteTextView) view.findViewById(R.id.actvSex);
+        etFirstName = view.findViewById(R.id.etFirstName);
+        etLastName = view.findViewById(R.id.etLastName);
+        etBirthDay = view.findViewById(R.id.etBirthDate);
+        etDescription = view.findViewById(R.id.etDescription);
+        actvSex = view.findViewById(R.id.actvSex);
 
         adapter = ArrayAdapter.createFromResource(getContext(), R.array.sex_list, R.layout.spinner_item);
         actvSex.setAdapter(null);

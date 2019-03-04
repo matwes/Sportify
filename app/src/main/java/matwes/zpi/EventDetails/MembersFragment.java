@@ -1,4 +1,4 @@
-package matwes.zpi.EventDetails;
+package matwes.zpi.eventDetails;
 
 
 import android.os.Bundle;
@@ -17,26 +17,26 @@ import android.view.ViewGroup;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import matwes.zpi.AsyncTaskCompleteListener;
+import matwes.zpi.Common;
+import matwes.zpi.GetMethodAPI;
+import matwes.zpi.R;
+import matwes.zpi.domain.Event;
+import matwes.zpi.domain.Member;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import matwes.zpi.AsyncTaskCompleteListener;
-import matwes.zpi.Common;
-import matwes.zpi.Classes.Event;
-import matwes.zpi.Classes.Member;
-import matwes.zpi.GetMethodAPI;
-import matwes.zpi.R;
-
-public class MembersFragment extends Fragment implements AsyncTaskCompleteListener<String>{
+public class MembersFragment extends Fragment implements AsyncTaskCompleteListener<String> {
     private Event event;
     private MembersListAdapter adapter;
     private ArrayList<Member> members;
     private SwipeRefreshLayout swipe;
 
 
-    public MembersFragment() {}
+    public MembersFragment() {
+    }
 
     public static MembersFragment newInstance(String event) {
         Bundle args = new Bundle();
@@ -65,25 +65,25 @@ public class MembersFragment extends Fragment implements AsyncTaskCompleteListen
         Gson gson = new GsonBuilder().create();
         event = gson.fromJson(membersJson, Event.class);
 
-        if(Common.isOnline(getContext())) {
+        if (Common.isOnline(getContext())) {
             updateMembers();
-        }else
+        } else
             members = event.getMembers();
 
         boolean isOwner = event.getCreatorId() == Common.getCurrentUserId(getContext());
 
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         adapter = new MembersListAdapter(getContext(), members, isOwner, this);
         recyclerView.setAdapter(adapter);
 
-        swipe = (SwipeRefreshLayout) view.findViewById(R.id.swipeEvents);
+        swipe = view.findViewById(R.id.swipeEvents);
         swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(!updateMembers()) {
+                if (!updateMembers()) {
                     swipe.setRefreshing(false);
                 }
             }
@@ -91,8 +91,7 @@ public class MembersFragment extends Fragment implements AsyncTaskCompleteListen
     }
 
     @Override
-    public void onTaskComplete(String result)
-    {
+    public void onTaskComplete(String result) {
         String json;
         try {
             json = new JSONObject(result).getJSONArray("content").toString();
@@ -107,11 +106,9 @@ public class MembersFragment extends Fragment implements AsyncTaskCompleteListen
         }
     }
 
-    boolean updateMembers()
-    {
-        if(Common.isOnline(getContext()))
-        {
-            new GetMethodAPI(getContext(), this, false).execute("https://zpiapi.herokuapp.com/events/"+event.getId()+"/members");
+    boolean updateMembers() {
+        if (Common.isOnline(getContext())) {
+            new GetMethodAPI(getContext(), this, false).execute(String.format("%s/events/%d/members", Common.URL, event.getId()));
             return true;
         }
         return false;

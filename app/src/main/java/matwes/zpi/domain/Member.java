@@ -1,4 +1,4 @@
-package matwes.zpi.Classes;
+package matwes.zpi.domain;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -10,8 +10,7 @@ import java.util.ArrayList;
  * Created by mateu on 19.04.2017.
  */
 
-public class Member
-{
+public class Member {
     private long id;
     private String status;
     private User user;
@@ -24,7 +23,9 @@ public class Member
         return status;
     }
 
-    public User getUser() { return user;}
+    public User getUser() {
+        return user;
+    }
 
     public static ArrayList<Member> jsonMembersToList(String json) {
         Gson gson = new GsonBuilder().create();

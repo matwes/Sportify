@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">ZPI</string>
+    <string name="app_name" translatable="false">Sportify</string>
     <string name="google_place_key" translatable="false">AIzaSyCJzQlROvatusmmEm2U35f5wUDb6mLoPAM</string>
 
     <string name="sign_up">Sign Up</string>

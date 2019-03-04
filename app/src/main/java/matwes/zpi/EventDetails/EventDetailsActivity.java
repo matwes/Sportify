@@ -1,4 +1,5 @@
-package matwes.zpi.EventDetails;
+package matwes.zpi.eventDetails;
+
 
 import android.content.Context;
 import android.content.Intent;
@@ -25,31 +26,30 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import matwes.zpi.AsyncTaskCompleteListener;
+import matwes.zpi.Common;
+import matwes.zpi.R;
+import matwes.zpi.RequestAPI;
+import matwes.zpi.domain.Event;
+import matwes.zpi.domain.Member;
+import matwes.zpi.domain.Place;
+import matwes.zpi.messages.MessageActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import matwes.zpi.AsyncTaskCompleteListener;
-import matwes.zpi.Common;
-import matwes.zpi.Classes.Event;
-import matwes.zpi.Classes.Member;
-import matwes.zpi.Classes.Place;
-import matwes.zpi.Messages.MessageActivity;
-import matwes.zpi.R;
-import matwes.zpi.RequestAPI;
 
 public class EventDetailsActivity extends AppCompatActivity
         implements AsyncTaskCompleteListener<String> {
+    private static final String JOIN_URL = Common.URL + "/events/";
+    private static final String URL = Common.URL + "/members/";
     private Event event;
     private ImageView location, members, messages;
     private Button join;
-
     private long userId;
-    private long memberId=-1;
-    private static final String JOIN_URL = "https://zpiapi.herokuapp.com/events/";
-    private static final String URL = "https://zpiapi.herokuapp.com/members/";
+    private long memberId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,14 +62,14 @@ public class EventDetailsActivity extends AppCompatActivity
 
         event = getEvent(eventId);
 
-        TextView eName = (TextView) findViewById(R.id.eventName);
-        TextView eSport = (TextView) findViewById(R.id.eventSport);
-        TextView eTime = (TextView) findViewById(R.id.eventTime);
-        TextView eDescription = (TextView) findViewById(R.id.eventDescription);
-        TextView eMembers = (TextView) findViewById(R.id.eventMembers);
-        location = (ImageView) findViewById(R.id.ivLocation);
-        members = (ImageView) findViewById(R.id.ivMembers);
-        messages = (ImageView) findViewById(R.id.ivMessages);
+        TextView eName = findViewById(R.id.eventName);
+        TextView eSport = findViewById(R.id.eventSport);
+        TextView eTime = findViewById(R.id.eventTime);
+        TextView eDescription = findViewById(R.id.eventDescription);
+        TextView eMembers = findViewById(R.id.eventMembers);
+        location = findViewById(R.id.ivLocation);
+        members = findViewById(R.id.ivMembers);
+        messages = findViewById(R.id.ivMessages);
 
         location.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +95,7 @@ public class EventDetailsActivity extends AppCompatActivity
             }
         });
 
-        join = (Button) findViewById(R.id.joinButton);
+        join = findViewById(R.id.joinButton);
         if (userId == event.getCreatorId()) {
             {
                 join.setText(R.string.update);
@@ -208,7 +208,7 @@ public class EventDetailsActivity extends AppCompatActivity
     public void onTaskComplete(String result) {
         if (result.equals("200")) {
             join.setEnabled(false);
-            join.setText("YOU ARE MEMBER");
+            join.setText("ZOSTAŁEŚ ZAAKCEPTOWANY");
             if (members.isSelected()) {
                 MembersFragment fragment = (MembersFragment) getSupportFragmentManager().findFragmentById(R.id.frame);
                 fragment.updateMembers();
@@ -229,18 +229,16 @@ public class EventDetailsActivity extends AppCompatActivity
 
     private boolean isMember() {
         for (Member member : event.getMembers()) {
-            if (member.getUser().getId() == userId)
-            {
-                memberId=member.getId();
+            if (member.getUser().getId() == userId) {
+                memberId = member.getId();
                 return true;
             }
         }
         return false;
     }
 
-    private String jsonToLeave()
-    {
-        return  "{\"status\": \"CANCELED\", \"user_id\":"+userId+"}";
+    private String jsonToLeave() {
+        return "{\"status\": \"CANCELED\", \"user_id\":" + userId + "}";
     }
 }
 
