@@ -15,6 +15,10 @@ public class Common {
     public static final String[] permission = {"email", "public_profile"};
     public static String URL = "http://10.0.2.2:8080";
 
+    public static boolean isMocked() {
+        return true;
+    }
+
     public static boolean isEmailOk(String email) {
         Pattern emailPattern =
                 Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
