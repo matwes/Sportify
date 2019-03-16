@@ -64,4 +64,7 @@
     <string name="sex">Płeć</string>
     <string name="max_members">Liczba uczestników</string>
     <string name="date">Data</string>
+    <string name="sport">Sport</string>
+    <string name="data">Data</string>
+    <string name="city">City</string>
 </resources>
