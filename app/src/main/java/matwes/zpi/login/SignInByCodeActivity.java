@@ -1,10 +1,8 @@
 package matwes.zpi.login;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -18,12 +16,15 @@ import matwes.zpi.R;
 import matwes.zpi.api.ApiInterface;
 import matwes.zpi.api.RestService;
 import matwes.zpi.domain.User;
+import matwes.zpi.utils.CustomDialog;
+import matwes.zpi.utils.LoadingDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SignInByCodeActivity extends AppCompatActivity {
     private EditText etEmail, etCode;
+    private LoadingDialog dialog;
 
     private ApiInterface api;
 
@@ -34,6 +35,7 @@ public class SignInByCodeActivity extends AppCompatActivity {
 
         api = RestService.getApiInstance();
 
+        dialog = new LoadingDialog(this);
         etEmail = findViewById(R.id.etEmailInCode);
         etCode = findViewById(R.id.etCode);
 
@@ -50,9 +52,10 @@ public class SignInByCodeActivity extends AppCompatActivity {
         String email = etEmail.getText().toString();
         String password = etCode.getText().toString();
 
-        if (!Common.isEmailOk(email)) {
-            etEmail.setError("Invalid email address");
+        if (Common.isEmailWrong(email)) {
+            etEmail.setError(getString(R.string.error_wrong_email));
         } else {
+            dialog.showLoadingDialog(getString(R.string.loading));
             handleLogin(api.loginByCode(email, password));
         }
     }
@@ -61,6 +64,7 @@ public class SignInByCodeActivity extends AppCompatActivity {
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
+                dialog.hideLoadingDialog();
                 Intent intent = new Intent(SignInByCodeActivity.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 Common.setLoginStatus(SignInByCodeActivity.this, true);
@@ -69,18 +73,8 @@ public class SignInByCodeActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
-                new AlertDialog.Builder(SignInByCodeActivity.this)
-                        .setTitle("Error")
-                        .setMessage("Wrong email or code")
-                        .setCancelable(false)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
+                dialog.hideLoadingDialog();
+                CustomDialog.showError(SignInByCodeActivity.this, getString(R.string.error_message));
                 LoginManager.getInstance().logOut();
             }
         });

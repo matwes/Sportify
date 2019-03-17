@@ -33,11 +33,6 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
-import matwes.zpi.Common;
-import matwes.zpi.R;
-import matwes.zpi.domain.Event;
-import matwes.zpi.domain.Place;
-import matwes.zpi.eventDetails.EventDetailsActivity;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,20 +40,27 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import matwes.zpi.Common;
+import matwes.zpi.R;
+import matwes.zpi.domain.Event;
+import matwes.zpi.domain.Place;
+import matwes.zpi.eventDetails.EventDetailsActivity;
+
 /**
  * Created by Mateusz Wesołowski
  */
 
 public class MapFragment extends MainFragment implements OnMapReadyCallback {
-    private ClusterManager<MyItem> clusterManager;
+    private static final int CAMERA_ZOOM = 14;
+
+    private ClusterManager<EventsCluster> clusterManager;
     private GoogleMap googleMap;
     private LocationManager locationManager;
-    private double latti;
-    private double longi;
+    private double dLat, dLong;
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_maps, container, false);
         setHasOptionsMenu(true);
 
@@ -77,7 +79,7 @@ public class MapFragment extends MainFragment implements OnMapReadyCallback {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getActivity().setTitle(getString(R.string.EVENTS));
+        getActivity().setTitle(R.string.EVENTS);
         getEvents();
     }
 
@@ -85,7 +87,7 @@ public class MapFragment extends MainFragment implements OnMapReadyCallback {
     public void onMapReady(final GoogleMap googleMap) {
         this.googleMap = googleMap;
         //googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.03, 18.25), 6));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latti, longi), 14));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(dLat, dLong), CAMERA_ZOOM));
 
         clusterManager = new ClusterManager<>(getContext(), googleMap);
         clusterManager.setRenderer(new EventRenderer(getContext(), googleMap, clusterManager));
@@ -93,14 +95,14 @@ public class MapFragment extends MainFragment implements OnMapReadyCallback {
         googleMap.setOnCameraIdleListener(clusterManager);
         googleMap.setOnMarkerClickListener(clusterManager);
 
-        clusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<MyItem>() {
+        clusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<EventsCluster>() {
             @Override
-            public boolean onClusterClick(Cluster<MyItem> cluster) {
-                if (googleMap.getCameraPosition().zoom >= 15 || cluster.getSize() < 2)
-                    showAlertDialog(cluster.getItems());
+            public boolean onClusterClick(Cluster<EventsCluster> eventsCluster) {
+                if (googleMap.getCameraPosition().zoom >= 15 || eventsCluster.getSize() < 2)
+                    showAlertDialog(eventsCluster.getItems());
                 else {
                     LatLngBounds.Builder builder = LatLngBounds.builder();
-                    for (ClusterItem item : cluster.getItems()) {
+                    for (ClusterItem item : eventsCluster.getItems()) {
                         builder.include(item.getPosition());
                     }
 
@@ -127,18 +129,18 @@ public class MapFragment extends MainFragment implements OnMapReadyCallback {
 
             if (p != null) {
                 LatLng marker = new LatLng(p.getLatitude(), p.getLongitude());
-                MyItem offsetItem = new MyItem(marker, event.getId(), i);
+                EventsCluster offsetItem = new EventsCluster(marker, event.getId(), i);
                 clusterManager.addItem(offsetItem);
             }
         }
     }
 
-    private void showAlertDialog(final Collection<MyItem> items) {
+    private void showAlertDialog(final Collection<EventsCluster> items) {
         final long[] ids = new long[items.size()];
         int i = 0;
 
         List<Event> list = new ArrayList<>();
-        for (MyItem item : items) {
+        for (EventsCluster item : items) {
             Event event = events.get(item.getLocalId());
             ids[i] = event.getId();
             list.add(event);
@@ -199,7 +201,7 @@ public class MapFragment extends MainFragment implements OnMapReadyCallback {
     }
 
     @Override
-    void updateList(ArrayList<Event> e) {
+    void updateList(List<Event> e) {
         super.updateList(e);
         if (filtered) {
             clusterManager.clearItems();
@@ -216,7 +218,7 @@ public class MapFragment extends MainFragment implements OnMapReadyCallback {
     }
 
     @Override
-    void removeOldEvents(ArrayList<Event> events) {
+    void removeOldEvents(List<Event> events) {
         Date date = new Date();
         Iterator<Event> i = events.iterator();
         while (i.hasNext()) {
@@ -228,7 +230,7 @@ public class MapFragment extends MainFragment implements OnMapReadyCallback {
     }
 
     @Override
-    void filterEvents(ArrayList<Event> events) {
+    void filterEvents(List<Event> events) {
         super.filterEvents(events);
         LatLng latLng;
         float zoom;
@@ -272,20 +274,20 @@ public class MapFragment extends MainFragment implements OnMapReadyCallback {
             Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
             if (location != null) {
-                latti = location.getLatitude();
-                longi = location.getLongitude();
+                dLat = location.getLatitude();
+                dLong = location.getLongitude();
             }
         }
     }
 
-    private class EventRenderer extends DefaultClusterRenderer<MyItem> {
+    private class EventRenderer extends DefaultClusterRenderer<EventsCluster> {
 
-        EventRenderer(Context context, GoogleMap map, ClusterManager<MyItem> clusterManager) {
+        EventRenderer(Context context, GoogleMap map, ClusterManager<EventsCluster> clusterManager) {
             super(context, map, clusterManager);
         }
 
         @Override
-        protected boolean shouldRenderAsCluster(Cluster<MyItem> cluster) {
+        protected boolean shouldRenderAsCluster(com.google.maps.android.clustering.Cluster cluster) {
             return true;
         }
     }

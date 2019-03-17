@@ -3,6 +3,7 @@ package matwes.zpi.events;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -10,14 +11,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 
+import com.google.gson.Gson;
 import com.leavjenn.smoothdaterangepicker.date.SmoothDateRangePickerFragment;
-import matwes.zpi.AsyncTaskCompleteListener;
-import matwes.zpi.Common;
-import matwes.zpi.GetMethodAPI;
-import matwes.zpi.R;
-import matwes.zpi.domain.Event;
-
-import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -26,25 +21,42 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
+
+import matwes.zpi.Common;
+import matwes.zpi.R;
+import matwes.zpi.api.ApiInterface;
+import matwes.zpi.api.RestService;
+import matwes.zpi.domain.Event;
+import matwes.zpi.utils.CustomDialog;
+import matwes.zpi.utils.LoadingDialog;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by mateu on 18.05.2017.
  */
 
-public abstract class MainFragment extends Fragment implements AsyncTaskCompleteListener<String> {
-    public ArrayList<Event> events;
-    public boolean filtered;
-    View parentView;
-    String selectedCity;
-    private Date maxDate, minDate;
-    private Date maxDateSelected, minDateSelected;
-    private String selectedSport;
+public abstract class MainFragment extends Fragment {
+    protected View parentView;
+    protected LoadingDialog dialog;
+
+    protected List<Event> events;
+    protected Date maxDate, minDate, maxDateSelected, minDateSelected;
+    protected String selectedSport, selectedCity;
+    protected boolean filtered;
+
+    private ApiInterface api;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         parentView = view;
+
+        api = RestService.getApiInstance();
+        dialog = new LoadingDialog(getContext());
 
         maxDate = maxDateSelected = new Date(Long.MIN_VALUE);
         minDate = minDateSelected = new Date(Long.MAX_VALUE);
@@ -57,26 +69,13 @@ public abstract class MainFragment extends Fragment implements AsyncTaskComplete
     }
 
     @Override
-    public void onTaskComplete(String result) {
-        String json;
-        try {
-            json = new JSONObject(result).getJSONArray("content").toString();
-            SharedPreferences prefs = getActivity().getSharedPreferences("EVENTS", Context.MODE_PRIVATE);
-            prefs.edit().putString("EVENTS_JSON", json).apply();
-
-            updateList(Event.jsonEventsToList(json));
-        } catch (Exception ignored) {
-        }
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case (R.id.filter):
                 filterDialog();
                 return true;
             case (R.id.refresh):
-                downloadEvents();
+                downloadEvents(true, true);
         }
 
         return super.onOptionsItemSelected(item);
@@ -85,13 +84,14 @@ public abstract class MainFragment extends Fragment implements AsyncTaskComplete
     void getEvents() {
         SharedPreferences prefs = getActivity().getSharedPreferences("EVENTS", Context.MODE_PRIVATE);
         ArrayList<Event> e = Event.jsonEventsToList(prefs.getString("EVENTS_JSON", "[]"));
-        if (e.isEmpty())
-            downloadEvents();
-        else
+        if (e.isEmpty()) {
+            downloadEvents(true, true);
+        } else {
             updateList(e);
+        }
     }
 
-    void updateList(ArrayList<Event> e) {
+    void updateList(List<Event> e) {
         if (!filtered) {
             boolean minDateChanged = false;
             boolean maxDateChanged = false;
@@ -122,18 +122,68 @@ public abstract class MainFragment extends Fragment implements AsyncTaskComplete
         }
 
         events.clear();
-        if (filtered)
+        if (filtered) {
             filterEvents(e);
-        removeOldEvents(e);
+        }
         events.addAll(e);
         Collections.sort(events);
     }
 
-    void downloadEvents() {
-        if (Common.isOnline(getContext()))
-            new GetMethodAPI(getContext(), this, true).execute(Common.URL + "/events?size=99");
-        else
+    void downloadEvents(final boolean connectionError, final boolean dialogLoading) {
+        if (Common.isMocked()) {
+            List<Event> events = Common.getMockedEvents();
+            String json;
+            try {
+                json = new Gson().toJson(events);
+                SharedPreferences prefs = getActivity().getSharedPreferences("EVENTS", Context.MODE_PRIVATE);
+                prefs.edit().putString("EVENTS_JSON", json).apply();
+
+                updateList(events);
+            } catch (Exception ignored) {
+                CustomDialog.showError(getContext(), getString(R.string.error_message));
+            }
+        } else if (Common.isOnline(getContext())) {
+            if (dialogLoading) {
+                dialog.showLoadingDialog(getString(R.string.loading));
+            }
+
+            api.getEvents().enqueue(new Callback<List<Event>>() {
+                @Override
+                public void onResponse(@NonNull Call<List<Event>> call, @NonNull Response<List<Event>> response) {
+                    if (dialogLoading) {
+                        dialog.hideLoadingDialog();
+                    } else {
+                        onApiResponse();
+                    }
+                    List<Event> events = response.body();
+                    String json;
+
+                    try {
+                        json = new Gson().toJson(events);
+                        SharedPreferences prefs = getActivity().getSharedPreferences("EVENTS", Context.MODE_PRIVATE);
+                        prefs.edit().putString("EVENTS_JSON", json).apply();
+
+                        updateList(events);
+                    } catch (Exception ignored) {
+                        CustomDialog.showError(getContext(), getString(R.string.error_message));
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<List<Event>> call, @NonNull Throwable t) {
+                    if (dialogLoading) {
+                        dialog.hideLoadingDialog();
+                    } else {
+                        onApiResponse();
+                    }
+                    if (connectionError) {
+                        CustomDialog.showError(getContext(), getString(R.string.error_message));
+                    }
+                }
+            });
+        } else if (connectionError) {
             Snackbar.make(parentView, R.string.noInternet, Snackbar.LENGTH_LONG).show();
+        }
     }
 
     void filterDialog() {
@@ -181,7 +231,7 @@ public abstract class MainFragment extends Fragment implements AsyncTaskComplete
         filterDialog.show();
     }
 
-    void filterEvents(ArrayList<Event> events) {
+    void filterEvents(List<Event> events) {
         Iterator<Event> i = events.iterator();
         while (i.hasNext()) {
             Event event = i.next();
@@ -196,10 +246,12 @@ public abstract class MainFragment extends Fragment implements AsyncTaskComplete
     @Override
     public void onResume() {
         super.onResume();
-        if (Common.isOnline(getContext()))
-            new GetMethodAPI(getContext(), this, false).execute(Common.URL + "/events?size=99");
+        downloadEvents(false, true);
     }
 
-    void removeOldEvents(ArrayList<Event> events) {
+    void removeOldEvents(List<Event> events) {
+    }
+
+    void onApiResponse() {
     }
 }

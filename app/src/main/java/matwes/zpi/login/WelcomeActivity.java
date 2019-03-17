@@ -1,9 +1,7 @@
 package matwes.zpi.login;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +11,7 @@ import android.widget.Toast;
 import matwes.zpi.Common;
 import matwes.zpi.MainActivity;
 import matwes.zpi.R;
+import matwes.zpi.utils.CustomDialog;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -65,22 +64,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
     private void checkConnection() {
         if (!Common.isOnline(this)) {
-            showDialog();
+            CustomDialog.showError(this, getString(R.string.error_no_internet));
         }
-    }
-
-    private void showDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle("Connection Required")
-                .setMessage("Make sure your wireless is on and connected")
-                .setCancelable(false)
-                .setPositiveButton("RETRY", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        checkConnection();
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
     }
 }

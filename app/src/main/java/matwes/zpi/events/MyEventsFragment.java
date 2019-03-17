@@ -2,7 +2,6 @@ package matwes.zpi.events;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,12 +12,12 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.Iterator;
+import java.util.List;
+
 import matwes.zpi.Common;
 import matwes.zpi.R;
 import matwes.zpi.domain.Event;
-
-import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Created by Mateusz Wesołowski
@@ -40,7 +39,7 @@ public class MyEventsFragment extends MainFragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        getActivity().setTitle(getString(R.string.my_events));
+        getActivity().setTitle(R.string.my_events);
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
@@ -54,33 +53,26 @@ public class MyEventsFragment extends MainFragment {
         swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (Common.isOnline(getContext()))
-                    downloadEvents();
-                else {
-                    swipe.setRefreshing(false);
-                    Snackbar.make(parentView, "No Internet connection", Snackbar.LENGTH_LONG).show();
-                }
+                downloadEvents(true, false);
             }
         });
         getEvents();
     }
 
     @Override
-    public void onTaskComplete(String result) {
-        super.onTaskComplete(result);
-
+    public void onApiResponse() {
         if (swipe.isRefreshing())
             swipe.setRefreshing(false);
     }
 
     @Override
-    void updateList(ArrayList<Event> e) {
+    void updateList(List<Event> e) {
         myFilterEvents(e);
         super.updateList(e);
         adapter.notifyDataSetChanged();
     }
 
-    private void myFilterEvents(ArrayList<Event> events) {
+    private void myFilterEvents(List<Event> events) {
         Iterator<Event> i = events.iterator();
         while (i.hasNext()) {
             Event event = i.next();

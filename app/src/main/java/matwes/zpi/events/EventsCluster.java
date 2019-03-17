@@ -7,12 +7,12 @@ import com.google.maps.android.clustering.ClusterItem;
  * Created by Mateusz Wesołowski
  */
 
-class MyItem implements ClusterItem {
+class EventsCluster implements ClusterItem {
     private final LatLng position;
     private final long id;
     private final int localId;
 
-    MyItem(LatLng position, long id, int localId) {
+    EventsCluster(LatLng position, long id, int localId) {
         this.position = position;
         this.id = id;
         this.localId = localId;

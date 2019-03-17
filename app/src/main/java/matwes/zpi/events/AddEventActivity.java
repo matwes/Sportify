@@ -1,16 +1,14 @@
 package matwes.zpi.events;
 
 import android.app.DatePickerDialog;
+import android.app.Fragment;
 import android.app.TimePickerDialog;
-import android.content.DialogInterface;
 import android.icu.util.Calendar;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -26,20 +24,25 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
-import matwes.zpi.AsyncTaskCompleteListener;
+
 import matwes.zpi.Common;
 import matwes.zpi.R;
-import matwes.zpi.RequestAPI;
+import matwes.zpi.api.ApiInterface;
+import matwes.zpi.api.RestService;
+import matwes.zpi.utils.CustomDialog;
+import matwes.zpi.utils.LoadingDialog;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-public class AddEventActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, AsyncTaskCompleteListener<String> {
-    private static final String CREATE_EVENT = Common.URL + "/events";
-    String sDate, sTime;
-    String placeId = "";
-    private EditText name, description, members, date;
+public class AddEventActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
     private AutoCompleteTextView autoCompleteTextView;
+    private EditText etName, etDescription, etMembers, etDate;
+    private LoadingDialog dialog;
+    private String sDate, sTime;
+    private String sPlaceId = "";
+
+    private ApiInterface api;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -47,18 +50,21 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_event);
 
+        api = RestService.getApiInstance();
         initGooglePlaceApi();
 
-        name = findViewById(R.id.etEventName);
-        description = findViewById(R.id.etEventDescription);
-        members = findViewById(R.id.etEventMembers);
-        date = findViewById(R.id.etEventDate);
+        dialog = new LoadingDialog(this);
+        etName = findViewById(R.id.etEventName);
+        etDescription = findViewById(R.id.etEventDescription);
+        etMembers = findViewById(R.id.etEventMembers);
+        etDate = findViewById(R.id.etEventDate);
 
         final TimePickerDialog.OnTimeSetListener timePicker = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                String date = etDate.getText().toString();
                 sTime = String.format("%02d:%02d", hourOfDay, minute);
-                date.setText(date.getText().toString() + (" " + hourOfDay + ":" + minute));
+                etDate.setText(String.format("%s %d:%d", date, hourOfDay, minute));
             }
         };
 
@@ -66,19 +72,25 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
         final DatePickerDialog.OnDateSetListener datePicker = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
-                new TimePickerDialog(AddEventActivity.this, timePicker, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
+                int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                int minute = calendar.get(Calendar.MINUTE);
+
+                new TimePickerDialog(AddEventActivity.this, timePicker, hour, minute, true).show();
                 sDate = String.format("%02d-%02d-%02d", year, month + 1, day);
-                date.setText(day + "-" + (month + 1) + "-" + year);
+                etDate.setText(String.format("%d-%d-%d", day, month + 1, year));
             }
         };
 
-
-        date.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        etDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus)
-                    new DatePickerDialog(AddEventActivity.this, datePicker, calendar.get(Calendar.YEAR),
-                            calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+                if (hasFocus) {
+                    int year = calendar.get(Calendar.YEAR);
+                    int month = calendar.get(Calendar.MONTH);
+                    int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                    new DatePickerDialog(AddEventActivity.this, datePicker, year, month, day).show();
+                }
             }
         });
 
@@ -103,7 +115,6 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
         });
     }
 
-
     private void initGooglePlaceApi() {
         new GoogleApiClient.Builder(this)
                 .addApi(Places.GEO_DATA_API)
@@ -111,80 +122,52 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
                 .enableAutoManage(this, this)
                 .build();
 
-        PlaceAutocompleteFragment placeAutocompleteFragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_fragment);
-        placeAutocompleteFragment.setHint("Miejsce");
+        Fragment placeFragment = getFragmentManager().findFragmentById(R.id.place_fragment);
+        PlaceAutocompleteFragment placeAutocompleteFragment = (PlaceAutocompleteFragment) placeFragment;
+        placeAutocompleteFragment.setHint(getString(R.string.place));
         placeAutocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(com.google.android.gms.location.places.Place place) {
-                placeId = place.getId();
+                sPlaceId = place.getId();
             }
 
             @Override
             public void onError(Status status) {
-                Log.i("PLACE_ERROR", "An error occurred: " + status);
+                CustomDialog.showError(AddEventActivity.this, getString(R.string.error_message));
             }
         });
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        new AlertDialog
-                .Builder(this)
-                .setTitle("Error")
-                .setMessage("Problem with connection")
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
-    }
-
-    @Override
-    public void onTaskComplete(String result) {
-        if (result.equals("200"))
-            finish();
-        else
-            showAlert(getString(R.string.required_fields));
+        CustomDialog.showError(AddEventActivity.this, getString(R.string.error_message));
     }
 
     private void createEvent() {
+        dialog.showLoadingDialog(getString(R.string.loading));
+
         long id = Common.getCurrentUserId(this);
+        String date = sDate;
+        String description = etDescription.getText().toString();
+        String maxMembers = etMembers.getText().toString();
+        String name = etName.getText().toString();
+        String googlePlaceId = sPlaceId;
+        int sportId = Common.getSportId(autoCompleteTextView.getText().toString());
+        String time = sTime;
 
-        JSONObject json = new JSONObject();
-        try {
-            json.put("creator_id", id);
-            json.put("date", sDate);
-            json.put("description", description.getText().toString());
-            json.put("maxMembers", members.getText().toString());
-            json.put("name", name.getText().toString());
-            json.put("place_googleId", placeId);
-            json.put("sport_id", Common.getSportId(autoCompleteTextView.getText().toString()));
-            json.put("time", sTime);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Log.i("NEW_EVENT", json.toString());
-        new RequestAPI(this, "POST", json.toString(), this, true).execute(CREATE_EVENT);
+        Call<Void> call = api.createEvent(id, date, description, maxMembers, name, googlePlaceId, sportId, time);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                dialog.hideLoadingDialog();
+                finish();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                dialog.hideLoadingDialog();
+                CustomDialog.showError(AddEventActivity.this, getString(R.string.error_message));
+            }
+        });
     }
-
-    private void showAlert(String message) {
-        new AlertDialog
-                .Builder(this)
-                .setTitle("Error")
-                .setMessage(message)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
-    }
-
 }

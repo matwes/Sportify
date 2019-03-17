@@ -1,15 +1,21 @@
 package matwes.zpi;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AlertDialog;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import matwes.zpi.domain.Event;
+import matwes.zpi.domain.Member;
+import matwes.zpi.domain.Message;
+import matwes.zpi.domain.Place;
+import matwes.zpi.domain.Sport;
 
 public class Common {
     public static final String[] permission = {"email", "public_profile"};
@@ -19,11 +25,11 @@ public class Common {
         return true;
     }
 
-    public static boolean isEmailOk(String email) {
+    public static boolean isEmailWrong(String email) {
         Pattern emailPattern =
                 Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
         Matcher matcher = emailPattern.matcher(email);
-        return matcher.find();
+        return !matcher.find();
     }
 
     private static SharedPreferences getSharedPreferences(Context context) {
@@ -54,22 +60,6 @@ public class Common {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
-    }
-
-    public static void showAlert(Context context, String title, String message, int icon) {
-        new AlertDialog
-                .Builder(context)
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                })
-                .setIcon(icon)
-                .show();
     }
 
     public static int getIcon(String sport) {
@@ -162,4 +152,27 @@ public class Common {
     }
 
 
+    public static List<Event> getMockedEvents() {
+        List<Event> events = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            Sport sport = new Sport(1, "Piłka nożna");
+            Place place = new Place("", "Miejsce imprezy", "Wrocław", "", 51.1078852, 17.0385376);
+            Event event = new Event(
+                    i,
+                    "Event nr " + i,
+                    null,
+                    sport,
+                    i * 7,
+                    "2018-04-0" + i,
+                    place,
+                    "opis dotyczący eventu",
+                    "1" + i + ":2" + i,
+                    "",
+                    new ArrayList<Message>(),
+                    new ArrayList<Member>());
+            events.add(event);
+        }
+
+        return events;
+    }
 }

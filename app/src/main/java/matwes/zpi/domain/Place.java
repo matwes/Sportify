@@ -14,6 +14,15 @@ public class Place {
     private double latitude;
     private double longitude;
 
+    public Place(String googleId, String name, String city, String address, double latitude, double longitude) {
+        this.googleId = googleId;
+        this.name = name;
+        this.city = city;
+        this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
     public String getName() {
         return name;
     }

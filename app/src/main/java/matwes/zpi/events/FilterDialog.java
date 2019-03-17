@@ -11,11 +11,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import matwes.zpi.R;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import matwes.zpi.R;
 
 /**
  * Created by Mateusz Wesołowski
@@ -38,11 +38,11 @@ class FilterDialog extends Dialog {
     void update(String selectedSport, String selectedCity, Date minSelectedDate, Date maxSelectedDate) {
         LinearLayout layout = findViewById(R.id.dialog_filter);
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH);
 
         button = layout.findViewById(R.id.btnFilter);
         filterDate = layout.findViewById(R.id.filterDate);
-        filterDate.setText(sdf.format(minSelectedDate) + " - " + sdf.format(maxSelectedDate));
+        filterDate.setText(String.format("%s - %s", sdf.format(minSelectedDate), sdf.format(maxSelectedDate)));
 
         autoCompleteTextView = findViewById(R.id.autoCompleteTextView);
         autoCompleteTextView.setAdapter(null);
@@ -78,7 +78,7 @@ class FilterDialog extends Dialog {
 
     void setSelectedDates(Date minSelectedDate, Date maxSelectedDate) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH);
-        filterDate.setText(sdf.format(minSelectedDate) + " - " + sdf.format(maxSelectedDate));
+        filterDate.setText(String.format("%s - %s", sdf.format(minSelectedDate), sdf.format(maxSelectedDate)));
     }
 
     String getSelectedCity() {

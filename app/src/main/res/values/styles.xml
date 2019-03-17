@@ -11,6 +11,8 @@
         <item name="buttonStyle">@style/ButtonText</item>
         <item name="android:windowAnimationStyle">@style/ActivityAnimation</item>
         <item name="android:alertDialogTheme">@style/AlertDialogTheme</item>
+        <item name="android:timePickerDialogTheme">@style/AlertDialogTheme</item>
+        <item name="android:datePickerDialogTheme">@style/AlertDialogTheme</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -41,6 +43,16 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
+        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
+    </style>
+
+    <style name="NegativeButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+    <style name="PositiveButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">@color/colorAccent</item>
     </style>
 
 </resources>

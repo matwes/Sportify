@@ -109,6 +109,22 @@ public class Event implements Comparable {
         return null;
     }
 
+    public Event(long id, String name, User creator, Sport sport, int maxMembers, String date,
+                 Place place, String description, String time, String status,
+                 ArrayList<Message> messages, ArrayList<Member> members) {
+        this.id = id;
+        this.name = name;
+        this.creator = creator;
+        this.sport = sport;
+        this.maxMembers = maxMembers;
+        this.date = date;
+        this.place = place;
+        this.description = description;
+        this.time = time;
+        this.status = status;
+        this.messages = messages;
+        this.members = members;
+    }
 
     public Place getPlace() {
         return place;

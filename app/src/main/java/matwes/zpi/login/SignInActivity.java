@@ -1,10 +1,8 @@
 package matwes.zpi.login;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -28,13 +26,15 @@ import matwes.zpi.R;
 import matwes.zpi.api.ApiInterface;
 import matwes.zpi.api.RestService;
 import matwes.zpi.domain.User;
+import matwes.zpi.utils.CustomDialog;
+import matwes.zpi.utils.LoadingDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SignInActivity extends AppCompatActivity {
     private EditText etEmail, etPassword;
-    private View loginForm, progress;
+    private LoadingDialog dialog;
     private CallbackManager callbackManager;
 
     private ApiInterface api;
@@ -46,10 +46,9 @@ public class SignInActivity extends AppCompatActivity {
 
         api = RestService.getApiInstance();
 
+        dialog = new LoadingDialog(this);
         etEmail = findViewById(R.id.etEmailIn);
         etPassword = findViewById(R.id.etPasswordIn);
-        loginForm = findViewById(R.id.loginForm);
-        progress = findViewById(R.id.loginProgress);
 
         TextView tvResetPassword = findViewById(R.id.tvResetPassword);
         tvResetPassword.setOnClickListener(new View.OnClickListener() {
@@ -114,15 +113,15 @@ public class SignInActivity extends AppCompatActivity {
         String email = etEmail.getText().toString();
         String password = etPassword.getText().toString();
 
-        if (!Common.isEmailOk(email)) {
-            etEmail.setError("Invalid email address");
+        if (Common.isEmailWrong(email)) {
+            etEmail.setError(getString(R.string.error_wrong_email));
         } else if (Common.isMocked()) {
             Intent intent = new Intent(SignInActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             Common.setLoginStatus(SignInActivity.this, true);
             startActivity(intent);
         } else {
-            showProgress(true);
+            dialog.showLoadingDialog(getString(R.string.loading));
             handleLogin(api.login(email, password));
         }
     }
@@ -131,37 +130,23 @@ public class SignInActivity extends AppCompatActivity {
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
+
                 Intent intent = new Intent(SignInActivity.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 Common.setLoginStatus(SignInActivity.this, true);
 
-                showProgress(false);
+                dialog.hideLoadingDialog();
 
                 startActivity(intent);
             }
 
             @Override
             public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
-                showProgress(false);
-                new AlertDialog.Builder(SignInActivity.this, R.style.AlertDialogTheme)
-                        .setTitle("Błąd")
-                        .setMessage("Brak połączenia z serwerem.")
-                        .setCancelable(false)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
+                dialog.hideLoadingDialog();
+                CustomDialog.showError(SignInActivity.this, getString(R.string.error_message));
                 LoginManager.getInstance().logOut();
             }
         });
-    }
-
-    private void showProgress(boolean show) {
-        loginForm.setVisibility(show ? View.GONE : View.VISIBLE);
-        progress.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     @Override

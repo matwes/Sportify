@@ -2,7 +2,6 @@ package matwes.zpi.events;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,20 +10,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import matwes.zpi.Common;
-import matwes.zpi.R;
-import matwes.zpi.domain.Event;
-
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
+
+import matwes.zpi.R;
+import matwes.zpi.domain.Event;
 
 /**
  * Created by Mateusz Wesołowski
  */
 
 public class EventsFragment extends MainFragment {
-
     private EventListAdapter adapter;
     private SwipeRefreshLayout swipe;
 
@@ -39,7 +36,7 @@ public class EventsFragment extends MainFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        getActivity().setTitle(getString(R.string.EVENTS));
+        getActivity().setTitle(R.string.EVENTS);
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
@@ -53,33 +50,26 @@ public class EventsFragment extends MainFragment {
         swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (Common.isOnline(getContext()))
-                    downloadEvents();
-                else {
-                    swipe.setRefreshing(false);
-                    Snackbar.make(parentView, "No Internet connection", Snackbar.LENGTH_LONG).show();
-                }
+                downloadEvents(true, false);
             }
         });
         getEvents();
     }
 
     @Override
-    public void onTaskComplete(String result) {
-        super.onTaskComplete(result);
-
+    public void onApiResponse() {
         if (swipe.isRefreshing())
             swipe.setRefreshing(false);
     }
 
     @Override
-    void updateList(ArrayList<Event> e) {
+    void updateList(List<Event> e) {
         super.updateList(e);
         adapter.notifyDataSetChanged();
     }
 
     @Override
-    void removeOldEvents(ArrayList<Event> events) {
+    void removeOldEvents(List<Event> events) {
         Date date = new Date();
         Iterator<Event> i = events.iterator();
         while (i.hasNext()) {

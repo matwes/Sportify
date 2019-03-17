@@ -9,13 +9,6 @@
     android:padding="@dimen/activityPadding"
     tools:context="matwes.zpi.login.SignInActivity">
 
-    <ProgressBar
-        android:id="@+id/loginProgress"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-
     <ScrollView
         android:id="@+id/loginForm"
         android:layout_width="match_parent"

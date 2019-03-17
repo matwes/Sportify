@@ -1,10 +1,8 @@
 package matwes.zpi.login;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +27,8 @@ import matwes.zpi.R;
 import matwes.zpi.api.ApiInterface;
 import matwes.zpi.api.RestService;
 import matwes.zpi.domain.User;
+import matwes.zpi.utils.CustomDialog;
+import matwes.zpi.utils.LoadingDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,6 +36,7 @@ import retrofit2.Response;
 public class SignUpActivity extends AppCompatActivity {
     private EditText etFirstName, etLastName, etEmail, etPassword;
     private CallbackManager callbackManager;
+    private LoadingDialog dialog;
 
     private ApiInterface api;
 
@@ -46,6 +47,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         api = RestService.getApiInstance();
 
+        dialog = new LoadingDialog(this);
         etFirstName = findViewById(R.id.etFirstName);
         etLastName = findViewById(R.id.etLastName);
         etEmail = findViewById(R.id.etEmail);
@@ -71,10 +73,10 @@ public class SignUpActivity extends AppCompatActivity {
             public void onSuccess(LoginResult loginResult) {
                 GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
                         new GraphRequest.GraphJSONObjectCallback() {
-                    @Override
-                    public void onCompleted(JSONObject object, GraphResponse response) {
-                    }
-                });
+                            @Override
+                            public void onCompleted(JSONObject object, GraphResponse response) {
+                            }
+                        });
                 Bundle parameters = new Bundle();
                 parameters.putString("fields", "id,name,email,gender");
                 request.setParameters(parameters);
@@ -99,9 +101,10 @@ public class SignUpActivity extends AppCompatActivity {
         String firstName = etFirstName.getText().toString();
         String lastName = etLastName.getText().toString();
 
-        if (!Common.isEmailOk(email)) {
-            etEmail.setError("Wrong email");
+        if (Common.isEmailWrong(email)) {
+            etEmail.setError(getString(R.string.error_wrong_email));
         } else {
+            dialog.showLoadingDialog(getString(R.string.loading));
             Call<User> register = api.register(email, password, firstName, lastName);
             handleRegister(register, false);
         }
@@ -113,6 +116,7 @@ public class SignUpActivity extends AppCompatActivity {
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
+                dialog.hideLoadingDialog();
                 Class className;
                 if (facebook) {
                     className = MainActivity.class;
@@ -133,19 +137,7 @@ public class SignUpActivity extends AppCompatActivity {
                         (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 input.setLayoutParams(lp);
 
-                new AlertDialog.Builder(SignUpActivity.this)
-                        .setTitle("Error")
-                        .setMessage("Something went wrong :(")
-                        .setCancelable(false)
-                        .setView(input)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
+                CustomDialog.showError(SignUpActivity.this, getString(R.string.error_message));
 
                 LoginManager.getInstance().logOut();
             }

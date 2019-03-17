@@ -11,13 +11,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Date;
+import java.util.List;
+
 import matwes.zpi.Common;
 import matwes.zpi.R;
 import matwes.zpi.domain.Event;
 import matwes.zpi.eventDetails.EventDetailsActivity;
-
-import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by Mateusz Wesołowski
@@ -25,9 +25,9 @@ import java.util.Date;
 
 class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Holder> {
     private Context context;
-    private ArrayList<Event> events;
+    private List<Event> events;
 
-    EventListAdapter(Context context, ArrayList<Event> events) {
+    EventListAdapter(Context context, List<Event> events) {
         this.context = context;
         this.events = events;
     }

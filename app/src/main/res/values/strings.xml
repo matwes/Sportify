@@ -91,6 +91,7 @@
     <string name="refresh">Refresh</string>
     <string name="noInternet">No Internet connection</string>
     <string name="downloading">Downloading...</string>
+    <string name="loading">Loading...</string>
     <string name="remove_filter">Remove filter</string>
     <string name="members">MEMBERS</string>
     <string name="join">JOIN</string>
@@ -122,5 +123,13 @@
     <string name="sport">Sport</string>
     <string name="data">Data</string>
     <string name="city">City</string>
+    <string name="error">Error</string>
+    <string name="error_message">An error occurred while processing your request</string>
+    <string name="error_wrong_email">Invalid email address</string>
+    <string name="error_no_internet">No Internet connection</string>
+    <string name="info">Info</string>
+    <string name="info_password_reset">Your password has been reset successfully!</string>
+    <string name="info_profile_updated">Profile has been updated successfully!</string>
+    <string name="place">place</string>
 
 </resources>

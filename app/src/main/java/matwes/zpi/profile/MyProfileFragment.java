@@ -21,15 +21,17 @@ import android.widget.EditText;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import matwes.zpi.AsyncTaskCompleteListener;
 import matwes.zpi.Common;
 import matwes.zpi.GetMethodAPI;
 import matwes.zpi.R;
 import matwes.zpi.RequestAPI;
 import matwes.zpi.domain.User;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import matwes.zpi.utils.CustomDialog;
 
 /**
  * Created by Mateusz Wesołowski
@@ -151,9 +153,10 @@ public class MyProfileFragment extends Fragment {
             @Override
             public void onTaskComplete(String result) {
                 if (result.equals("200")) {
-                    Common.showAlert(getContext(), "Info", "Profile has been updated successfully!", android.R.drawable.ic_dialog_info);
-                } else
-                    Common.showAlert(getContext(), "Error", getString(R.string.required_fields) + result, android.R.drawable.ic_dialog_alert);
+                    CustomDialog.showInfo(getContext(), getString(R.string.error_message));
+                } else {
+                    CustomDialog.showError(getContext(), getString(R.string.error_message));
+                }
             }
         }, true).execute(UPDATE_PROFILE + userId);
     }

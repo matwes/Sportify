@@ -27,15 +27,17 @@ import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import matwes.zpi.AsyncTaskCompleteListener;
 import matwes.zpi.Common;
 import matwes.zpi.GetMethodAPI;
 import matwes.zpi.R;
 import matwes.zpi.RequestAPI;
 import matwes.zpi.domain.Event;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import matwes.zpi.utils.CustomDialog;
 
 public class UpdateEventActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
     private static final String UPDATE_EVENT = Common.URL + "/events/";
@@ -173,7 +175,7 @@ public class UpdateEventActivity extends AppCompatActivity implements GoogleApiC
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Common.showAlert(this, "Error", "Problem with connection", android.R.drawable.ic_dialog_alert);
+        CustomDialog.showError(this, getString(R.string.error_message));
     }
 
     private void updateEvent() {
@@ -192,10 +194,11 @@ public class UpdateEventActivity extends AppCompatActivity implements GoogleApiC
         new RequestAPI(this, "PATCH", json.toString(), new AsyncTaskCompleteListener<String>() {
             @Override
             public void onTaskComplete(String result) {
-                if (result.equals("200"))
+                if (result.equals("200")) {
                     finish();
-                else
-                    Common.showAlert(getApplicationContext(), "Error", getString(R.string.required_fields), android.R.drawable.ic_dialog_alert);
+                } else {
+                    CustomDialog.showError(getApplicationContext(), getString(R.string.error_message));
+                }
             }
         }, true).execute(UPDATE_EVENT + eventId);
     }
