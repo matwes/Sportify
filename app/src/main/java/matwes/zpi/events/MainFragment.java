@@ -142,6 +142,8 @@ public abstract class MainFragment extends Fragment {
             } catch (Exception ignored) {
                 CustomDialog.showError(getContext(), getString(R.string.error_message));
             }
+            onApiResponse();
+
         } else if (Common.isOnline(getContext())) {
             if (dialogLoading) {
                 dialog.showLoadingDialog(getString(R.string.loading));
