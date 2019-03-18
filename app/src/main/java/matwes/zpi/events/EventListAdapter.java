@@ -3,6 +3,7 @@ package matwes.zpi.events;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.Date;
 import java.util.List;
@@ -45,6 +48,9 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Holder> {
         holder.members.setText(event.getMembersStatus());
         holder.place.setText(event.getPlace() != null ? event.getPlace().getName() : "");
         holder.icon.setImageResource(Common.getIcon(event.getSportName()));
+        if (event.getEventImage() == null || event.getEventImage().equals("")) {
+            Picasso.get().load(Uri.parse("https://www.gstatic.com/webp/gallery/5.jpg")).placeholder(Common.getEventPlaceholder()).into(holder.eventImage);
+        }   // todo zamienic link na event.getEventImage
         if (event.getDateWithTime() == null || event.getDateWithTime().before(new Date())) {
             holder.changeCardColor();
         }
@@ -69,6 +75,8 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Holder> {
         TextView title, date, members = itemView.findViewById(R.id.tvEventMembers), place;
         ImageView icon;
         CardView eventCard;
+        ImageView eventImage;
+        View eventInfoView;
 
         Holder(View itemView) {
             super(itemView);
@@ -77,10 +85,12 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Holder> {
             place = itemView.findViewById(R.id.tvEventPlace);
             icon = itemView.findViewById(R.id.ivEventIcon);
             eventCard = itemView.findViewById(R.id.eventCard);
+            eventImage = itemView.findViewById(R.id.eventImage);
+            eventInfoView = itemView.findViewById(R.id.eventInfoView);
         }
 
         void changeCardColor() {
-            eventCard.setBackgroundColor(Color.parseColor("#f44336"));
+            //eventInfoView.setBackgroundColor(Color.parseColor("#B30b5e9d"));
         }
     }
 }

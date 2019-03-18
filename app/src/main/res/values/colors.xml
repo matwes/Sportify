@@ -9,4 +9,6 @@
     <color name="background">#ffffff</color>
     <color name="white">#ffffff</color>
     <color name="textColor">#0b5e9d</color>
+    <color name="colorPrimary70Percent">#B30b5e9d</color>
+
 </resources>

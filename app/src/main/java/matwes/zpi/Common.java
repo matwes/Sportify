@@ -93,6 +93,10 @@ public class Common {
         }
     }
 
+    public static int getEventPlaceholder() {
+        return R.drawable.event_placeholder;
+    }
+
     public static int getSportId(String sport) {
         int result;
         switch (sport) {

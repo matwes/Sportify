@@ -28,9 +28,11 @@ public class Event implements Comparable {
     private String description;
     private String time;
     private String status;
+    private String eventImage;
     private ArrayList<Message> messages;
     private ArrayList<Member> members;
 
+    public String getEventImage() { return eventImage; }
 
     public Event(String name) {
         this.name = name;
