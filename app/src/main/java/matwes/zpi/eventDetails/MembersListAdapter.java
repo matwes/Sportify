@@ -2,7 +2,6 @@ package matwes.zpi.eventDetails;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,13 +10,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import matwes.zpi.AsyncTaskCompleteListener;
 import matwes.zpi.Common;
 import matwes.zpi.R;
-import matwes.zpi.RequestAPI;
 import matwes.zpi.domain.Member;
-
-import java.util.ArrayList;
 
 
 /**
@@ -33,12 +31,10 @@ class MembersListAdapter extends RecyclerView.Adapter<MembersListAdapter.Holder>
     private boolean isOwner;
     private AsyncTaskCompleteListener<String> listener;
 
-    MembersListAdapter(Context context, ArrayList<Member> members, boolean isOwner,
-                       AsyncTaskCompleteListener<String> listener) {
+    MembersListAdapter(Context context, ArrayList<Member> members, boolean isOwner) {
         this.context = context;
         this.members = members;
         this.isOwner = isOwner;
-        this.listener = listener;
     }
 
     @Override
@@ -52,39 +48,41 @@ class MembersListAdapter extends RecyclerView.Adapter<MembersListAdapter.Holder>
 
         if (members != null) {
             final Member member = members.get(position);
-            if (member != null) {
-                if (member.getStatus().equals("PENDING")) {
-                    if (isOwner) {
-                        holder.accept.setVisibility(View.VISIBLE);
-                        holder.accept.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                System.out.println(ACCEPTED);
-                                new RequestAPI(context, "PATCH", ACCEPTED, listener, true).execute(URL + member.getId());
-                                holder.accept.setVisibility(View.GONE);
-                                holder.reject.setVisibility(View.GONE);
-                            }
-                        });
-                        holder.reject.setVisibility(View.VISIBLE);
-                        holder.reject.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                System.out.println(REJECTED);
-                                new RequestAPI(context, "PATCH", REJECTED, listener, true).execute(URL + member.getId());
-                                holder.accept.setVisibility(View.GONE);
-                                holder.reject.setVisibility(View.GONE);
-                                holder.member.setTextColor(Color.RED);
-                            }
-                        });
-                    } else
-                        holder.pending.setVisibility(View.VISIBLE);
-                } else if (!member.getStatus().equals("ACCEPTED"))
-                    holder.member.setTextColor(Color.RED);
-                try {
-                    holder.member.setText(member.getUser().getName());
-                } catch (Exception ignored) {
-                }
-            }
+//            if (member != null) {
+//                if (member.getStatus().equals("PENDING")) {
+//                    if (isOwner) {
+//                        holder.accept.setVisibility(View.VISIBLE);
+//                        holder.accept.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                System.out.println(ACCEPTED);
+//                                new RequestAPI(context, "PATCH", ACCEPTED, listener, true).execute(URL + member.getId());
+//                                holder.accept.setVisibility(View.GONE);
+//                                holder.reject.setVisibility(View.GONE);
+//                            }
+//                        });
+//                        holder.reject.setVisibility(View.VISIBLE);
+//                        holder.reject.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                System.out.println(REJECTED);
+//                                new RequestAPI(context, "PATCH", REJECTED, listener, true).execute(URL + member.getId());
+//                                holder.accept.setVisibility(View.GONE);
+//                                holder.reject.setVisibility(View.GONE);
+//                                holder.member.setTextColor(Color.RED);
+//                            }
+//                        });
+//                    } else {
+//                        holder.pending.setVisibility(View.VISIBLE);
+//                    }
+//                } else if (!member.getStatus().equals("ACCEPTED")) {
+//                    holder.member.setTextColor(Color.RED);
+//                }
+//                try {
+//                    holder.member.setText(member.getUser().getName());
+//                } catch (Exception ignored) {
+//                }
+//            }
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

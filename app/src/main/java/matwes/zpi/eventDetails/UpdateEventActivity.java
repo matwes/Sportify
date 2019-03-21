@@ -25,29 +25,30 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import matwes.zpi.AsyncTaskCompleteListener;
 import matwes.zpi.Common;
-import matwes.zpi.GetMethodAPI;
 import matwes.zpi.R;
-import matwes.zpi.RequestAPI;
+import matwes.zpi.api.ApiInterface;
+import matwes.zpi.api.RestService;
 import matwes.zpi.domain.Event;
 import matwes.zpi.utils.CustomDialog;
+import matwes.zpi.utils.LoadingDialog;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class UpdateEventActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
-    private static final String UPDATE_EVENT = Common.URL + "/events/";
-    private long eventId;
-    private AutoCompleteTextView autoCompleteTextView;
     private PlaceAutocompleteFragment placeAutocompleteFragment;
     private EditText name, description, members, date;
+    private AutoCompleteTextView autoCompleteTextView;
+    private ArrayAdapter<CharSequence> adapter;
+    private LoadingDialog dialog;
+
+    private long eventId;
     private String placeId = "";
     private String sDate, sTime;
-    private ArrayAdapter<CharSequence> adapter;
+
+    private ApiInterface api;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -55,11 +56,14 @@ public class UpdateEventActivity extends AppCompatActivity implements GoogleApiC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_event);
 
+        api = RestService.getApiInstance();
+
         initGooglePlaceApi();
 
         Intent intent = getIntent();
         eventId = intent.getLongExtra("eventId", -1);
 
+        dialog = new LoadingDialog(this);
         name = findViewById(R.id.etEventName);
         description = findViewById(R.id.etEventDescription);
         members = findViewById(R.id.etEventMembers);
@@ -71,7 +75,7 @@ public class UpdateEventActivity extends AppCompatActivity implements GoogleApiC
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 sTime = String.format("%02d:%02d", hourOfDay, minute);
-                date.setText(date.getText().toString() + (" " + hourOfDay + ":" + minute));
+                date.setText(String.format("%s %d:%d", date.getText().toString(), hourOfDay, minute));
             }
         };
 
@@ -79,19 +83,25 @@ public class UpdateEventActivity extends AppCompatActivity implements GoogleApiC
         final DatePickerDialog.OnDateSetListener datePicker = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
-                new TimePickerDialog(UpdateEventActivity.this, timePicker, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
+                int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                int minute = calendar.get(Calendar.MINUTE);
+
+                new TimePickerDialog(UpdateEventActivity.this, timePicker, hour, minute, true).show();
                 sDate = String.format("%02d-%02d-%02d", year, month + 1, day);
-                date.setText(day + "-" + (month + 1) + "-" + year);
+                date.setText(String.format("%d-%d-%d", day, month + 1, year));
             }
         };
-
 
         date.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus)
-                    new DatePickerDialog(UpdateEventActivity.this, datePicker, calendar.get(Calendar.YEAR),
-                            calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+                if (hasFocus) {
+                    int year = calendar.get(Calendar.YEAR);
+                    int month = calendar.get(Calendar.MONTH);
+                    int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                    new DatePickerDialog(UpdateEventActivity.this, datePicker, year, month, day).show();
+                }
             }
         });
 
@@ -121,22 +131,33 @@ public class UpdateEventActivity extends AppCompatActivity implements GoogleApiC
         deleteEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new RequestAPI(v.getContext(), "DELETE", "", new AsyncTaskCompleteListener<String>() {
+                dialog.showLoadingDialog(getString(R.string.loading));
+                Call<Void> call = api.deleteEvent(eventId);
+                call.enqueue(new Callback<Void>() {
                     @Override
-                    public void onTaskComplete(String result) {
+                    public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                        dialog.hideLoadingDialog();
                         finish();
                     }
-                }, true).execute(UPDATE_EVENT + eventId);
+
+                    @Override
+                    public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                        dialog.hideLoadingDialog();
+                        CustomDialog.showError(UpdateEventActivity.this, getString(R.string.error_message));
+                    }
+                });
             }
         });
     }
 
     private void getEvent() {
-        new GetMethodAPI(this, new AsyncTaskCompleteListener<String>() {
+        dialog.showLoadingDialog(getString(R.string.loading));
+        Call<Event> eventCall = api.getEvent(eventId);
+        eventCall.enqueue(new Callback<Event>() {
             @Override
-            public void onTaskComplete(String result) {
-                Gson gson = new GsonBuilder().create();
-                Event event = gson.fromJson(result, Event.class);
+            public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
+                Event event = response.body();
+
                 name.setText(event.getName());
                 description.setText(event.getDescription());
                 members.setText(event.getMaxMembers() + "");
@@ -147,8 +168,16 @@ public class UpdateEventActivity extends AppCompatActivity implements GoogleApiC
                 placeId = event.getPlace().getGoogleId();
                 sTime = event.getTime();
                 sDate = event.getDateString();
+
+                dialog.hideLoadingDialog();
             }
-        }, true).execute(String.format("%s/events/%d", Common.URL, eventId));
+
+            @Override
+            public void onFailure(@NonNull Call<Event> call, @NonNull Throwable t) {
+                dialog.hideLoadingDialog();
+                CustomDialog.showError(UpdateEventActivity.this, getString(R.string.error_message));
+            }
+        });
     }
 
     private void initGooglePlaceApi() {
@@ -168,7 +197,7 @@ public class UpdateEventActivity extends AppCompatActivity implements GoogleApiC
 
             @Override
             public void onError(Status status) {
-                Log.i("PLACE_ERROR", "An error occurred: " + status);
+                Log.i("PLACE_ERROR", getString(R.string.error_message) + "\n" + status);
             }
         });
     }
@@ -179,27 +208,23 @@ public class UpdateEventActivity extends AppCompatActivity implements GoogleApiC
     }
 
     private void updateEvent() {
-        JSONObject json = new JSONObject();
-        try {
-            json.put("date", sDate);
-            json.put("description", description.getText().toString());
-            json.put("maxMembers", members.getText().toString());
-            json.put("name", name.getText().toString());
-            json.put("place_googleId", placeId);
-            json.put("sport_id", Common.getSportId(autoCompleteTextView.getText().toString()));
-            json.put("time", sTime);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        new RequestAPI(this, "PATCH", json.toString(), new AsyncTaskCompleteListener<String>() {
+        dialog.showLoadingDialog(getString(R.string.loading));
+        Call<Void> call = api.updateEvent(eventId, sDate, description.getText().toString(),
+                members.getText().toString(), name.getText().toString(), placeId,
+                Common.getSportId(autoCompleteTextView.getText().toString()), sTime);
+
+        call.enqueue(new Callback<Void>() {
             @Override
-            public void onTaskComplete(String result) {
-                if (result.equals("200")) {
-                    finish();
-                } else {
-                    CustomDialog.showError(getApplicationContext(), getString(R.string.error_message));
-                }
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                dialog.hideLoadingDialog();
+                finish();
             }
-        }, true).execute(UPDATE_EVENT + eventId);
+
+            @Override
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                dialog.hideLoadingDialog();
+                CustomDialog.showError(UpdateEventActivity.this, getString(R.string.error_message));
+            }
+        });
     }
 }

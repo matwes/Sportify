@@ -3,12 +3,12 @@ package matwes.zpi.eventDetails;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,25 +17,32 @@ import android.view.ViewGroup;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import matwes.zpi.AsyncTaskCompleteListener;
-import matwes.zpi.Common;
-import matwes.zpi.GetMethodAPI;
-import matwes.zpi.R;
-import matwes.zpi.domain.Event;
-import matwes.zpi.domain.Member;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class MembersFragment extends Fragment implements AsyncTaskCompleteListener<String> {
-    private Event event;
+import matwes.zpi.Common;
+import matwes.zpi.R;
+import matwes.zpi.api.ApiInterface;
+import matwes.zpi.api.RestService;
+import matwes.zpi.domain.Event;
+import matwes.zpi.domain.Member;
+import matwes.zpi.utils.CustomDialog;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class MembersFragment extends Fragment {
     private MembersListAdapter adapter;
-    private ArrayList<Member> members;
     private SwipeRefreshLayout swipe;
 
+    private Event event;
+    private ArrayList<Member> members;
+
+    private ApiInterface api;
 
     public MembersFragment() {
+        api = RestService.getApiInstance();
     }
 
     public static MembersFragment newInstance(String event) {
@@ -46,7 +53,6 @@ public class MembersFragment extends Fragment implements AsyncTaskCompleteListen
         fragment.setArguments(args);
         return fragment;
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,8 +73,9 @@ public class MembersFragment extends Fragment implements AsyncTaskCompleteListen
 
         if (Common.isOnline(getContext())) {
             updateMembers();
-        } else
+        } else {
             members = event.getMembers();
+        }
 
         boolean isOwner = event.getCreatorId() == Common.getCurrentUserId(getContext());
 
@@ -76,7 +83,7 @@ public class MembersFragment extends Fragment implements AsyncTaskCompleteListen
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        adapter = new MembersListAdapter(getContext(), members, isOwner, this);
+        adapter = new MembersListAdapter(getContext(), members, isOwner);
         recyclerView.setAdapter(adapter);
 
         swipe = view.findViewById(R.id.swipeEvents);
@@ -90,28 +97,39 @@ public class MembersFragment extends Fragment implements AsyncTaskCompleteListen
         });
     }
 
-    @Override
-    public void onTaskComplete(String result) {
-        String json;
-        try {
-            json = new JSONObject(result).getJSONArray("content").toString();
-            members.clear();
-            members.addAll(Member.jsonMembersToList(json));
-            adapter.notifyDataSetChanged();
-
-            if (swipe.isRefreshing())
-                swipe.setRefreshing(false);
-        } catch (Exception e) {
-            Log.e("ERROR", e.getMessage());
+    boolean updateMembers() {
+        if (Common.isOnline(getContext())) {
+            handleApiResponse(api.getMemebers(event.getId()));
+            return true;
+        } else {
+            Snackbar.make(getView(), R.string.noInternet, Snackbar.LENGTH_LONG).show();
+            return false;
         }
     }
 
-    boolean updateMembers() {
-        if (Common.isOnline(getContext())) {
-            new GetMethodAPI(getContext(), this, false).execute(String.format("%s/events/%d/members", Common.URL, event.getId()));
-            return true;
-        }
-        return false;
+    private void handleApiResponse(Call<List<Member>> call) {
+        call.enqueue(new Callback<List<Member>>() {
+            @Override
+            public void onResponse(Call<List<Member>> call, Response<List<Member>> response) {
+                List<Member> members = response.body();
+
+                members.clear();
+                members.addAll(members);
+                adapter.notifyDataSetChanged();
+
+                if (swipe.isRefreshing()) {
+                    swipe.setRefreshing(false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Member>> call, Throwable t) {
+                if (swipe.isRefreshing()) {
+                    swipe.setRefreshing(false);
+                }
+                CustomDialog.showError(getContext(), getString(R.string.error_message));
+            }
+        });
     }
 
     @Override

@@ -195,8 +195,9 @@ public abstract class MainFragment extends Fragment {
 
         if (filtered) {
             filterDialog.update(selectedSport, selectedCity, minDateSelected, maxDateSelected);
-        } else
+        } else {
             filterDialog.update(selectedSport, selectedCity, minDate, maxDate);
+        }
 
         filterDialog.button.setOnClickListener(new View.OnClickListener() {
             @Override

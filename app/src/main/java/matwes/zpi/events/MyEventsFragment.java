@@ -61,8 +61,9 @@ public class MyEventsFragment extends MainFragment {
 
     @Override
     public void onApiResponse() {
-        if (swipe.isRefreshing())
+        if (swipe.isRefreshing()) {
             swipe.setRefreshing(false);
+        }
     }
 
     @Override

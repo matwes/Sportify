@@ -3,17 +3,25 @@ package matwes.zpi.api;
 import java.util.List;
 
 import matwes.zpi.domain.Event;
+import matwes.zpi.domain.Member;
 import matwes.zpi.domain.User;
 import retrofit2.Call;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 /**
  * Created by Mateusz Wesołowski
  */
 public interface ApiInterface {
+
+    /*******************************
+     ****** LOGIN AND REGISTER ******
+     *********************************/
+
     @POST("/login")
     Call<User> login(
             @Field("email") String email,
@@ -39,6 +47,10 @@ public interface ApiInterface {
             @Field("firstName") String firstName,
             @Field("lastName") String lastName);
 
+    /*******************
+     ****** EVENTS ******
+     *********************/
+
     @FormUrlEncoded
     @POST("/events")
     Call<Void> createEvent(
@@ -51,6 +63,48 @@ public interface ApiInterface {
             @Field("sport_id") int sportId,
             @Field("time") String time);
 
+    @FormUrlEncoded
+    @POST("/event/{eventId}")
+    Call<Void> updateEvent(
+            @Path("eventId") long eventId,
+            @Field("date") String date,
+            @Field("description") String description,
+            @Field("maxMembers") String maxMembers,
+            @Field("name") String name,
+            @Field("place_googleId") String googlePlaceId,
+            @Field("sport_id") int sportId,
+            @Field("time") String time);
+
+    @GET("/event/{eventId}")
+    Call<Event> getEvent(
+            @Path("eventId") long eventId
+    );
+
     @GET("/events?size=99")
     Call<List<Event>> getEvents();
+
+    @POST("/event/interested")
+    Call<Void> interested(
+            @Field("eventId") long eventId
+    );
+
+    @POST("/event/cancelInterested")
+    Call<Void> cancelInterested(
+            @Field("eventId") long eventId
+    );
+
+    @POST("/event/notInterested")
+    Call<Void> notInterested(
+            @Field("eventId") long eventId
+    );
+
+    @GET("/event/{eventId}/members")
+    Call<List<Member>> getMemebers(
+            @Path("eventId") long eventId
+    );
+
+    @DELETE("/event/{eventId}")
+    Call<Void> deleteEvent(
+            @Path("eventId") long eventId
+    );
 }

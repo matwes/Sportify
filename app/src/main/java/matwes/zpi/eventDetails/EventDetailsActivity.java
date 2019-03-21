@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -26,35 +27,41 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import matwes.zpi.AsyncTaskCompleteListener;
+
+import java.util.ArrayList;
+
 import matwes.zpi.Common;
 import matwes.zpi.R;
-import matwes.zpi.RequestAPI;
+import matwes.zpi.api.ApiInterface;
+import matwes.zpi.api.RestService;
 import matwes.zpi.domain.Event;
 import matwes.zpi.domain.Member;
 import matwes.zpi.domain.Place;
 import matwes.zpi.messages.MessageActivity;
+import matwes.zpi.utils.CustomDialog;
+import matwes.zpi.utils.LoadingDialog;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.util.ArrayList;
-
-
-public class EventDetailsActivity extends AppCompatActivity
-        implements AsyncTaskCompleteListener<String> {
-    private static final String JOIN_URL = Common.URL + "/events/";
-    private static final String URL = Common.URL + "/members/";
-    private Event event;
+public class EventDetailsActivity extends AppCompatActivity {
     private ImageView location, members, messages;
     private Button join;
+    private LoadingDialog dialog;
+
+    private Event event;
     private long userId;
     private long memberId = -1;
+
+    private ApiInterface api;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_details);
+
+        api = RestService.getApiInstance();
 
         Intent intent = getIntent();
         final long eventId = intent.getLongExtra("eventId", -1);
@@ -62,6 +69,7 @@ public class EventDetailsActivity extends AppCompatActivity
 
         event = getEvent(eventId);
 
+        dialog = new LoadingDialog(this);
         TextView eName = findViewById(R.id.eventName);
         TextView eSport = findViewById(R.id.eventSport);
         TextView eTime = findViewById(R.id.eventTime);
@@ -116,17 +124,11 @@ public class EventDetailsActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
                         if (Common.isOnline(getApplicationContext())) {
-                            System.out.println(jsonToLeave());
-                            new RequestAPI(v.getContext(), "PATCH", jsonToLeave(), new AsyncTaskCompleteListener<String>() {
-                                @Override
-                                public void onTaskComplete(String result) {
-                                    System.out.println(result);
-                                    if (result.equals("200"))
-                                        join.setText("JOIN");
-                                }
-                            }, true).execute(URL + memberId);
-                        } else
-                            Snackbar.make(findViewById(R.id.eventDetailView), "No Internet connection", Snackbar.LENGTH_LONG).show();
+                            dialog.showLoadingDialog(getString(R.string.loading));
+                            handleApiResponse(api.cancelInterested(eventId));
+                        } else {
+                            Snackbar.make(findViewById(R.id.eventDetailView), R.string.noInternet, Snackbar.LENGTH_LONG).show();
+                        }
                     }
                 });
             } else {
@@ -134,17 +136,20 @@ public class EventDetailsActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
                         if (Common.isOnline(getApplicationContext())) {
-                            new RequestAPI(v.getContext(), "POST", jsonRequest(), EventDetailsActivity.this, false).execute(JOIN_URL + eventId + "/members");
-                        } else
-                            Snackbar.make(findViewById(R.id.eventDetailView), "No Internet connection", Snackbar.LENGTH_LONG).show();
+                            dialog.showLoadingDialog(getString(R.string.loading));
+                            handleApiResponse(api.interested(eventId));
+                        } else {
+                            Snackbar.make(findViewById(R.id.eventDetailView), R.string.noInternet, Snackbar.LENGTH_LONG).show();
+                        }
                     }
                 });
             }
         }
 
         eName.setText(event.getName());
-        if (event.getSportName() != null)
+        if (event.getSportName() != null) {
             eSport.setText(event.getSportName());
+        }
         eTime.setText(event.getDateWithTimeString());
         eDescription.setText(event.getDescription());
         eMembers.setText(event.getMembersStatus());
@@ -155,8 +160,9 @@ public class EventDetailsActivity extends AppCompatActivity
         SharedPreferences prefs = getSharedPreferences("EVENTS", Context.MODE_PRIVATE);
         ArrayList<Event> events = Event.jsonEventsToList(prefs.getString("EVENTS_JSON", "[]"));
         for (Event e : events) {
-            if (e.getId() == id)
+            if (e.getId() == id) {
                 return e;
+            }
         }
         return null;
     }
@@ -204,27 +210,25 @@ public class EventDetailsActivity extends AppCompatActivity
         iv.setSelected(true);
     }
 
-    @Override
-    public void onTaskComplete(String result) {
-        if (result.equals("200")) {
-            join.setEnabled(false);
-            join.setText("ZOSTAŁEŚ ZAAKCEPTOWANY");
-            if (members.isSelected()) {
-                MembersFragment fragment = (MembersFragment) getSupportFragmentManager().findFragmentById(R.id.frame);
-                fragment.updateMembers();
+    private void handleApiResponse(Call<Void> call) {
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                join.setEnabled(false);
+                join.setText("ZOSTAŁEŚ ZAAKCEPTOWANY");
+                if (members.isSelected()) {
+                    MembersFragment fragment = (MembersFragment) getSupportFragmentManager().findFragmentById(R.id.frame);
+                    fragment.updateMembers();
+                }
+                dialog.hideLoadingDialog();
             }
-        }
-    }
 
-    private String jsonRequest() {
-        JSONObject json = new JSONObject();
-        try {
-            json.put("status", "PENDING");
-            json.put("user_id", userId);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return json.toString();
+            @Override
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                dialog.hideLoadingDialog();
+                CustomDialog.showError(EventDetailsActivity.this, getString(R.string.error_message));
+            }
+        });
     }
 
     private boolean isMember() {
@@ -236,10 +240,4 @@ public class EventDetailsActivity extends AppCompatActivity
         }
         return false;
     }
-
-    private String jsonToLeave() {
-        return "{\"status\": \"CANCELED\", \"user_id\":" + userId + "}";
-    }
 }
-
-
