@@ -2,9 +2,7 @@ package matwes.zpi.events;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,7 +16,7 @@ import com.squareup.picasso.Picasso;
 import java.util.Date;
 import java.util.List;
 
-//import butterknife.OnClick;
+import butterknife.OnClick;
 import matwes.zpi.Common;
 import matwes.zpi.R;
 import matwes.zpi.domain.Event;
@@ -32,16 +30,16 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Holder> {
     private Context context;
     private List<Event> events;
     EventFragmentType type;
-    //EventItemListener listener;
+    EventItemListener listener;
 
-//    public interface EventItemListener {
-//        void refreshView();
-//    }
+    public interface EventItemListener {
+        void refreshView();
+    }
 
-    EventListAdapter(Context context, List<Event> events) { //, EventItemListener listener
+    EventListAdapter(Context context, List<Event> events, EventItemListener listener) {
         this.context = context;
         this.events = events;
-       // this.listener = listener;
+        this.listener = listener;
     }
 
     @Override
@@ -68,6 +66,7 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Holder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                System.out.println("open detail");
                 Intent intent = new Intent(context, EventDetailsActivity.class);
                 intent.putExtra("eventId", event.getId());
                 context.startActivity(intent);
@@ -104,24 +103,28 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Holder> {
             eventImage = itemView.findViewById(R.id.eventImage);
             eventInfoView = itemView.findViewById(R.id.eventInfoView);
             blockedIcon = itemView.findViewById(R.id.blocked_icon);
+            blockedIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    switch (type) {
+                        case blocked:
+                            // post to block if success than in callback do this
+                            System.out.println("set as Unblock");
+                            listener.refreshView();
+                            break;
+                        case unblocked:
+                            // post to block if success than in callback do this
+                            System.out.println("set as Block");
+                            listener.refreshView();
+                            break;
+                    }
+                }
+            });
         }
 
         void changeCardColor() {
             //eventInfoView.setBackgroundColor(Color.parseColor("#B30b5e9d"));
         }
 
-//        @OnClick(R.id.blocked_icon)
-//        void changeBlockState() {
-//            switch (type) {
-//                case blocked:
-//                    System.out.println("set as Unblock");
-//                  //  listener.refreshView();
-//                    break;
-//                case unblocked:
-//                    System.out.println("set as Block");
-//                  //  listener.refreshView();
-//                    break;
-//            }
-//        }
     }
 }

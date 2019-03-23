@@ -21,7 +21,7 @@ import matwes.zpi.domain.Event;
  * Created by Mateusz Wesołowski
  */
 
-public class EventsFragment extends MainFragment {
+public class EventsFragment extends MainFragment implements EventListAdapter.EventItemListener {
     private EventListAdapter adapter;
     private SwipeRefreshLayout swipe;
 
@@ -43,7 +43,7 @@ public class EventsFragment extends MainFragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
 
-        adapter = new EventListAdapter(view.getContext(), events);
+        adapter = new EventListAdapter(view.getContext(), events, this);
         adapter.type = type;
         recyclerView.setAdapter(adapter);
 
@@ -71,8 +71,6 @@ public class EventsFragment extends MainFragment {
     public void onApiResponse() {
         if (swipe.isRefreshing())
             swipe.setRefreshing(false);
-
-        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -93,8 +91,8 @@ public class EventsFragment extends MainFragment {
         }
     }
 
-//    @Override
-//    public void refreshView() {
-//        downloadEvents(false, true );
-//    }
+    @Override
+    public void refreshView() {
+        downloadEvents(false, true );
+    }
 }
