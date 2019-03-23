@@ -18,6 +18,7 @@ import android.view.View;
 
 import com.facebook.login.LoginManager;
 import matwes.zpi.events.AddEventActivity;
+import matwes.zpi.events.EventFragmentType;
 import matwes.zpi.events.EventsFragment;
 import matwes.zpi.events.MapFragment;
 import matwes.zpi.events.MyEventsFragment;
@@ -96,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (id == R.id.events_list) {
             fragment = new EventsFragment();
+            ((EventsFragment) fragment).type = EventFragmentType.unblocked;
             tag = "LIST";
         } else if (id == R.id.events_map) {
             fragment = new MapFragment();
@@ -109,6 +111,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fabVisibility = View.GONE;
         } else if (id == R.id.nav_log_out) {
             logout();
+        } else if (id == R.id.blocked_events) {
+            fragment = new EventsFragment();
+            ((EventsFragment) fragment).type = EventFragmentType.blocked;
         }
 
         fab.setVisibility(fabVisibility);

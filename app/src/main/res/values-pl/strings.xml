@@ -67,4 +67,15 @@
     <string name="sport">Sport</string>
     <string name="data">Data</string>
     <string name="city">City</string>
+    <string name="error">Error</string>
+    <string name="error_message">An error occurred while processing your request</string>
+    <string name="error_wrong_email">Invalid email address</string>
+    <string name="error_no_internet">No Internet connection</string>
+    <string name="info">Info</string>
+    <string name="info_password_reset">Your password has been reset successfully!</string>
+    <string name="info_profile_updated">Profile has been updated successfully!</string>
+    <string name="place">place</string>
+    <string name="blocked">Blokowane wydarzenia</string>
+    <string name="blocked_events_title">Blokowane</string>
+
 </resources>

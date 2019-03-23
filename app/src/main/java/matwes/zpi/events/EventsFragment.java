@@ -36,7 +36,7 @@ public class EventsFragment extends MainFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        getActivity().setTitle(R.string.EVENTS);
+        getActivity().setTitle(getTitle());
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
@@ -54,6 +54,16 @@ public class EventsFragment extends MainFragment {
             }
         });
         getEvents();
+    }
+
+    String getTitle() {
+        switch (type) {
+            case unblocked:
+                return getString(R.string.EVENTS);
+            case blocked:
+                return getString(R.string.blocked_events_title);
+        }
+        return "";
     }
 
     @Override

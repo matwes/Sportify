@@ -131,5 +131,7 @@
     <string name="info_password_reset">Your password has been reset successfully!</string>
     <string name="info_profile_updated">Profile has been updated successfully!</string>
     <string name="place">place</string>
+    <string name="blocked">Blocked events</string>
+    <string name="blocked_events_title">Blocked</string>
 
 </resources>

@@ -31,6 +31,7 @@ public class Event implements Comparable {
     private String eventImage;
     private ArrayList<Message> messages;
     private ArrayList<Member> members;
+    private Boolean blocked;
 
     public String getEventImage() { return eventImage; }
 
@@ -126,6 +127,7 @@ public class Event implements Comparable {
         this.status = status;
         this.messages = messages;
         this.members = members;
+        this.blocked = false;
     }
 
     public Place getPlace() {

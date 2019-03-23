@@ -83,6 +83,9 @@ public interface ApiInterface {
     @GET("/events?size=99")
     Call<List<Event>> getEvents();
 
+    @GET("/unblocked_events?size=99")
+    Call<List<Event>> getBlockedEvents();
+
     @POST("/event/interested")
     Call<Void> interested(
             @Field("eventId") long eventId

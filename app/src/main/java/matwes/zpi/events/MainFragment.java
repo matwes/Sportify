@@ -28,6 +28,7 @@ import matwes.zpi.Common;
 import matwes.zpi.R;
 import matwes.zpi.api.ApiInterface;
 import matwes.zpi.api.RestService;
+import matwes.zpi.callbackInterface;
 import matwes.zpi.domain.Event;
 import matwes.zpi.utils.CustomDialog;
 import matwes.zpi.utils.LoadingDialog;
@@ -47,15 +48,13 @@ public abstract class MainFragment extends Fragment {
     protected Date maxDate, minDate, maxDateSelected, minDateSelected;
     protected String selectedSport, selectedCity;
     protected boolean filtered;
-
-    private ApiInterface api;
+    public EventFragmentType type = EventFragmentType.unblocked;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         parentView = view;
 
-        api = RestService.getApiInstance();
         dialog = new LoadingDialog(getContext());
 
         maxDate = maxDateSelected = new Date(Long.MIN_VALUE);
@@ -131,63 +130,48 @@ public abstract class MainFragment extends Fragment {
 
     void downloadEvents(final boolean connectionError, final boolean dialogLoading) {
         if (Common.isMocked()) {
-            List<Event> events = Common.getMockedEvents();
-            String json;
-            try {
-                json = new Gson().toJson(events);
-                SharedPreferences prefs = getActivity().getSharedPreferences("EVENTS", Context.MODE_PRIVATE);
-                prefs.edit().putString("EVENTS_JSON", json).apply();
-
-                updateList(events);
-            } catch (Exception ignored) {
-                CustomDialog.showError(getContext(), getString(R.string.error_message));
-            }
-            onApiResponse();
-
-        } else if (Common.isOnline(getContext())) {
-            if (dialogLoading) {
-                dialog.showLoadingDialog(getString(R.string.loading));
-            }
-
-            api.getEvents().enqueue(new Callback<List<Event>>() {
+            EventService.getInstance().downloadEvents(getContext(), connectionError, type, new callbackInterface() {
                 @Override
-                public void onResponse(@NonNull Call<List<Event>> call, @NonNull Response<List<Event>> response) {
-                    if (dialogLoading) {
-                        dialog.hideLoadingDialog();
-                    } else {
-                        onApiResponse();
-                    }
-                    List<Event> events = response.body();
-                    String json;
-
-                    try {
-                        json = new Gson().toJson(events);
-                        SharedPreferences prefs = getActivity().getSharedPreferences("EVENTS", Context.MODE_PRIVATE);
-                        prefs.edit().putString("EVENTS_JSON", json).apply();
-
+                public <T> void onDownloadFinished(T data, Integer error) {
+                    List<Event> events = (List<Event>) data;
+                    if (events != null) {
                         updateList(events);
-                    } catch (Exception ignored) {
-                        CustomDialog.showError(getContext(), getString(R.string.error_message));
                     }
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<List<Event>> call, @NonNull Throwable t) {
-                    if (dialogLoading) {
-                        dialog.hideLoadingDialog();
-                    } else {
-                        onApiResponse();
+                    if (error != null) {
+                        CustomDialog.showError(getContext(), getString(error));
                     }
-                    if (connectionError) {
-                        CustomDialog.showError(getContext(), getString(R.string.error_message));
-                    }
+                    onApiResponse();
                 }
             });
-        } else if (connectionError) {
-            Snackbar.make(parentView, R.string.noInternet, Snackbar.LENGTH_LONG).show();
+        }else {
+            if(Common.isOnline(getContext())) {
+
+                if (dialogLoading) {
+                    dialog.showLoadingDialog(getString(R.string.loading));
+                }
+                EventService.getInstance().downloadEvents(getContext(), connectionError, type, new callbackInterface() {
+                    @Override
+                    public <T> void onDownloadFinished(T data, Integer error) {
+                        if (dialogLoading) {
+                            dialog.hideLoadingDialog();
+                        } else {
+                            onApiResponse();
+                        }
+
+                        List<Event> events = (List<Event>) data;
+                        if (events != null) {
+                            updateList(events);
+                        }
+                        if (error != null) {
+                            CustomDialog.showError(getContext(), getString(error));
+                        }
+                    }
+                });
+            }else if (connectionError) {
+                Snackbar.make(parentView, R.string.noInternet, Snackbar.LENGTH_LONG).show();
+            }
         }
     }
-
     void filterDialog() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.sport_list2, R.layout.spinner_item);
         ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(getContext(), R.array.cities_list, R.layout.spinner_item);
