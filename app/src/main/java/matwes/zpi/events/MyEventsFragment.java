@@ -64,6 +64,7 @@ public class MyEventsFragment extends MainFragment {
         if (swipe.isRefreshing()) {
             swipe.setRefreshing(false);
         }
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -88,4 +89,9 @@ public class MyEventsFragment extends MainFragment {
         menu.findItem(R.id.change_view).setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
     }
+
+//    @Override
+//    public void refreshView() {
+//        downloadEvents(false, true );
+//    }
 }

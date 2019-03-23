@@ -44,6 +44,7 @@ public class EventsFragment extends MainFragment {
 
 
         adapter = new EventListAdapter(view.getContext(), events);
+        adapter.type = type;
         recyclerView.setAdapter(adapter);
 
         swipe = view.findViewById(R.id.swipeEvents);
@@ -70,6 +71,8 @@ public class EventsFragment extends MainFragment {
     public void onApiResponse() {
         if (swipe.isRefreshing())
             swipe.setRefreshing(false);
+
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -89,4 +92,9 @@ public class EventsFragment extends MainFragment {
             }
         }
     }
+
+//    @Override
+//    public void refreshView() {
+//        downloadEvents(false, true );
+//    }
 }

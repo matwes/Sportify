@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import com.squareup.picasso.Picasso;
 import java.util.Date;
 import java.util.List;
 
+//import butterknife.OnClick;
 import matwes.zpi.Common;
 import matwes.zpi.R;
 import matwes.zpi.domain.Event;
@@ -29,10 +31,17 @@ import matwes.zpi.eventDetails.EventDetailsActivity;
 class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Holder> {
     private Context context;
     private List<Event> events;
+    EventFragmentType type;
+    //EventItemListener listener;
 
-    EventListAdapter(Context context, List<Event> events) {
+//    public interface EventItemListener {
+//        void refreshView();
+//    }
+
+    EventListAdapter(Context context, List<Event> events) { //, EventItemListener listener
         this.context = context;
         this.events = events;
+       // this.listener = listener;
     }
 
     @Override
@@ -64,6 +73,12 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Holder> {
                 context.startActivity(intent);
             }
         });
+
+        if (type == EventFragmentType.blocked) {
+            holder.blockedIcon.setImageResource(R.drawable.blocked_event);
+        }else {
+            holder.blockedIcon.setImageResource(R.drawable.unblocked_event);
+        }
     }
 
     @Override
@@ -77,6 +92,7 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Holder> {
         CardView eventCard;
         ImageView eventImage;
         View eventInfoView;
+        ImageView blockedIcon;
 
         Holder(View itemView) {
             super(itemView);
@@ -87,10 +103,25 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Holder> {
             eventCard = itemView.findViewById(R.id.eventCard);
             eventImage = itemView.findViewById(R.id.eventImage);
             eventInfoView = itemView.findViewById(R.id.eventInfoView);
+            blockedIcon = itemView.findViewById(R.id.blocked_icon);
         }
 
         void changeCardColor() {
             //eventInfoView.setBackgroundColor(Color.parseColor("#B30b5e9d"));
         }
+
+//        @OnClick(R.id.blocked_icon)
+//        void changeBlockState() {
+//            switch (type) {
+//                case blocked:
+//                    System.out.println("set as Unblock");
+//                  //  listener.refreshView();
+//                    break;
+//                case unblocked:
+//                    System.out.println("set as Block");
+//                  //  listener.refreshView();
+//                    break;
+//            }
+//        }
     }
 }
