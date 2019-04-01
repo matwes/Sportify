@@ -33,6 +33,7 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,7 +41,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import matwes.zpi.Common;
 import matwes.zpi.R;
 import matwes.zpi.domain.Event;
 import matwes.zpi.domain.Place;
@@ -125,18 +125,19 @@ public class MapFragment extends MainFragment implements OnMapReadyCallback {
     private void addItems() {
         for (int i = 0; i < events.size(); i++) {
             Event event = events.get(i);
-            Place p = event.getPlace();
+            Place place = event.getPlace();
 
-            if (p != null) {
-                LatLng marker = new LatLng(p.getLatitude(), p.getLongitude());
-                EventsCluster offsetItem = new EventsCluster(marker, event.getId(), i);
+            if (place != null) {
+                matwes.zpi.domain.Location location = place.getLocation();
+                LatLng marker = new LatLng(location.getLatitude(), location.getLongitude());
+                EventsCluster offsetItem = new EventsCluster(marker, i);
                 clusterManager.addItem(offsetItem);
             }
         }
     }
 
     private void showAlertDialog(final Collection<EventsCluster> items) {
-        final long[] ids = new long[items.size()];
+        final String[] ids = new String[items.size()];
         int i = 0;
 
         List<Event> list = new ArrayList<>();
@@ -162,14 +163,17 @@ public class MapFragment extends MainFragment implements OnMapReadyCallback {
                     holder.date = convertView.findViewById(R.id.textView4);
                     holder.members = convertView.findViewById(R.id.textView3);
                     convertView.setTag(holder);
-                } else
+                } else {
                     holder = (ViewHolder) convertView.getTag();
+                }
 
                 Event event = getItem(position);
                 holder.name.setText(event.getName());
                 holder.date.setText(event.getDateWithTimeString());
-                holder.members.setText(event.getMembersStatus());
-                holder.icon.setImageResource(Common.getIcon(event.getSportName()));
+                holder.members.setText(event.getInterested()+"");
+                if(event.getImage()!=null && event.getImage()!="") {
+                    Picasso.get().load(event.getImage()).into(holder.icon);
+                }
 
                 return convertView;
             }
@@ -232,37 +236,9 @@ public class MapFragment extends MainFragment implements OnMapReadyCallback {
     @Override
     void filterEvents(List<Event> events) {
         super.filterEvents(events);
-        LatLng latLng;
-        float zoom;
-        switch (selectedCity) {
-            case "Wrocław":
-                latLng = new LatLng(51.1136, 17.0320);
-                zoom = 12;
-                break;
-            case "Białcz":
-                latLng = new LatLng(52.67, 14.93);
-                zoom = 14;
-                break;
-            case "Warszawa":
-                latLng = new LatLng(52.234, 21.02);
-                zoom = 11;
-                break;
-            case "Racibórz":
-                latLng = new LatLng(50.092, 18.219);
-                zoom = 13;
-                break;
-            case "Kraków":
-                latLng = new LatLng(50.062, 19.946);
-                zoom = 11;
-                break;
-            case "Gdańsk":
-                latLng = new LatLng(54.36, 18.63);
-                zoom = 12;
-                break;
-            default:
-                latLng = new LatLng(52.03, 18.25);
-                zoom = 6;
-        }
+        LatLng latLng = new LatLng(51.1136, 17.0320);
+        float zoom = 12;
+
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
     }
 

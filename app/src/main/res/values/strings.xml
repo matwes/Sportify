@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Sportify</string>
+    <string name="app_name" translatable="false">Gdzie się dzieje?</string>
     <string name="google_place_key" translatable="false">AIzaSyCJzQlROvatusmmEm2U35f5wUDb6mLoPAM</string>
 
     <string name="sign_up">Sign Up</string>
@@ -10,7 +10,7 @@
     <string name="password">Password</string>
     <string name="reg_or_fb">or:</string>
     <string name="forgotPassword">Forgot your password?</string>
-    <string name="appName" translatable="false">Sportify</string>
+    <string name="appName" translatable="false">Gdzie się dzieje?</string>
     <string name="resetPassword">Reset Password</string>
 
     <string name="facebook_app_id" translatable="false">422088551467608</string>

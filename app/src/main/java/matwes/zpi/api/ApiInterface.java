@@ -54,13 +54,13 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("/events")
     Call<Void> createEvent(
-            @Field("creator_id") long creatorId,
+            @Field("creator_id") String creatorId,
             @Field("date") String date,
             @Field("description") String description,
             @Field("maxMembers") String maxMembers,
             @Field("name") String name,
-            @Field("place_googleId") String googlePlaceId,
-            @Field("sport_id") int sportId,
+            @Field("latitude") double latitude,
+            @Field("longitude") double longitude,
             @Field("time") String time);
 
     @FormUrlEncoded
@@ -71,8 +71,8 @@ public interface ApiInterface {
             @Field("description") String description,
             @Field("maxMembers") String maxMembers,
             @Field("name") String name,
-            @Field("place_googleId") String googlePlaceId,
-            @Field("sport_id") int sportId,
+            @Field("latitude") double latitude,
+            @Field("longitude") double longitude,
             @Field("time") String time);
 
     @GET("/event/{eventId}")

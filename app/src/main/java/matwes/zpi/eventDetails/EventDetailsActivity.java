@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -35,7 +34,7 @@ import matwes.zpi.R;
 import matwes.zpi.api.ApiInterface;
 import matwes.zpi.api.RestService;
 import matwes.zpi.domain.Event;
-import matwes.zpi.domain.Member;
+import matwes.zpi.domain.Location;
 import matwes.zpi.domain.Place;
 import matwes.zpi.messages.MessageActivity;
 import matwes.zpi.utils.CustomDialog;
@@ -51,8 +50,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     private LoadingDialog dialog;
 
     private Event event;
-    private long userId;
-    private long memberId = -1;
+    private String userId;
 
     private ApiInterface api;
 
@@ -64,7 +62,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         api = RestService.getApiInstance();
 
         Intent intent = getIntent();
-        final long eventId = intent.getLongExtra("eventId", -1);
+        final String eventId = intent.getStringExtra("eventId");
         userId = Common.getCurrentUserId(this);
 
         event = getEvent(eventId);
@@ -104,7 +102,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         });
 
         join = findViewById(R.id.joinButton);
-        if (userId == event.getCreatorId()) {
+        if (userId.equals(event.getCreatorId())) {
             {
                 join.setText(R.string.update);
                 join.setOnClickListener(new View.OnClickListener() {
@@ -117,7 +115,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                     }
                 });
             }
-        } else {
+        } /*else {
             if (isMember()) {
                 join.setText("LEAVE");
                 join.setOnClickListener(new View.OnClickListener() {
@@ -144,23 +142,23 @@ public class EventDetailsActivity extends AppCompatActivity {
                     }
                 });
             }
-        }
+        }*/
 
         eName.setText(event.getName());
-        if (event.getSportName() != null) {
-            eSport.setText(event.getSportName());
-        }
+//        if (event.getSportName() != null) {
+//            eSport.setText(event.getSportName());
+//        }
         eTime.setText(event.getDateWithTimeString());
-        eDescription.setText(event.getDescription());
-        eMembers.setText(event.getMembersStatus());
+//        eDescription.setText(event.getDescription());
+        eMembers.setText(event.getInterested() + "");
     }
 
     @Nullable
-    private Event getEvent(long id) {
+    private Event getEvent(String id) {
         SharedPreferences prefs = getSharedPreferences("EVENTS", Context.MODE_PRIVATE);
         ArrayList<Event> events = Event.jsonEventsToList(prefs.getString("EVENTS_JSON", "[]"));
         for (Event e : events) {
-            if (e.getId() == id) {
+            if (e.getId().equals(id)) {
                 return e;
             }
         }
@@ -181,12 +179,13 @@ public class EventDetailsActivity extends AppCompatActivity {
             public void onMapReady(GoogleMap googleMap) {
                 if (event.getPlace() != null) {
                     Place place = event.getPlace();
+                    Location location = place.getLocation();
 
-                    LatLng marker = new LatLng(place.getLatitude(), place.getLongitude());
+                    LatLng marker = new LatLng(location.getLatitude(), location.getLongitude());
                     googleMap.addMarker(new MarkerOptions()
                             .position(marker)
                             .title(event.getName())
-                            .snippet(event.getDateWithTimeString() + "\n" + event.getCurrMembers() + "\\" + event.getMaxMembers())
+                            .snippet(event.getDateWithTimeString() + "\n" + event.getInterested())
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin)));
                     CameraPosition cameraPosition = new CameraPosition.Builder()
                             .target(marker)
@@ -229,15 +228,5 @@ public class EventDetailsActivity extends AppCompatActivity {
                 CustomDialog.showError(EventDetailsActivity.this, getString(R.string.error_message));
             }
         });
-    }
-
-    private boolean isMember() {
-        for (Member member : event.getMembers()) {
-            if (member.getUser().getId() == userId) {
-                memberId = member.getId();
-                return true;
-            }
-        }
-        return false;
     }
 }

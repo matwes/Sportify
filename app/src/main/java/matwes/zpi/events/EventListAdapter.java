@@ -2,7 +2,6 @@ package matwes.zpi.events;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,7 +15,6 @@ import com.squareup.picasso.Picasso;
 import java.util.Date;
 import java.util.List;
 
-import butterknife.OnClick;
 import matwes.zpi.Common;
 import matwes.zpi.R;
 import matwes.zpi.domain.Event;
@@ -27,14 +25,10 @@ import matwes.zpi.eventDetails.EventDetailsActivity;
  */
 
 class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Holder> {
+    EventFragmentType type;
     private Context context;
     private List<Event> events;
-    EventFragmentType type;
-    EventItemListener listener;
-
-    public interface EventItemListener {
-        void refreshView();
-    }
+    private EventItemListener listener;
 
     EventListAdapter(Context context, List<Event> events, EventItemListener listener) {
         this.context = context;
@@ -52,12 +46,20 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Holder> {
         final Event event = events.get(position);
         holder.title.setText(event.getName());
         holder.date.setText(event.getDateWithTimeString());
-        holder.members.setText(event.getMembersStatus());
+        holder.members.setText(event.getInterested() + "");
         holder.place.setText(event.getPlace() != null ? event.getPlace().getName() : "");
-        holder.icon.setImageResource(Common.getIcon(event.getSportName()));
-        if (event.getEventImage() == null || event.getEventImage().equals("")) {
-            Picasso.get().load(Uri.parse("https://www.gstatic.com/webp/gallery/5.jpg")).placeholder(Common.getEventPlaceholder()).into(holder.eventImage);
-        }   // todo zamienic link na event.getEventImage
+        if (event.getImage() == null || event.getImage().equals("")) {
+            Picasso.get()
+                    .load(Common.getEventPlaceholder())
+                    .placeholder(Common.getEventPlaceholder())
+                    .into(holder.eventImage);
+        } else {
+            Picasso.get()
+                    .load(event.getImage())
+                    .placeholder(Common.getEventPlaceholder())
+                    .into(holder.eventImage);
+        }
+
         if (event.getDateWithTime() == null || event.getDateWithTime().before(new Date())) {
             holder.changeCardColor();
         }
@@ -66,7 +68,6 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Holder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("open detail");
                 Intent intent = new Intent(context, EventDetailsActivity.class);
                 intent.putExtra("eventId", event.getId());
                 context.startActivity(intent);
@@ -75,7 +76,7 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Holder> {
 
         if (type == EventFragmentType.blocked) {
             holder.blockedIcon.setImageResource(R.drawable.blocked_event);
-        }else {
+        } else {
             holder.blockedIcon.setImageResource(R.drawable.unblocked_event);
         }
     }
@@ -85,9 +86,12 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Holder> {
         return events.size();
     }
 
+    public interface EventItemListener {
+        void refreshView();
+    }
+
     class Holder extends RecyclerView.ViewHolder {
-        TextView title, date, members = itemView.findViewById(R.id.tvEventMembers), place;
-        ImageView icon;
+        TextView title, date, members, place;
         CardView eventCard;
         ImageView eventImage;
         View eventInfoView;
@@ -97,8 +101,8 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Holder> {
             super(itemView);
             title = itemView.findViewById(R.id.tvEventName);
             date = itemView.findViewById(R.id.tvEventDate);
+            members = itemView.findViewById(R.id.tvEventMembers);
             place = itemView.findViewById(R.id.tvEventPlace);
-            icon = itemView.findViewById(R.id.ivEventIcon);
             eventCard = itemView.findViewById(R.id.eventCard);
             eventImage = itemView.findViewById(R.id.eventImage);
             eventInfoView = itemView.findViewById(R.id.eventInfoView);
@@ -125,6 +129,5 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Holder> {
         void changeCardColor() {
             //eventInfoView.setBackgroundColor(Color.parseColor("#B30b5e9d"));
         }
-
     }
 }

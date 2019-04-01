@@ -24,6 +24,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.maps.model.LatLng;
 
 import matwes.zpi.Common;
 import matwes.zpi.R;
@@ -40,7 +41,7 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
     private EditText etName, etDescription, etMembers, etDate;
     private LoadingDialog dialog;
     private String sDate, sTime;
-    private String sPlaceId = "";
+    private double dLat, dLng;
 
     private ApiInterface api;
 
@@ -128,7 +129,9 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
         placeAutocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(com.google.android.gms.location.places.Place place) {
-                sPlaceId = place.getId();
+                LatLng latLng = place.getLatLng();
+                dLat = latLng.latitude;
+                dLng = latLng.longitude;
             }
 
             @Override
@@ -146,16 +149,14 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
     private void createEvent() {
         dialog.showLoadingDialog(getString(R.string.loading));
 
-        long id = Common.getCurrentUserId(this);
+        String id = Common.getCurrentUserId(this);
         String date = sDate;
         String description = etDescription.getText().toString();
         String maxMembers = etMembers.getText().toString();
         String name = etName.getText().toString();
-        String googlePlaceId = sPlaceId;
-        int sportId = Common.getSportId(autoCompleteTextView.getText().toString());
         String time = sTime;
 
-        Call<Void> call = api.createEvent(id, date, description, maxMembers, name, googlePlaceId, sportId, time);
+        Call<Void> call = api.createEvent(id, date, description, maxMembers, name, dLat, dLng, time);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {

@@ -3,7 +3,6 @@ package matwes.zpi.events;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -11,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 
-import com.google.gson.Gson;
 import com.leavjenn.smoothdaterangepicker.date.SmoothDateRangePickerFragment;
 
 import java.text.DateFormat;
@@ -26,29 +24,23 @@ import java.util.Locale;
 
 import matwes.zpi.Common;
 import matwes.zpi.R;
-import matwes.zpi.api.ApiInterface;
-import matwes.zpi.api.RestService;
 import matwes.zpi.callbackInterface;
 import matwes.zpi.domain.Event;
 import matwes.zpi.utils.CustomDialog;
 import matwes.zpi.utils.LoadingDialog;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by mateu on 18.05.2017.
  */
 
 public abstract class MainFragment extends Fragment {
+    public EventFragmentType type = EventFragmentType.unblocked;
     protected View parentView;
     protected LoadingDialog dialog;
-
     protected List<Event> events;
     protected Date maxDate, minDate, maxDateSelected, minDateSelected;
     protected String selectedSport, selectedCity;
     protected boolean filtered;
-    public EventFragmentType type = EventFragmentType.unblocked;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -61,7 +53,7 @@ public abstract class MainFragment extends Fragment {
         minDate = minDateSelected = new Date(Long.MAX_VALUE);
 
         selectedSport = "Wszystkie";
-        selectedCity = "Wszystkie miasta";
+        selectedCity = "Wrocław";
         filtered = false;
 
         events = new ArrayList<>();
@@ -99,13 +91,13 @@ public abstract class MainFragment extends Fragment {
             maxDate = new Date(Long.MIN_VALUE);
 
             for (Event event : e) {
-                if (event.getDate().before(minDate)) {
+                if (event.getDateObject().before(minDate)) {
                     minDateChanged = true;
-                    minDate = event.getDate();
+                    minDate = event.getDateObject();
                 }
-                if (event.getDate().after(maxDate)) {
+                if (event.getDateObject().after(maxDate)) {
                     maxDateChanged = true;
-                    maxDate = event.getDate();
+                    maxDate = event.getDateObject();
                 }
             }
 
@@ -143,8 +135,8 @@ public abstract class MainFragment extends Fragment {
                     onApiResponse();
                 }
             });
-        }else {
-            if(Common.isOnline(getContext())) {
+        } else {
+            if (Common.isOnline(getContext())) {
 
                 if (dialogLoading) {
                     dialog.showLoadingDialog(getString(R.string.loading));
@@ -167,11 +159,12 @@ public abstract class MainFragment extends Fragment {
                         }
                     }
                 });
-            }else if (connectionError) {
+            } else if (connectionError) {
                 Snackbar.make(parentView, R.string.noInternet, Snackbar.LENGTH_LONG).show();
             }
         }
     }
+
     void filterDialog() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.sport_list2, R.layout.spinner_item);
         ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(getContext(), R.array.cities_list, R.layout.spinner_item);
@@ -222,9 +215,9 @@ public abstract class MainFragment extends Fragment {
         Iterator<Event> i = events.iterator();
         while (i.hasNext()) {
             Event event = i.next();
-            if ((!event.getSportName().equals(selectedSport) && !selectedSport.equals("Wszystkie")) ||
-                    event.getDate().before(minDateSelected) ||
-                    event.getDate().after(maxDateSelected) ||
+            if (/*(!event.getSportName().equals(selectedSport) && !selectedSport.equals("Wszystkie")) ||*/
+                    event.getDateObject().before(minDateSelected) ||
+                    event.getDateObject().after(maxDateSelected) ||
                     (!event.getPlace().getCity().equals(selectedCity) && !selectedCity.equals("Wszystkie miasta")))
                 i.remove();
         }

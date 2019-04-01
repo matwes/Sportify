@@ -20,7 +20,7 @@ public class Message {
         return message;
     }
 
-    public long getAuthorId() {
+    public String getAuthorId() {
         return author.getId();
     }
 

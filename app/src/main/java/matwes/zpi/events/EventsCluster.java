@@ -9,12 +9,10 @@ import com.google.maps.android.clustering.ClusterItem;
 
 class EventsCluster implements ClusterItem {
     private final LatLng position;
-    private final long id;
     private final int localId;
 
-    EventsCluster(LatLng position, long id, int localId) {
+    EventsCluster(LatLng position, int localId) {
         this.position = position;
-        this.id = id;
         this.localId = localId;
     }
 
@@ -31,10 +29,6 @@ class EventsCluster implements ClusterItem {
     @Override
     public String getSnippet() {
         return null;
-    }
-
-    public long getId() {
-        return id;
     }
 
     int getLocalId() {

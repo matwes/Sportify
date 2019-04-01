@@ -25,8 +25,8 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.maps.model.LatLng;
 
-import matwes.zpi.Common;
 import matwes.zpi.R;
 import matwes.zpi.api.ApiInterface;
 import matwes.zpi.api.RestService;
@@ -45,8 +45,8 @@ public class UpdateEventActivity extends AppCompatActivity implements GoogleApiC
     private LoadingDialog dialog;
 
     private long eventId;
-    private String placeId = "";
     private String sDate, sTime;
+    private double dLat, dLng;
 
     private ApiInterface api;
 
@@ -159,15 +159,15 @@ public class UpdateEventActivity extends AppCompatActivity implements GoogleApiC
                 Event event = response.body();
 
                 name.setText(event.getName());
-                description.setText(event.getDescription());
-                members.setText(event.getMaxMembers() + "");
+                //description.setText(event.getDescription());
+                members.setText(event.getInterested() + "");
                 date.setText(event.getDateWithTimeString());
                 placeAutocompleteFragment.setText(event.getPlace().getName());
-                autoCompleteTextView.setText(event.getSport().getName());
+                //autoCompleteTextView.setText(event.getSport().getName());
                 autoCompleteTextView.setAdapter(adapter);
-                placeId = event.getPlace().getGoogleId();
+                //placeId = event.getPlace().getGoogleId();
                 sTime = event.getTime();
-                sDate = event.getDateString();
+                sDate = event.getDate();
 
                 dialog.hideLoadingDialog();
             }
@@ -192,7 +192,9 @@ public class UpdateEventActivity extends AppCompatActivity implements GoogleApiC
         placeAutocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(com.google.android.gms.location.places.Place place) {
-                placeId = place.getId();
+                LatLng latLng = place.getLatLng();
+                dLat = latLng.latitude;
+                dLng = latLng.longitude;
             }
 
             @Override
@@ -210,8 +212,7 @@ public class UpdateEventActivity extends AppCompatActivity implements GoogleApiC
     private void updateEvent() {
         dialog.showLoadingDialog(getString(R.string.loading));
         Call<Void> call = api.updateEvent(eventId, sDate, description.getText().toString(),
-                members.getText().toString(), name.getText().toString(), placeId,
-                Common.getSportId(autoCompleteTextView.getText().toString()), sTime);
+                members.getText().toString(), name.getText().toString(), dLat, dLng, sTime);
 
         call.enqueue(new Callback<Void>() {
             @Override

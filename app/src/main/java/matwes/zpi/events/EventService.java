@@ -3,11 +3,9 @@ package matwes.zpi.events;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import matwes.zpi.Common;
@@ -49,7 +47,7 @@ class EventService {
     }
 
     private void getMockedEvents(Context context, callbackInterface callback) {
-        List<Event> events = Common.getMockedEvents();
+        List<Event> events = Common.getMockedEvents(context);
         String json;
         try {
             json = new Gson().toJson(events);

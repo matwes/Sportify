@@ -78,8 +78,9 @@ public class MyEventsFragment extends MainFragment implements EventListAdapter.E
         Iterator<Event> i = events.iterator();
         while (i.hasNext()) {
             Event event = i.next();
-            if (event.getCreatorId() != Common.getCurrentUserId(getContext()))
+            if (!event.getCreatorId().equals(Common.getCurrentUserId(getContext()))) {
                 i.remove();
+            }
         }
     }
 
@@ -92,6 +93,6 @@ public class MyEventsFragment extends MainFragment implements EventListAdapter.E
 
     @Override
     public void refreshView() {
-        downloadEvents(false, true );
+        downloadEvents(false, true);
     }
 }

@@ -6,10 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import matwes.zpi.R;
 import matwes.zpi.domain.Message;
-
-import java.util.ArrayList;
 
 /**
  * Created by Mateusz Wesołowski
@@ -19,9 +19,9 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
     private static final int MESSAGE_LEFT = 0;
     private static final int MESSAGE_RIGHT = 1;
     private final ArrayList<Message> messages;
-    private long userId;
+    private String userId;
 
-    MessageListAdapter(final ArrayList<Message> messages, long userId) {
+    MessageListAdapter(final ArrayList<Message> messages, String userId) {
         this.userId = userId;
         this.messages = messages;
     }
@@ -51,7 +51,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
 
     @Override
     public int getItemViewType(final int position) {
-        boolean isLeftMessage = messages.get(position).getAuthorId() != userId;
+        boolean isLeftMessage = !messages.get(position).getAuthorId().equals(userId);
         if (isLeftMessage) {
             return MESSAGE_LEFT;
         } else {

@@ -5,7 +5,7 @@ package matwes.zpi.domain;
  */
 
 public class User {
-    private long id;
+    private String id;
     private String email;
     private String firstName;
     private String lastName;
@@ -57,7 +57,7 @@ public class User {
 
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 }

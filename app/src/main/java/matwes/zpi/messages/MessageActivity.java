@@ -29,7 +29,7 @@ import java.util.TimerTask;
 
 public class MessageActivity extends AppCompatActivity implements AsyncTaskCompleteListener<String> {
     private long eventId;
-    private long userId;
+    private String userId;
     private ArrayList<Message> messages;
     private MessageListAdapter adapter;
     private EditText messageBox;

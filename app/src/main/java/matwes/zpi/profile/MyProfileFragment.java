@@ -43,7 +43,7 @@ public class MyProfileFragment extends Fragment {
     private AutoCompleteTextView actvSex;
     private ArrayAdapter<CharSequence> adapter;
     private String sDate;
-    private long userId;
+    private String userId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

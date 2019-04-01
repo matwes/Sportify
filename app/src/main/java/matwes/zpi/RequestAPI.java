@@ -80,13 +80,12 @@ public class RequestAPI extends AsyncTask<String, Void, Integer> {
             br.close();
 
             if (!Common.getLoginStatus(context)) {
-                int id;
-                String bearer;
+                String bearer, id;
                 try {
-                    id = new JSONObject(responseOutput.toString()).getInt("id");
+                    id = new JSONObject(responseOutput.toString()).getString("id");
                     bearer = connection.getHeaderField("Authentication");
                     SharedPreferences prefs = context.getSharedPreferences("EVENTS", Context.MODE_PRIVATE);
-                    prefs.edit().putInt("USER_ID", id).apply();
+                    prefs.edit().putString("USER_ID", id).apply();
                     prefs.edit().putString("BEARER", bearer).apply();
                     prefs.edit().putString("LOGIN", parameter).apply();
 

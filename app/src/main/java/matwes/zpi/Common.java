@@ -6,16 +6,19 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 
-import java.util.ArrayList;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import matwes.zpi.domain.Event;
-import matwes.zpi.domain.Member;
-import matwes.zpi.domain.Message;
-import matwes.zpi.domain.Place;
-import matwes.zpi.domain.Sport;
 
 public class Common {
     public static final String[] permission = {"email", "public_profile"};
@@ -42,9 +45,9 @@ public class Common {
         editor.apply();
     }
 
-    public static long getCurrentUserId(Context context) {
+    public static String getCurrentUserId(Context context) {
         SharedPreferences prefs = context.getSharedPreferences("EVENTS", Context.MODE_PRIVATE);
-        return prefs.getInt("USER_ID", 0);
+        return prefs.getString("USER_ID", "");
     }
 
     static String getBearer(Context context) {
@@ -62,84 +65,8 @@ public class Common {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
-    public static int getIcon(String sport) {
-        switch (sport) {
-            case "Piłka nożna":
-                return R.drawable.sport_soccer;
-            case "Siatkówka":
-                return R.drawable.sport_volleyball;
-            case "Polowanie na pokemony":
-                return R.drawable.sport_pokeball;
-            case "Siłownia":
-                return R.drawable.sport_gym;
-            case "Koszykówka":
-                return R.drawable.sport_basketball;
-            case "Badminton":
-                return R.drawable.sport_badminton;
-            case "Squash":
-                return R.drawable.sport_squash;
-            case "Golf":
-                return R.drawable.sport_golf;
-            case "Bieganie":
-                return R.drawable.sport_running;
-            case "Pływanie":
-                return R.drawable.sport_swim;
-            case "Piłka ręczna":
-                return R.drawable.sport_handball;
-            case "Tenis":
-                return R.drawable.sport_tennis;
-            default:
-                return R.drawable.sport_soccer;
-        }
-    }
-
     public static int getEventPlaceholder() {
         return R.drawable.event_placeholder;
-    }
-
-    public static int getSportId(String sport) {
-        int result;
-        switch (sport) {
-            case "Piłka nożna":
-                result = 1;
-                break;
-            case "Koszykówka":
-                result = 2;
-                break;
-            case "Siatkówka":
-                result = 3;
-                break;
-            case "Siłownia":
-                result = 4;
-                break;
-            case "Polowanie na pokemony":
-                result = 5;
-                break;
-            case "Badminton":
-                result = 6;
-                break;
-            case "Squash":
-                result = 7;
-                break;
-            case "Golf":
-                result = 8;
-                break;
-            case "Bieganie":
-                result = 9;
-                break;
-            case "Pływanie":
-                result = 10;
-                break;
-            case "Piłka ręczna":
-                result = 11;
-                break;
-            case "Tenis":
-                result = 12;
-                break;
-            default:
-                result = 1;
-        }
-        return result;
     }
 
     public static String getPolishSex(String sex) {
@@ -156,27 +83,28 @@ public class Common {
     }
 
 
-    public static List<Event> getMockedEvents() {
-        List<Event> events = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            Sport sport = new Sport(1, "Piłka nożna");
-            Place place = new Place("", "Miejsce imprezy", "Wrocław", "", 51.1078852, 17.0385376);
-            Event event = new Event(
-                    i,
-                    "Event nr " + i,
-                    null,
-                    sport,
-                    i * 7,
-                    "2018-04-0" + i,
-                    place,
-                    "opis dotyczący eventu",
-                    "1" + i + ":2" + i,
-                    "",
-                    new ArrayList<Message>(),
-                    new ArrayList<Member>());
-            events.add(event);
-        }
+    public static List<Event> getMockedEvents(Context context) {
+        Gson gson = new GsonBuilder().create();
+        String json = loadJSONFromAsset(context);
+        Type type = new TypeToken<List<Event>>() {
+        }.getType();
 
-        return events;
+        return gson.fromJson(json, type);
+    }
+
+    private static String loadJSONFromAsset(Context context) {
+        String json;
+        try {
+            InputStream is = context.getAssets().open("events.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, StandardCharsets.UTF_8);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return "[]";
+        }
+        return json;
     }
 }

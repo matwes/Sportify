@@ -71,13 +71,13 @@ public class MembersFragment extends Fragment {
         Gson gson = new GsonBuilder().create();
         event = gson.fromJson(membersJson, Event.class);
 
-        if (Common.isOnline(getContext())) {
-            updateMembers();
-        } else {
-            members = event.getMembers();
-        }
+//        if (Common.isOnline(getContext())) {
+//            updateMembers();
+//        } else {
+//            members = event.getMembers();
+//        }
 
-        boolean isOwner = event.getCreatorId() == Common.getCurrentUserId(getContext());
+        boolean isOwner = event.getCreatorId().equals(Common.getCurrentUserId(getContext()));
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
@@ -99,7 +99,7 @@ public class MembersFragment extends Fragment {
 
     boolean updateMembers() {
         if (Common.isOnline(getContext())) {
-            handleApiResponse(api.getMemebers(event.getId()));
+            //handleApiResponse(api.getMemebers(event.getId()));
             return true;
         } else {
             Snackbar.make(getView(), R.string.noInternet, Snackbar.LENGTH_LONG).show();

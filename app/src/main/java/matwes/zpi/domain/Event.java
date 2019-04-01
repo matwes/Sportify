@@ -11,84 +11,48 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
- * Created by mateu on 05.04.2017.
+ * Created by Mateusz Wesołowski
  */
-
 public class Event implements Comparable {
-    private long id;
+    private String id;
     private String name;
-    private User creator;
-    private Sport sport;
-    private int maxMembers;
+    private String image;
     private String date;
-    private Place place;
-    private String description;
     private String time;
-    private String status;
-    private String eventImage;
-    private ArrayList<Message> messages;
-    private ArrayList<Member> members;
-    private Boolean blocked;
+    private String type;
+    private String promoter;
+    private List<Price> price;
+    private Place place;
+    private int interested;
+    private String creatorId;
 
-    public String getEventImage() { return eventImage; }
-
-    public Event(String name) {
+    public Event(String id, String name, String image, String date, String time, String type,
+                 String promoter, List<Price> price, Place place, int interested, String creatorId) {
+        this.id = id;
         this.name = name;
+        this.image = image;
+        this.date = date;
+        this.time = time;
+        this.type = type;
+        this.promoter = promoter;
+        this.price = price;
+        this.place = place;
+        this.interested = interested;
+        this.creatorId = creatorId;
     }
 
-    public long getId() {
-        return id;
+    public static ArrayList<Event> jsonEventsToList(String json) {
+        Gson gson = new GsonBuilder().create();
+        TypeToken<ArrayList<Event>> token = new TypeToken<ArrayList<Event>>() {
+        };
+        return gson.fromJson(json, token.getType());
     }
 
-    public String getName() {
-        return name == null ? "" : name;
-    }
-
-    public String getSportName() {
-        return sport.getName();
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public Sport getSport() {
-        return sport;
-    }
-
-    public int getSportId() {
-        return sport.getId();
-    }
-
-    public String getMembersStatus() {
-        return members.size() + "/" + maxMembers;
-    }
-
-    public int getMaxMembers() {
-        return maxMembers;
-    }
-
-    public int getCurrMembers() {
-        return members.size();
-    }
-
-    public String getDateWithTimeString() {
-        if (date != null && time != null)
-            return date + " " + time;
-        else if (date != null)
-            return date;
-        else
-            return "";
-    }
-
-    public String getDateString() {
-        return date;
-    }
-
-    public Date getDate() {
+    public Date getDateObject() {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
         if (date != null)
@@ -105,64 +69,114 @@ public class Event implements Comparable {
 
         if (date != null && time != null)
             try {
-                return df.parse(date + " " + time);
+                return df.parse(date + " " + parseTime());
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         return null;
     }
 
-    public Event(long id, String name, User creator, Sport sport, int maxMembers, String date,
-                 Place place, String description, String time, String status,
-                 ArrayList<Message> messages, ArrayList<Member> members) {
+    public String getDateWithTimeString() {
+        return date != null && time != null ? date + " " + parseTime() : date != null ? date : "";
+    }
+
+    private String parseTime() {
+        String[] s = time.split("S");
+        return String.format("%s:%s", s[0], s[1]);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
         this.name = name;
-        this.creator = creator;
-        this.sport = sport;
-        this.maxMembers = maxMembers;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
         this.date = date;
-        this.place = place;
-        this.description = description;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
         this.time = time;
-        this.status = status;
-        this.messages = messages;
-        this.members = members;
-        this.blocked = false;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getPromoter() {
+        return promoter;
+    }
+
+    public void setPromoter(String promoter) {
+        this.promoter = promoter;
+    }
+
+    public List<Price> getPrice() {
+        return price;
+    }
+
+    public void setPrice(List<Price> price) {
+        this.price = price;
     }
 
     public Place getPlace() {
         return place;
     }
 
-    @Override
-    public String toString() {
-        return id + ". " + name;
+    public void setPlace(Place place) {
+        this.place = place;
     }
 
-
-    public static ArrayList<Event> jsonEventsToList(String json) {
-        Gson gson = new GsonBuilder().create();
-        TypeToken<ArrayList<Event>> token = new TypeToken<ArrayList<Event>>() {
-        };
-        return gson.fromJson(json, token.getType());
+    public int getInterested() {
+        return interested;
     }
 
-    public String getDescription() {
-        return description;
+    public void setInterested(int interested) {
+        this.interested = interested;
     }
 
-    public ArrayList<Member> getMembers() {
-        return members;
+    public String getCreatorId() {
+        return creatorId;
     }
 
-    public int getCreatorId() {
-        return (int) creator.getId();
+    public void setCreatorId(String creatorId) {
+        this.creatorId = creatorId;
     }
 
     @Override
     public int compareTo(@NonNull Object o) {
-        Date d1 = this.getDate();
-        Date d2 = ((Event) o).getDate();
+        Date d1 = this.getDateObject();
+        Date d2 = ((Event) o).getDateObject();
         return d1.compareTo(d2);
     }
 }

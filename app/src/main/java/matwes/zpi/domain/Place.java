@@ -1,58 +1,70 @@
 package matwes.zpi.domain;
 
-import com.google.android.gms.maps.model.LatLng;
-
 /**
- * Created by mateu on 05.04.2017.
+ * Created by Mateusz Wesołowski
  */
-
 public class Place {
-    private String googleId;
     private String name;
-    private String city;
+    private String postalCode;
     private String address;
-    private double latitude;
-    private double longitude;
+    private String country;
+    private String city;
+    private Location location;
 
-    public Place(String googleId, String name, String city, String address, double latitude, double longitude) {
-        this.googleId = googleId;
+    public Place(String name, String postalCode, String address, String country, String city, Location location) {
         this.name = name;
-        this.city = city;
+        this.postalCode = postalCode;
         this.address = address;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.country = country;
+        this.city = city;
+        this.location = location;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getCity() {
-        return city;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
     }
 
     public String getAddress() {
         return address;
     }
 
-    public double getLatitude() {
-        return latitude;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public double getLongitude() {
-        return longitude;
+    public String getCountry() {
+        return country;
     }
 
-    @Override
-    public String toString() {
-        return name + " - " + city;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
-    public String getGoogleId() {
-        return googleId;
+    public String getCity() {
+        return city;
     }
 
-    public LatLng getLatLng() {
-        return new LatLng(latitude, longitude);
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 }
