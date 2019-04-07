@@ -4,11 +4,11 @@ package matwes.zpi.eventDetails;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -24,8 +24,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -36,17 +35,11 @@ import matwes.zpi.api.RestService;
 import matwes.zpi.domain.Event;
 import matwes.zpi.domain.Location;
 import matwes.zpi.domain.Place;
-import matwes.zpi.messages.MessageActivity;
-import matwes.zpi.utils.CustomDialog;
+import matwes.zpi.domain.Price;
 import matwes.zpi.utils.LoadingDialog;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 public class EventDetailsActivity extends AppCompatActivity {
-    private ImageView location, members, messages;
-    private Button join;
     private LoadingDialog dialog;
 
     private Event event;
@@ -54,12 +47,15 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     private ApiInterface api;
 
+    private boolean interested, nInterested;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_details);
 
         api = RestService.getApiInstance();
+        initializeMap();
 
         Intent intent = getIntent();
         final String eventId = intent.getStringExtra("eventId");
@@ -68,89 +64,96 @@ public class EventDetailsActivity extends AppCompatActivity {
         event = getEvent(eventId);
 
         dialog = new LoadingDialog(this);
+        ImageView eImage = findViewById(R.id.eventImage);
         TextView eName = findViewById(R.id.eventName);
-        TextView eSport = findViewById(R.id.eventSport);
+        TextView eType = findViewById(R.id.eventType);
         TextView eTime = findViewById(R.id.eventTime);
-        TextView eDescription = findViewById(R.id.eventDescription);
-        TextView eMembers = findViewById(R.id.eventMembers);
-        location = findViewById(R.id.ivLocation);
-        members = findViewById(R.id.ivMembers);
-        messages = findViewById(R.id.ivMessages);
-
-        location.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                initializeMap();
-            }
-        });
-        location.callOnClick();
-        members.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Gson gson = new GsonBuilder().create();
-                replaceFragment(MembersFragment.newInstance(gson.toJson(event)), members);
-            }
-        });
-        messages.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), MessageActivity.class);
-                intent.putExtra("eventId", event.getId());
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                getApplicationContext().startActivity(intent);
-            }
-        });
-
-        join = findViewById(R.id.joinButton);
-        if (userId.equals(event.getCreatorId())) {
-            {
-                join.setText(R.string.update);
-                join.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(), UpdateEventActivity.class);
-                        intent.putExtra("eventId", event.getId());
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        getApplicationContext().startActivity(intent);
-                    }
-                });
-            }
-        } /*else {
-            if (isMember()) {
-                join.setText("LEAVE");
-                join.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (Common.isOnline(getApplicationContext())) {
-                            dialog.showLoadingDialog(getString(R.string.loading));
-                            handleApiResponse(api.cancelInterested(eventId));
-                        } else {
-                            Snackbar.make(findViewById(R.id.eventDetailView), R.string.noInternet, Snackbar.LENGTH_LONG).show();
-                        }
-                    }
-                });
-            } else {
-                join.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (Common.isOnline(getApplicationContext())) {
-                            dialog.showLoadingDialog(getString(R.string.loading));
-                            handleApiResponse(api.interested(eventId));
-                        } else {
-                            Snackbar.make(findViewById(R.id.eventDetailView), R.string.noInternet, Snackbar.LENGTH_LONG).show();
-                        }
-                    }
-                });
-            }
-        }*/
+        TextView ePlace = findViewById(R.id.eventPlace);
+        TextView ePlace2 = findViewById(R.id.eventAddress);
+        TextView eMoney = findViewById(R.id.eventMoney);
+        final TextView eMembers = findViewById(R.id.eventMembers);
+        final Button btnInt = findViewById(R.id.btnInterested);
+        final Button btnNInt = findViewById(R.id.btnNotInterested);
 
         eName.setText(event.getName());
-//        if (event.getSportName() != null) {
-//            eSport.setText(event.getSportName());
-//        }
+        eType.setText(event.getType() + ", " + event.getPromoter());
         eTime.setText(event.getDateWithTimeString());
-//        eDescription.setText(event.getDescription());
-        eMembers.setText(event.getInterested() + "");
+        ePlace.setText(event.getPlace().getName());
+        ePlace2.setText(event.getPlace().getAddress());
+        eMembers.setText(getString(R.string.people_interested) + " " + event.getInterested());
+
+        if (event.getPrice().isEmpty()) {
+            eMoney.setText("???");
+        } else {
+            Price price = event.getPrice().get(0);
+            eMoney.setText(price.getMin() + " - " + price.getMax() + " " + price.getCurrency());
+        }
+
+
+        if (event.getImage() == null || event.getImage().equals("")) {
+            Picasso.get()
+                    .load(Common.getEventPlaceholder())
+                    .placeholder(Common.getEventPlaceholder())
+                    .into(eImage);
+        } else {
+            Picasso.get()
+                    .load(event.getImage())
+                    .placeholder(Common.getEventPlaceholder())
+                    .into(eImage);
+        }
+
+        btnInt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (interested) {
+                    deactivateButton(btnInt);
+                    interested = false;
+                    event.decreaseInterested();
+                } else {
+                    activateButton(btnInt);
+                    if (nInterested) {
+                        deactivateButton(btnNInt);
+                        nInterested = false;
+                    }
+                    interested = true;
+                    event.increaseInterested();
+                }
+                updateInterestedNote(eMembers);
+            }
+        });
+
+        btnNInt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (nInterested) {
+                    deactivateButton(btnNInt);
+                    nInterested = false;
+                } else {
+                    activateButton(btnNInt);
+                    if (interested) {
+                        deactivateButton(btnInt);
+                        interested = false;
+                        event.decreaseInterested();
+                    }
+                    nInterested = true;
+                }
+                updateInterestedNote(eMembers);
+            }
+        });
+    }
+
+    private void updateInterestedNote(TextView textView) {
+        textView.setText(getString(R.string.people_interested) + " " + event.getInterested());
+    }
+
+    private void activateButton(Button button) {
+        button.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
+        button.setTextColor(Color.WHITE);
+    }
+
+    private void deactivateButton(Button button) {
+        button.setBackground(getDrawable(R.drawable.my_button));
+        button.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_gray));
     }
 
     @Nullable
@@ -195,38 +198,9 @@ public class EventDetailsActivity extends AppCompatActivity {
                 }
             }
         });
-        replaceFragment(fragment, location);
-    }
 
-    void replaceFragment(Fragment fragment, ImageView iv) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.frame, fragment);
         ft.commit();
-
-        location.setSelected(false);
-        members.setSelected(false);
-        messages.setSelected(false);
-        iv.setSelected(true);
-    }
-
-    private void handleApiResponse(Call<Void> call) {
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-                join.setEnabled(false);
-                join.setText("ZOSTAŁEŚ ZAAKCEPTOWANY");
-                if (members.isSelected()) {
-                    MembersFragment fragment = (MembersFragment) getSupportFragmentManager().findFragmentById(R.id.frame);
-                    fragment.updateMembers();
-                }
-                dialog.hideLoadingDialog();
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
-                dialog.hideLoadingDialog();
-                CustomDialog.showError(EventDetailsActivity.this, getString(R.string.error_message));
-            }
-        });
     }
 }

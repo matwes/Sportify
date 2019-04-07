@@ -6,7 +6,6 @@
     android:gravity="center"
     android:orientation="vertical"
     android:padding="@dimen/activityPadding"
-    android:background="@color/colorPrimary"
     tools:context="matwes.zpi.login.ResetPassActivity">
 
     <android.support.design.widget.TextInputLayout

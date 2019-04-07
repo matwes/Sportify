@@ -77,12 +77,24 @@ public class Event implements Comparable {
     }
 
     public String getDateWithTimeString() {
-        return date != null && time != null ? date + " " + parseTime() : date != null ? date : "";
+        Date dateObject = getDateWithTime();
+
+        DateFormat df = new SimpleDateFormat("EEEE, d MMMM, HH:mm", Locale.ENGLISH);
+
+        return df.format(dateObject);
     }
 
     private String parseTime() {
         String[] s = time.split("S");
         return String.format("%s:%s", s[0], s[1]);
+    }
+
+    public void increaseInterested() {
+        interested++;
+    }
+
+    public  void decreaseInterested() {
+        interested--;
     }
 
     public String getId() {

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/eventDetailView"
     android:layout_width="match_parent"
@@ -9,149 +8,180 @@
     android:orientation="vertical"
     tools:context="matwes.zpi.eventDetails.EventDetailsActivity">
 
-
-    <android.support.v7.widget.CardView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="5dp"
-        app:cardElevation="2dp"
-        app:cardUseCompatPadding="true"
-        app:contentPadding="10dp">
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
-        <LinearLayout
+        <ImageView
+            android:id="@+id/eventImage"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="300dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/event_placeholder" />
 
-            <RelativeLayout
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/eventImage"
+            android:layout_marginTop="-10dp"
+            android:fillViewport="true"
+            android:background="@drawable/layout_bg">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/eventTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@+id/eventSport"
-                    android:layout_alignBottom="@+id/eventSport"
-                    android:layout_marginStart="10dp"
-                    android:layout_toEndOf="@+id/eventSport"
-                    android:textColor="@color/colorPrimary"
-                    tools:text="10-01-2017 12:00" />
-
-                <TextView
-                    android:id="@+id/eventSport"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/eventMembers"
-                    android:layout_alignParentStart="true"
-                    android:textColor="@color/colorPrimary"
-                    android:textStyle="bold|italic"
-                    tools:text="Nazwa sportu" />
+                android:orientation="vertical"
+                android:padding="12dp">
 
                 <TextView
                     android:id="@+id/eventName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginBottom="10dp"
-                    android:layout_toStartOf="@+id/eventMembers"
                     android:ellipsize="end"
+                    android:fontFamily="sans-serif-condensed-medium"
                     android:maxLines="1"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/dark_gray"
                     android:textSize="24sp"
-                    tools:layout_editor_absoluteX="174dp"
-                    tools:layout_editor_absoluteY="16dp"
-                    tools:text="Nazwa eventu" />
+                    tools:text="Salvador Sobral - Poland Tour 2019" />
+
+                <TextView
+                    android:id="@+id/eventType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:textColor="@color/calendar_header"
+                    tools:text="Music" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp">
+
+                    <ImageView
+                        android:id="@+id/timeIcon"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="20dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/time" />
+
+                    <TextView
+                        android:id="@+id/eventTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@id/timeIcon"
+                        android:textColor="@color/dark_gray"
+                        tools:text="10-01-2017 12:00" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp">
+
+                    <ImageView
+                        android:id="@+id/placeIcon"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="20dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/location" />
+
+                    <TextView
+                        android:id="@+id/eventPlace"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/placeIcon"
+                        android:textColor="@color/dark_gray"
+                        tools:text="Narodowe Forum Muzyki" />
+
+                    <TextView
+                        android:id="@+id/eventAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/eventPlace"
+                        android:layout_toEndOf="@id/placeIcon"
+                        android:textColor="@color/calendar_header"
+                        tools:text="Plac Wolności 1" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp">
+
+                    <ImageView
+                        android:id="@+id/moneyIcon"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="20dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/money" />
+
+                    <TextView
+                        android:id="@+id/eventMoney"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@id/moneyIcon"
+                        android:textColor="@color/dark_gray"
+                        tools:text="12 - 20 PLN" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/calendar_header" />
 
                 <TextView
                     android:id="@+id/eventMembers"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="24sp"
-                    tools:text="10/12" />
-            </RelativeLayout>
-
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginTop="10dp">
+                    android:layout_marginStart="5dp"
+                    android:textColor="@color/dark_gray"
+                    tools:text="Liczba zainteresowanych: 241" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/eventDescription"
-                        android:layout_width="match_parent"
+
+                    <Button
+                        android:id="@+id/btnInterested"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/colorPrimary" />
+                        android:layout_margin="4dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/my_button"
+                        android:text="@string/interested"
+                        android:textColor="@color/dark_gray" />
+
+                    <Button
+                        android:id="@+id/btnNotInterested"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/my_button"
+                        android:text="@string/not_interested"
+                        android:textColor="@color/dark_gray" />
                 </LinearLayout>
-            </ScrollView>
 
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
+                <FrameLayout
+                    android:id="@+id/frame"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
 
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginBottom="6dp">
-
-        <ImageView
-            android:id="@+id/ivLocation"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_alignParentStart="true"
-            android:clickable="true"
-            app:srcCompat="@drawable/button_map" />
-
-        <ImageView
-            android:id="@+id/ivMembers"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_centerInParent="true"
-            android:clickable="true"
-            app:srcCompat="@drawable/button_members" />
-
-        <ImageView
-            android:id="@+id/ivMessages"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_alignParentEnd="true"
-            android:clickable="true"
-            app:srcCompat="@drawable/button_messages" />
+            </LinearLayout>
+        </ScrollView>
     </RelativeLayout>
-
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <Button
-            android:id="@+id/joinButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/button_join"
-            android:text="@string/join"
-            android:textColor="@color/white" />
-
-        <FrameLayout
-            android:id="@+id/frame"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/joinButton">
-
-        </FrameLayout>
-
-    </RelativeLayout>
-
-
 </LinearLayout>

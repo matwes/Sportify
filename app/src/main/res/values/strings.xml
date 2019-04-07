@@ -133,5 +133,8 @@
     <string name="place">place</string>
     <string name="blocked">Blocked events</string>
     <string name="blocked_events_title">Blocked</string>
+    <string name="interested">INTERESTED</string>
+    <string name="not_interested">Not interested</string>
+    <string name="people_interested">Interested people:</string>
 
 </resources>
