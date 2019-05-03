@@ -239,10 +239,12 @@ public class MapFragment extends MainFragment implements OnMapReadyCallback {
         List<Event> dest= new ArrayList<Event>();
         dest.addAll(EventService.getInstance().originalListOfEvents);
         List<Event> filteredEvents = super.filterEvents(dest);
+        this.events = filteredEvents;
         LatLng latLng = new LatLng(51.1136, 17.0320);
         float zoom = 12;
-
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+        if (googleMap != null) {
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+        }
         return filteredEvents;
     }
 

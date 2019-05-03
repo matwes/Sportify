@@ -3,7 +3,8 @@
     "id":"Z598xZQpZaFeF",
     "name":"BRYAN FERRY",
     "image":"https://s1.ticketm.net/dam/a/81f/a6699447-db8e-4c6d-a5a7-b6ed6a17681f_838121_RETINA_PORTRAIT_16_9.jpg",
-    "date":"2019-07-03T16:00:00.000Z",
+    "date":"2019-06-03",
+    "time":"18:00:00",
     "type":"Music",
     "promoter":"Live Nation Sp. z o.o.",
     "price":{
@@ -25,7 +26,8 @@
     "id":"Z698xZQpZaeMS",
     "name":"Our Last Night + Hands Like Houses",
     "image":"https://s1.ticketm.net/dam/a/588/266ed1bf-497f-418b-ab0c-9b022bc9e588_1014581_RETINA_PORTRAIT_16_9.jpg",
-    "date":"2019-08-02T18:00:00.000Z",
+    "date":"2019-07-02",
+    "time":"20:00:00",
     "type":"Music",
     "promoter":"WINIARY BOOKINGS Masłowski Stobiński Spółka Cywilna",
     "price":{
@@ -47,7 +49,8 @@
     "id":"Z698xZQpZaey-",
     "name":"Bullet For My Valentine",
     "image":"https://s1.ticketm.net/dam/a/12e/aadd82f7-7967-4647-bcd4-6b03ed2c512e_1026881_RECOMENDATION_16_9.jpg",
-    "date":"2019-09-05T16:00:00.000Z",
+    "date":"2019-08-05",
+    "time":"18:00:00",
     "type":"Music",
     "promoter":"Live Nation Sp. z o.o.",
     "price":{
@@ -69,7 +72,8 @@
     "id":"Z698xZQpZaell",
     "name":"DEVIN TOWNSEND",
     "image":"https://s1.ticketm.net/dam/a/644/570eab3a-c96b-42cc-9a6a-36fcaf06f644_955361_RETINA_LANDSCAPE_16_9.jpg",
-    "date":"2019-12-29T17:00:00.000Z",
+    "date":"2019-11-29",
+    "time":"18:00:00",
     "type":"Music",
     "promoter":"Live Nation Sp. z o.o.",
     "price":{
@@ -91,7 +95,8 @@
     "id":"Z698xZQpZaeYM",
     "name":"Morcheeba",
     "image":"https://s1.ticketm.net/dam/c/df8/81eadad8-4449-412e-a2b1-3d8bbb78edf8_106181_RETINA_LANDSCAPE_16_9.jpg",
-    "date":"2019-06-08T18:00:00.000Z",
+    "date":"2019-05-08",
+    "time":"20:00:00",
     "type":"Music",
     "promoter":"Fource Entertainment sp. z o.o.",
     "price":{
@@ -113,7 +118,8 @@
     "id":"Z698xZQpZaetP",
     "name":"Little Big",
     "image":"https://s1.ticketm.net/dam/a/87b/9a9f97e2-9ddd-4bfd-a60c-41b57378a87b_907141_TABLET_LANDSCAPE_16_9.jpg",
-    "date":"2019-06-10T18:00:00.000Z",
+    "date":"2019-05-10",
+    "time":"20:00:00",
     "type":"Music",
     "promoter":"WINIARY BOOKINGS Masłowski Stobiński Spółka Cywilna",
     "price":{
@@ -135,7 +141,8 @@
     "id":"Z698xZQpZaeID",
     "name":"The Cinematic Orchestra",
     "image":"https://s1.ticketm.net/dam/a/828/62cefbdf-9e6c-42f2-aac6-d8e915ad8828_945321_EVENT_DETAIL_PAGE_16_9.jpg",
-    "date":"2019-06-17T18:00:00.000Z",
+    "date":"2019-05-17",
+    "time":"20:00:00",
     "type":"Music",
     "promoter":"5AM ARTISTS",
     "price":{
@@ -157,7 +164,8 @@
     "id":"Z698xZQpZaeDt",
     "name":"Koncert Hawdalowy - NINA STILLER - JIDYSZE PERŁ",
     "image":"https://s1.ticketm.net/dam/c/f6d/6f417e97-2981-4605-a837-a307d33e3f6d_105491_TABLET_LANDSCAPE_LARGE_16_9.jpg",
-    "date":"2019-06-26T16:00:00.000Z",
+    "date":"2019-05-26",
+    "time":"18:00:00",
     "type":"Music",
     "promoter":"Fundacja „PRO ARTE 2002”",
     "price":{
@@ -179,7 +187,8 @@
     "id":"Z698xZQpZaeBL",
     "name":"SIMCHA - KLEZMERSKA HAWDALA – NEOKLEZ",
     "image":"https://s1.ticketm.net/dam/a/f49/6183e5fa-4094-45bf-8221-6eaf2e5a2f49_1028891_RECOMENDATION_16_9.jpg",
-    "date":"2019-07-01T20:08:00.000Z",
+    "date":"2019-06-01",
+    "time":"22:08:00",
     "type":"Miscellaneous",
     "promoter":"Fundacja „PRO ARTE 2002”",
     "price":{
@@ -201,7 +210,8 @@
     "id":"Z698xZQpZaeBE",
     "name":"SIMCHA -POWRÓT DO KORZENI - YAMMA ENSEMBLE /Izrael/",
     "image":"https://s1.ticketm.net/dam/a/f49/6183e5fa-4094-45bf-8221-6eaf2e5a2f49_1028891_RECOMENDATION_16_9.jpg",
-    "date":"2019-07-02T18:00:00.000Z",
+    "date":"2019-06-02",
+    "time":"20:00:00",
     "type":"Miscellaneous",
     "promoter":"Fundacja „PRO ARTE 2002”",
     "price":{
@@ -223,7 +233,8 @@
     "id":"Z698xZQpZaesK",
     "name":"Tim Bowness with band",
     "image":"https://s1.ticketm.net/dam/a/e74/51346a92-39e4-45b4-b89f-fc26a2915e74_981681_ARTIST_PAGE_3_2.jpg",
-    "date":"2019-07-02T18:00:00.000Z",
+    "date":"2019-06-02",
+    "time":"20:00:00",
     "type":"Music",
     "promoter":"Rock Serwis Piotr Kosiński",
     "price":{
@@ -245,7 +256,8 @@
     "id":"Z698xZQpZaeBt",
     "name":"SIMCHA - KONCERT PAMIĘCI LEOPOLDA KOZŁOWSKIEGO",
     "image":"https://s1.ticketm.net/dam/a/f49/6183e5fa-4094-45bf-8221-6eaf2e5a2f49_1028891_RECOMENDATION_16_9.jpg",
-    "date":"2019-07-03T18:00:00.000Z",
+    "date":"2019-06-03",
+    "time":"20:00:00",
     "type":"Miscellaneous",
     "promoter":"Fundacja „PRO ARTE 2002”",
     "price":{
@@ -267,7 +279,8 @@
     "id":"Z698xZQpZaeBl",
     "name":"SIMCHA - KLEZMERZY Z HAMBURGA - MISCHPOKE KLEZMER BAND /Niemcy/",
     "image":"https://s1.ticketm.net/dam/a/f49/6183e5fa-4094-45bf-8221-6eaf2e5a2f49_1028891_RECOMENDATION_16_9.jpg",
-    "date":"2019-07-04T18:00:00.000Z",
+    "date":"2019-06-04",
+    "time":"20:00:00",
     "type":"Miscellaneous",
     "promoter":"Fundacja „PRO ARTE 2002”",
     "price":{
@@ -289,7 +302,8 @@
     "id":"Z698xZQpZaeMl",
     "name":"Cigarettes After Sex",
     "image":"https://s1.ticketm.net/dam/a/2c9/41f9787e-6634-49a7-b3b7-8a44521302c9_1016421_TABLET_LANDSCAPE_16_9.jpg",
-    "date":"2019-07-04T18:00:00.000Z",
+    "date":"2019-06-04",
+    "time":"20:00:00",
     "type":"Music",
     "promoter":"Go-Ahead",
     "price":{
@@ -311,7 +325,8 @@
     "id":"Z698xZQpZaeBc",
     "name":"SIMCHA -  SYMCHA KELLER Z ZESPOŁEM",
     "image":"https://s1.ticketm.net/dam/a/f49/6183e5fa-4094-45bf-8221-6eaf2e5a2f49_1028891_RECOMENDATION_16_9.jpg",
-    "date":"2019-07-05T18:00:00.000Z",
+    "date":"2019-06-05",
+    "time":"20:00:00",
     "type":"Miscellaneous",
     "promoter":"Fundacja „PRO ARTE 2002”",
     "price":{
@@ -333,7 +348,8 @@
     "id":"Z698xZQpZaeBs",
     "name":"SIMCHA - PIOTR WOJTASIK - JAZZ IN THE SYNAGOGUE",
     "image":"https://s1.ticketm.net/dam/a/f49/6183e5fa-4094-45bf-8221-6eaf2e5a2f49_1028891_RECOMENDATION_16_9.jpg",
-    "date":"2019-07-06T18:00:00.000Z",
+    "date":"2019-06-06",
+    "time":"20:00:00",
     "type":"Miscellaneous",
     "promoter":"Fundacja „PRO ARTE 2002”",
     "price":{
@@ -355,7 +371,8 @@
     "id":"Z698xZQpZaeYt",
     "name":"Anthrax, Acid Drinkers",
     "image":"https://s1.ticketm.net/dam/a/f3a/435d425f-7905-4287-99b3-73ea58053f3a_939691_CUSTOM.jpg",
-    "date":"2019-07-12T17:30:00.000Z",
+    "date":"2019-06-12",
+    "time":"19:30:00",
     "type":"Music",
     "promoter":"WINIARY BOOKINGS Masłowski Stobiński Spółka Cywilna",
     "price":{
@@ -377,7 +394,8 @@
     "id":"Z698xZQpZaePD",
     "name":"Christian Death",
     "image":"https://s1.ticketm.net/dam/a/451/aae7367a-7b61-446c-a187-8754aad3f451_936421_TABLET_LANDSCAPE_16_9.jpg",
-    "date":"2019-07-21T18:00:00.000Z",
+    "date":"2019-06-21",
+    "time":"20:00:00",
     "type":"Music",
     "promoter":"Events Piotr Walczuk",
     "price":{
@@ -399,7 +417,8 @@
     "id":"Z698xZQpZaeVN",
     "name":"Mistrzowie Flamenco - W hołdzie dla \"La Chany\"",
     "image":"https://s1.ticketm.net/dam/a/6f4/1048d98e-a88a-4757-a7db-7b8ca97776f4_574611_RECOMENDATION_16_9.jpg",
-    "date":"2019-07-30T17:00:00.000Z",
+    "date":"2019-06-30",
+    "time":"19:00:00",
     "type":"Music",
     "promoter":"Arte Flamenco",
     "price":{
@@ -421,7 +440,8 @@
     "id":"Z698xZQpZaeB5",
     "name":"God Is An Astronaut",
     "image":"https://s1.ticketm.net/dam/a/622/3255eab7-6de5-48c8-aa42-bb009e24a622_1026831_ARTIST_PAGE_3_2.jpg",
-    "date":"2019-08-17T18:00:00.000Z",
+    "date":"2019-07-17",
+    "time":"20:00:00",
     "type":"Music",
     "promoter":"WINIARY BOOKINGS Masłowski Stobiński Spółka Cywilna",
     "price":{
