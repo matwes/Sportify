@@ -30,11 +30,7 @@
     "time":"20:00:00",
     "type":"Music",
     "promoter":"WINIARY BOOKINGS Masłowski Stobiński Spółka Cywilna",
-    "price":{
-      "min":209,
-      "max":379,
-      "currency":"PLN"
-    },
+    "price":null,
     "place":{
       "name":"Zaklęte Rewiry",
       "postalCode":"50-001",
@@ -53,11 +49,7 @@
     "time":"18:00:00",
     "type":"Music",
     "promoter":"Live Nation Sp. z o.o.",
-    "price":{
-      "min":209,
-      "max":379,
-      "currency":"PLN"
-    },
+    "price":null,
     "place":{
       "name":"Centrum Koncertowe A2",
       "postalCode":"53-610",
@@ -78,7 +70,7 @@
     "promoter":"Live Nation Sp. z o.o.",
     "price":{
       "min":90,
-      "max":379,
+      "max":99,
       "currency":"PLN"
     },
     "place":{
@@ -100,8 +92,8 @@
     "type":"Music",
     "promoter":"Fource Entertainment sp. z o.o.",
     "price":{
-      "min":90,
-      "max":379,
+      "min":110,
+      "max":110,
       "currency":"PLN"
     },
     "place":{
@@ -123,8 +115,8 @@
     "type":"Music",
     "promoter":"WINIARY BOOKINGS Masłowski Stobiński Spółka Cywilna",
     "price":{
-      "min":90,
-      "max":379,
+      "min":105,
+      "max":105,
       "currency":"PLN"
     },
     "place":{
@@ -146,8 +138,8 @@
     "type":"Music",
     "promoter":"5AM ARTISTS",
     "price":{
-      "min":90,
-      "max":379,
+      "min":130,
+      "max":130,
       "currency":"PLN"
     },
     "place":{
@@ -168,11 +160,7 @@
     "time":"18:00:00",
     "type":"Music",
     "promoter":"Fundacja „PRO ARTE 2002”",
-    "price":{
-      "min":90,
-      "max":379,
-      "currency":"PLN"
-    },
+    "price":null,
     "place":{
       "name":"Synagoga Pod Białym Bocianem",
       "postalCode":"50-072",
@@ -191,11 +179,7 @@
     "time":"22:08:00",
     "type":"Miscellaneous",
     "promoter":"Fundacja „PRO ARTE 2002”",
-    "price":{
-      "min":90,
-      "max":379,
-      "currency":"PLN"
-    },
+    "price":null,
     "place":{
       "name":"Synagoga Pod Białym Bocianem",
       "postalCode":"50-072",
@@ -214,11 +198,7 @@
     "time":"20:00:00",
     "type":"Miscellaneous",
     "promoter":"Fundacja „PRO ARTE 2002”",
-    "price":{
-      "min":90,
-      "max":379,
-      "currency":"PLN"
-    },
+    "price":null,
     "place":{
       "name":"Synagoga Pod Białym Bocianem",
       "postalCode":"50-072",
@@ -237,11 +217,7 @@
     "time":"20:00:00",
     "type":"Music",
     "promoter":"Rock Serwis Piotr Kosiński",
-    "price":{
-      "min":90,
-      "max":379,
-      "currency":"PLN"
-    },
+    "price":null,
     "place":{
       "name":"Firlej",
       "postalCode":"53-504",
@@ -260,11 +236,7 @@
     "time":"20:00:00",
     "type":"Miscellaneous",
     "promoter":"Fundacja „PRO ARTE 2002”",
-    "price":{
-      "min":90,
-      "max":379,
-      "currency":"PLN"
-    },
+    "price":null,
     "place":{
       "name":"Synagoga Pod Białym Bocianem",
       "postalCode":"50-072",
@@ -283,11 +255,7 @@
     "time":"20:00:00",
     "type":"Miscellaneous",
     "promoter":"Fundacja „PRO ARTE 2002”",
-    "price":{
-      "min":90,
-      "max":379,
-      "currency":"PLN"
-    },
+    "price":null,
     "place":{
       "name":"Synagoga Pod Białym Bocianem",
       "postalCode":"50-072",
@@ -306,11 +274,7 @@
     "time":"20:00:00",
     "type":"Music",
     "promoter":"Go-Ahead",
-    "price":{
-      "min":90,
-      "max":379,
-      "currency":"PLN"
-    },
+    "price":null,
     "place":{
       "name":"Centrum Koncertowe A2",
       "postalCode":"53-610",
@@ -329,11 +293,7 @@
     "time":"20:00:00",
     "type":"Miscellaneous",
     "promoter":"Fundacja „PRO ARTE 2002”",
-    "price":{
-      "min":90,
-      "max":379,
-      "currency":"PLN"
-    },
+    "price":null,
     "place":{
       "name":"Synagoga Pod Białym Bocianem",
       "postalCode":"50-072",
@@ -352,11 +312,7 @@
     "time":"20:00:00",
     "type":"Miscellaneous",
     "promoter":"Fundacja „PRO ARTE 2002”",
-    "price":{
-      "min":90,
-      "max":379,
-      "currency":"PLN"
-    },
+    "price":null,
     "place":{
       "name":"Synagoga Pod Białym Bocianem",
       "postalCode":"50-072",
@@ -376,8 +332,8 @@
     "type":"Music",
     "promoter":"WINIARY BOOKINGS Masłowski Stobiński Spółka Cywilna",
     "price":{
-      "min":90,
-      "max":379,
+      "min":130,
+      "max":130,
       "currency":"PLN"
     },
     "place":{
@@ -400,7 +356,7 @@
     "promoter":"Events Piotr Walczuk",
     "price":{
       "min":55,
-      "max":379,
+      "max":55,
       "currency":"PLN"
     },
     "place":{
@@ -421,11 +377,7 @@
     "time":"19:00:00",
     "type":"Music",
     "promoter":"Arte Flamenco",
-    "price":{
-      "min":55,
-      "max":379,
-      "currency":"PLN"
-    },
+    "price":null,
     "place":{
       "name":"Synagoga Pod Białym Bocianem",
       "postalCode":"50-072",
@@ -444,11 +396,7 @@
     "time":"20:00:00",
     "type":"Music",
     "promoter":"WINIARY BOOKINGS Masłowski Stobiński Spółka Cywilna",
-    "price":{
-      "min":55,
-      "max":379,
-      "currency":"PLN"
-    },
+    "price":null,
     "place":{
       "name":"Zaklęte Rewiry",
       "postalCode":"50-001",

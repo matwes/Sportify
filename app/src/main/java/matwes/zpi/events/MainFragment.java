@@ -91,7 +91,7 @@ public abstract class MainFragment extends Fragment {
         filterEvents(e);
         events.clear();
         events.addAll(e);
-        
+
         Collections.sort(events);
     }
 
