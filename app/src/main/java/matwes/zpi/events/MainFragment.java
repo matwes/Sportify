@@ -83,51 +83,15 @@ public abstract class MainFragment extends Fragment {
         if (e.isEmpty()) {
             downloadEvents(true, true);
         } else {
-            updateList(filterEvents(e));
+            updateList(e);
         }
     }
 
     void updateList(List<Event> e) {
-
-//        if (!filtered) {
-//            boolean minDateChanged = false;
-//            boolean maxDateChanged = false;
-//
-//            minDate = new Date(Long.MAX_VALUE);
-//            maxDate = new Date(Long.MIN_VALUE);
-//
-//            for (Event event : e) {
-//                if (event.getDateObject().before(minDate)) {
-//                    minDateChanged = true;
-//                    minDate = event.getDateObject();
-//                }
-//                if (event.getDateObject().after(maxDate)) {
-//                    maxDateChanged = true;
-//                    maxDate = event.getDateObject();
-//                }
-//            }
-//
-//            if (!minDateChanged) {
-//                minDate = new Date();
-//            }
-//            if (!maxDateChanged) {
-//                maxDate = new Date();
-//            }
-//
-//            minDateSelected = minDate;
-//            maxDateSelected = maxDate;
-//        }
-
+        filterEvents(e);
         events.clear();
-//        if (filtered) {
-//            List<Event> dest= new ArrayList<Event>();
-//            dest.addAll(e);
-//
-//            filterEvents(dest);
-//        }else {
         events.addAll(e);
-//        }
-
+        
         Collections.sort(events);
     }
 
@@ -248,16 +212,19 @@ public abstract class MainFragment extends Fragment {
                             event.getDateObject().after(maxDateSelected))
                     ) {
                         i.remove();
+                        continue;
                     }
                 }
 
                 if ((this.selectedCheckboxes.get(0) && !event.getName().contains(selectedName))) {
                     i.remove();
+                    continue;
                 }
 
                 if (selectedMaxPrice != null && !selectedMaxPrice.equals("")) {
                     if (this.selectedCheckboxes.get(1) && (event.getPrice().getMin() >= Double.parseDouble((selectedMaxPrice)))) {
                         i.remove();
+                        continue;
                     }
                 }
             }
