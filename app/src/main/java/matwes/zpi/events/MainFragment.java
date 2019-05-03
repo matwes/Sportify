@@ -255,8 +255,10 @@ public abstract class MainFragment extends Fragment {
                     i.remove();
                 }
 
-                if (this.selectedCheckboxes.get(1) && (event.getPrice().getMin() >= Double.parseDouble((selectedMaxPrice)))) {
-                    i.remove();
+                if (selectedMaxPrice != null && !selectedMaxPrice.equals("")) {
+                    if (this.selectedCheckboxes.get(1) && (event.getPrice().getMin() >= Double.parseDouble((selectedMaxPrice)))) {
+                        i.remove();
+                    }
                 }
             }
         }
