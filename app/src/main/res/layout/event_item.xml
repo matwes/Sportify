@@ -57,14 +57,30 @@
                     tools:text="12.07.2017" />
 
                 <TextView
+                    android:id="@+id/tvEventMembers"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/blocked_icon"
+                    android:layout_alignBaseline="@id/tvEventDate"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:fontFamily="sans-serif-light"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    tools:text="20" />
+
+                <TextView
                     android:id="@+id/tvEventPlace"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignBaseline="@id/tvEventDate"
                     android:layout_marginStart="5dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="35dp"
                     android:layout_toEndOf="@id/tvEventDate"
                     android:textColor="@android:color/white"
-                    tools:text="Wrocław Główny" />
+                    tools:text="Wrocław Główny Główny Głównydsff Główny Główny" />
 
                 <ImageView
                     android:id="@+id/blocked_icon"
@@ -75,19 +91,7 @@
                     android:scaleType="centerCrop"
                     android:src="@drawable/blocked_event" />
 
-                <TextView
-                    android:id="@+id/tvEventMembers"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/blocked_icon"
-                    android:layout_alignBaseline="@id/tvEventDate"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:fontFamily="sans-serif-light"
-                    android:textAlignment="center"
-                    android:textColor="@android:color/white"
-                    android:textSize="18sp"
-                    tools:text="3540" />
+
             </RelativeLayout>
 
         </RelativeLayout>
