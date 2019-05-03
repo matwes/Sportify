@@ -29,7 +29,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/email"
                     android:inputType="textEmailAddress"
-                    android:textColor="@color/textColor" />
+                    android:textColor="@color/blackColor" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -43,7 +43,7 @@
                     android:ems="10"
                     android:hint="@string/password"
                     android:inputType="textPassword"
-                    android:textColor="@color/textColor" />
+                    android:textColor="@color/blackColor" />
             </android.support.design.widget.TextInputLayout>
 
             <Button

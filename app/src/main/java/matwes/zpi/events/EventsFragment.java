@@ -76,6 +76,7 @@ public class EventsFragment extends MainFragment implements EventListAdapter.Eve
     @Override
     void updateList(List<Event> e) {
         super.updateList(e);
+        adapter.setEvents(e);
         adapter.notifyDataSetChanged();
     }
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#B30b5e9d</color>
+    <color name="colorPrimary">#0b5e9d</color>
     <color name="colorPrimaryDark">#0b5e9d</color>
 
 
@@ -9,5 +9,6 @@
     <color name="background">#ffffff</color>
     <color name="white">#ffffff</color>
     <color name="textColor">#ffffff</color>
+    <color name="blackColor">#000000</color>
 
 </resources>

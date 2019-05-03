@@ -43,23 +43,23 @@ public class WelcomeActivity extends AppCompatActivity {
         });
         checkConnection();
 
-        final EditText serverAddress = findViewById(R.id.serverIp);
-        serverAddress.setText(Common.URL);
-        serverAddress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                serverAddress.setVisibility(View.VISIBLE);
-            }
-        });
+//        final EditText serverAddress = findViewById(R.id.serverIp);
+//        serverAddress.setText(Common.URL);
+//        serverAddress.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                serverAddress.setVisibility(View.VISIBLE);
+//            }
+//        });
 
-        Button changeAddress = findViewById(R.id.changeIp);
-        changeAddress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Common.URL = serverAddress.getText().toString();
-                Toast.makeText(getApplicationContext(), "Ip has changed", Toast.LENGTH_SHORT).show();
-            }
-        });
+//        Button changeAddress = findViewById(R.id.changeIp);
+//        changeAddress.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Common.URL = serverAddress.getText().toString();
+//                Toast.makeText(getApplicationContext(), "Ip has changed", Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 
     private void checkConnection() {

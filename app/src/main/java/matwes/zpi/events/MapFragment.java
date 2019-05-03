@@ -123,6 +123,7 @@ public class MapFragment extends MainFragment implements OnMapReadyCallback {
     }
 
     private void addItems() {
+        //todo Ola z mapa czy dziala sortowanie tutaj tez bylo uzywane filtered- wyszykaj
         for (int i = 0; i < events.size(); i++) {
             Event event = events.get(i);
             Place place = event.getPlace();
@@ -207,11 +208,11 @@ public class MapFragment extends MainFragment implements OnMapReadyCallback {
     @Override
     void updateList(List<Event> e) {
         super.updateList(e);
-        if (filtered) {
+//        if (filtered) {
             clusterManager.clearItems();
             addItems();
             clusterManager.cluster();
-        }
+//        }
     }
 
     @Override
@@ -234,12 +235,15 @@ public class MapFragment extends MainFragment implements OnMapReadyCallback {
     }
 
     @Override
-    void filterEvents(List<Event> events) {
-        super.filterEvents(events);
+    List<Event> filterEvents(List<Event> events) {
+        List<Event> dest= new ArrayList<Event>();
+        dest.addAll(EventService.getInstance().originalListOfEvents);
+        List<Event> filteredEvents = super.filterEvents(dest);
         LatLng latLng = new LatLng(51.1136, 17.0320);
         float zoom = 12;
 
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+        return filteredEvents;
     }
 
     private void getLocation() {

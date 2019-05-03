@@ -4,24 +4,14 @@ package matwes.zpi.domain;
  * Created by Mateusz Wesołowski
  */
 public class Price {
-    private String type;
     private String currency;
-    private int min;
-    private int max;
+    private double min;
+    private double max;
 
-    public Price(String type, String currency, int min, int max) {
-        this.type = type;
+    public Price(String currency, int min, int max) {
         this.currency = currency;
         this.min = min;
         this.max = max;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getCurrency() {
@@ -32,7 +22,7 @@ public class Price {
         this.currency = currency;
     }
 
-    public int getMin() {
+    public double getMin() {
         return min;
     }
 
@@ -40,7 +30,7 @@ public class Price {
         this.min = min;
     }
 
-    public int getMax() {
+    public double getMax() {
         return max;
     }
 

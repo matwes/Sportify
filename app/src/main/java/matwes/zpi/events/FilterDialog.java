@@ -3,6 +3,8 @@ package matwes.zpi.events;
 import android.app.Dialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -12,10 +14,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import matwes.zpi.R;
+import matwes.zpi.domain.Event;
 
 /**
  * Created by Mateusz Wesołowski
@@ -24,18 +29,19 @@ import matwes.zpi.R;
 class FilterDialog extends Dialog {
     public Button button;
     TextView filterDate;
-    private AutoCompleteTextView autoCompleteTextView, autoCompleteTextView2;
-    private ArrayAdapter<CharSequence> cityAdapter, sportAdapter;
+    private TextInputEditText autoCompleteTextView2;
+    private AutoCompleteTextView autoCompleteTextView;
+    private ArrayAdapter<String> eventsAdatper;
+    private AppCompatCheckBox nameCheckBox, priceCheckBox, dateCheckBox;
 
-    FilterDialog(@NonNull Context context, ArrayAdapter<CharSequence> sportAdapter, ArrayAdapter<CharSequence> cityAdapter) {
+    FilterDialog(@NonNull Context context, ArrayAdapter<String> eventsAdatper) {
         super(context);
         setTitle(R.string.filter);
         setContentView(R.layout.dialog_filter);
-        this.cityAdapter = cityAdapter;
-        this.sportAdapter = sportAdapter;
+        this.eventsAdatper = eventsAdatper;
     }
 
-    void update(String selectedSport, String selectedCity, Date minSelectedDate, Date maxSelectedDate) {
+    void update(String selectedName, String selectedPrice, Date minSelectedDate, Date maxSelectedDate) {
         LinearLayout layout = findViewById(R.id.dialog_filter);
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH);
@@ -44,7 +50,11 @@ class FilterDialog extends Dialog {
         filterDate = layout.findViewById(R.id.filterDate);
         filterDate.setText(String.format("%s - %s", sdf.format(minSelectedDate), sdf.format(maxSelectedDate)));
 
-        autoCompleteTextView = findViewById(R.id.autoCompleteTextView);
+        nameCheckBox = findViewById(R.id.checkButtonEventName);
+        priceCheckBox = findViewById(R.id.checkButtonPrice);
+        dateCheckBox  = findViewById(R.id.checkButtonDate);
+
+        autoCompleteTextView = findViewById(R.id.autoCompleteTextView2);
         autoCompleteTextView.setAdapter(null);
         autoCompleteTextView.setKeyListener(null);
         autoCompleteTextView.setOnTouchListener(new View.OnTouchListener() {
@@ -54,25 +64,25 @@ class FilterDialog extends Dialog {
                 return false;
             }
         });
-        autoCompleteTextView.setText(selectedSport);
-        autoCompleteTextView.setAdapter(sportAdapter);
+        autoCompleteTextView.setText(selectedName);
+        autoCompleteTextView.setAdapter(eventsAdatper);
 
-        autoCompleteTextView2 = findViewById(R.id.autoCompleteTextView2);
-        autoCompleteTextView2.setAdapter(null);
-        autoCompleteTextView2.setKeyListener(null);
-        autoCompleteTextView2.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                ((AutoCompleteTextView) v).showDropDown();
-                return false;
-            }
-        });
-        autoCompleteTextView2.setText(selectedCity);
-        autoCompleteTextView2.setAdapter(cityAdapter);
+        autoCompleteTextView2 = findViewById(R.id.maxPriceEditText);
+//        autoCompleteTextView2.setAdapter(null);
+//        autoCompleteTextView2.setKeyListener(null);
+//        autoCompleteTextView2.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                ((AutoCompleteTextView) v).showDropDown();
+//                return false;
+//            }
+//        });
+        autoCompleteTextView2.setText(selectedPrice);
+//        autoCompleteTextView2.setAdapter(cityAdapter);
 
     }
 
-    String getSelectedSport() {
+    String getSelectedEventName() {
         return autoCompleteTextView.getText().toString();
     }
 
@@ -81,7 +91,15 @@ class FilterDialog extends Dialog {
         filterDate.setText(String.format("%s - %s", sdf.format(minSelectedDate), sdf.format(maxSelectedDate)));
     }
 
-    String getSelectedCity() {
+    String getSelectedPrice() {
         return autoCompleteTextView2.getText().toString();
+    }
+
+    List<Boolean> getSelectedCheckboxes() {
+        List<Boolean> selectedCheckboxes = new ArrayList<>();
+        selectedCheckboxes.add(this.nameCheckBox.isChecked());
+        selectedCheckboxes.add(this.priceCheckBox.isChecked());
+        selectedCheckboxes.add(this.dateCheckBox.isChecked());
+        return selectedCheckboxes;
     }
 }

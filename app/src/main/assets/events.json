@@ -1,597 +1,442 @@
 [
   {
-    "id": "Z598xZQpZaFeF",
-    "name": "BRYAN FERRY",
-    "image": "https://s1.ticketm.net/dam/a/81f/a6699447-db8e-4c6d-a5a7-b6ed6a17681f_838121_RETINA_PORTRAIT_16_9.jpg",
-    "date": "2019-06-03",
-    "time": "18S00S00",
-    "type": "Music",
-    "promoter": "Live Nation Sp. z o.o.",
-    "price": [
-      {
-        "type": "standard including fees",
-        "currency": "PLN",
-        "min": 229,
-        "max": 379
-      },
-      {
-        "type": "standard",
-        "currency": "PLN",
-        "min": 209,
-        "max": 345
-      }
-    ],
-    "place": {
-      "name": "Narodowe Forum Muzyki",
-      "postalCode": "50-071",
-      "address": "Plac Wolności 1",
-      "country": "Poland",
-      "city": "Wroclaw",
-      "location": {
-        "latitude": 51.10708,
-        "longitude": 17.02574
-      }
+    "id":"Z598xZQpZaFeF",
+    "name":"BRYAN FERRY",
+    "image":"https://s1.ticketm.net/dam/a/81f/a6699447-db8e-4c6d-a5a7-b6ed6a17681f_838121_RETINA_PORTRAIT_16_9.jpg",
+    "date":"2019-07-03T16:00:00.000Z",
+    "type":"Music",
+    "promoter":"Live Nation Sp. z o.o.",
+    "price":{
+      "min":209,
+      "max":379,
+      "currency":"PLN"
     },
-    "interested": 350
+    "place":{
+      "name":"Narodowe Forum Muzyki",
+      "postalCode":"50-071",
+      "address":"Plac Wolności 1",
+      "location":{
+        "latitude":51.10708,
+        "longitude":17.02574
+      }
+    }
   },
   {
-    "id": "Z698xZQpZaeMS",
-    "name": "Our Last Night",
-    "image": "https://s1.ticketm.net/dam/a/588/266ed1bf-497f-418bab0c-9b022bc9e588_1014581_RECOMENDATION_16_9.jpg",
-    "date": "2019-07-02",
-    "time": "20S00S00",
-    "type": "Music",
-    "promoter": "WINIARY BOOKINGS Masłowski Stobiński Spółka Cywilna",
-    "price": [],
-    "place": {
-      "name": "Zaklęte Rewiry",
-      "postalCode": "50-001",
-      "address": "ul. Krakowska 100",
-      "country": "Poland",
-      "city": "Wroclaw",
-      "location": {
-        "latitude": 51.09049,
-        "longitude": 17.06583
-      }
+    "id":"Z698xZQpZaeMS",
+    "name":"Our Last Night + Hands Like Houses",
+    "image":"https://s1.ticketm.net/dam/a/588/266ed1bf-497f-418b-ab0c-9b022bc9e588_1014581_RETINA_PORTRAIT_16_9.jpg",
+    "date":"2019-08-02T18:00:00.000Z",
+    "type":"Music",
+    "promoter":"WINIARY BOOKINGS Masłowski Stobiński Spółka Cywilna",
+    "price":{
+      "min":209,
+      "max":379,
+      "currency":"PLN"
     },
-    "interested": 1290
+    "place":{
+      "name":"Zaklęte Rewiry",
+      "postalCode":"50-001",
+      "address":"ul. Krakowska 100",
+      "location":{
+        "latitude":51.09049,
+        "longitude":17.06583
+      }
+    }
   },
   {
-    "id": "Z598xZQpZFA71",
-    "name": "Salvador Sobral - Poland Tour 2019",
-    "image": "https://s1.ticketm.net/dam/a/d22/360c0112-05a0-49a2-b4ad-73641b160d22_907081_EVENT_DETAIL_PAGE_16_9.jpg",
-    "date": "2019-04-07",
-    "time": "19S30S00",
-    "type": "Music",
-    "promoter": "Stage Production",
-    "price": [
-      {
-        "type": "standard",
-        "currency": "PLN",
-        "min": 179,
-        "max": 199
-      },
-      {
-        "type": "standard including fees",
-        "currency": "PLN",
-        "min": 179,
-        "max": 199
-      }
-    ],
-    "place": {
-      "name": "Narodowe Forum Muzyki",
-      "postalCode": "50-071",
-      "address": "Plac Wolności 1",
-      "country": "Poland",
-      "city": "Wroclaw",
-      "location": {
-        "latitude": 51.10708,
-        "longitude": 17.02574
-      }
+    "id":"Z698xZQpZaey-",
+    "name":"Bullet For My Valentine",
+    "image":"https://s1.ticketm.net/dam/a/12e/aadd82f7-7967-4647-bcd4-6b03ed2c512e_1026881_RECOMENDATION_16_9.jpg",
+    "date":"2019-09-05T16:00:00.000Z",
+    "type":"Music",
+    "promoter":"Live Nation Sp. z o.o.",
+    "price":{
+      "min":209,
+      "max":379,
+      "currency":"PLN"
     },
-    "interested": 12
+    "place":{
+      "name":"Centrum Koncertowe A2",
+      "postalCode":"53-610",
+      "address":"ul. Góralska 5",
+      "location":{
+        "latitude":51.11042,
+        "longitude":17.00319
+      }
+    }
   },
   {
-    "id": "Z698xZQpZaec5",
-    "name": "Andrzej Grabowski: Spowiedź chuligana. Jesienin",
-    "image": "https://s1.ticketm.net/dam/a/a73/f1e51e70-0b44-4d94-9d20-b78380aefa73_960201_EVENT_DETAIL_PAGE_16_9.jpg",
-    "date": "2019-04-07",
-    "time": "17S00S00",
-    "type": "Arts & Theatre",
-    "promoter": "Centrum Kultury Agora",
-    "price": [
-      {
-        "type": "standard including fees",
-        "currency": "PLN",
-        "min": 65,
-        "max": 65
-      },
-      {
-        "type": "standard",
-        "currency": "PLN",
-        "min": 65,
-        "max": 65
-      }
-    ],
-    "place": {
-      "name": "CK Agora, Wrocław",
-      "postalCode": "51-111",
-      "address": "ul. Serbska 5a",
-      "country": "Poland",
-      "city": "Wroclaw",
-      "location": {
-        "latitude": 51.13492,
-        "longitude": 17.01937
-      }
+    "id":"Z698xZQpZaell",
+    "name":"DEVIN TOWNSEND",
+    "image":"https://s1.ticketm.net/dam/a/644/570eab3a-c96b-42cc-9a6a-36fcaf06f644_955361_RETINA_LANDSCAPE_16_9.jpg",
+    "date":"2019-12-29T17:00:00.000Z",
+    "type":"Music",
+    "promoter":"Live Nation Sp. z o.o.",
+    "price":{
+      "min":90,
+      "max":379,
+      "currency":"PLN"
     },
-    "interested": 749
+    "place":{
+      "name":"Centrum Koncertowe A2",
+      "postalCode":"53-610",
+      "address":"ul. Góralska 5",
+      "location":{
+        "latitude":51.11042,
+        "longitude":17.00319
+      }
+    }
   },
   {
-    "id": "Z698xZQpZae0L",
-    "name": "NIEMEN INACZEJ",
-    "image": "https://s1.ticketm.net/dam/c/fbc/b293c0ad-c904-4215-bc59-8d7f2414dfbc_106141_RETINA_PORTRAIT_3_2.jpg",
-    "date": "2019-04-09",
-    "time": "20S30S00",
-    "type": "Music",
-    "promoter": "Music Company Sp. z o.o. Sp.k.",
-    "price": [
-      {
-        "type": "standard including fees",
-        "currency": "PLN",
-        "max": 229
-      },
-      {
-        "type": "standard",
-        "currency": "PLN",
-        "min": 149,
-        "max": 229
-      }
-    ],
-    "place": {
-      "name": "Narodowe Forum Muzyki",
-      "postalCode": "50-071",
-      "address": "Plac Wolności 1",
-      "country": "Poland",
-      "city": "Wroclaw",
-      "location": {
-        "latitude": 51.10708,
-        "longitude": 17.02574
-      }
+    "id":"Z698xZQpZaeYM",
+    "name":"Morcheeba",
+    "image":"https://s1.ticketm.net/dam/c/df8/81eadad8-4449-412e-a2b1-3d8bbb78edf8_106181_RETINA_LANDSCAPE_16_9.jpg",
+    "date":"2019-06-08T18:00:00.000Z",
+    "type":"Music",
+    "promoter":"Fource Entertainment sp. z o.o.",
+    "price":{
+      "min":90,
+      "max":379,
+      "currency":"PLN"
     },
-    "interested": 46
+    "place":{
+      "name":"Centrum Koncertowe A2",
+      "postalCode":"53-610",
+      "address":"ul. Góralska 5",
+      "location":{
+        "latitude":51.11042,
+        "longitude":17.00319
+      }
+    }
   },
   {
-    "id": "Z698xZQpZaeRM",
-    "name": "\"Niewiosna\" Tour: Blindead, MuN, Fleshworld",
-    "image": "https://s1.ticketm.net/dam/a/0dd/437c9468-9ea9-4189-8e3fd589090930dd_972911_RETINA_PORTRAIT_16_9.jpg",
-    "date": "2019-04-26",
-    "time": "20S00S00",
-    "type": "Music",
-    "promoter": "GRIN",
-    "price": [
-      {
-        "type": "standard including fees",
-        "currency": "PLN",
-        "min": 59,
-        "max": 59
-      },
-      {
-        "type": "standard",
-        "currency": "PLN",
-        "min": 59,
-        "max": 59
-      }
-    ],
-    "place": {
-      "name": "Klub Pralnia",
-      "postalCode": "50-001",
-      "address": "ul. Krakowska 100",
-      "country": "Poland",
-      "city": "Wroclaw",
-      "location": {
-        "latitude": 51.09045,
-        "longitude": 17.06605
-      }
+    "id":"Z698xZQpZaetP",
+    "name":"Little Big",
+    "image":"https://s1.ticketm.net/dam/a/87b/9a9f97e2-9ddd-4bfd-a60c-41b57378a87b_907141_TABLET_LANDSCAPE_16_9.jpg",
+    "date":"2019-06-10T18:00:00.000Z",
+    "type":"Music",
+    "promoter":"WINIARY BOOKINGS Masłowski Stobiński Spółka Cywilna",
+    "price":{
+      "min":90,
+      "max":379,
+      "currency":"PLN"
     },
-    "interested": 5
+    "place":{
+      "name":"Centrum Koncertowe A2",
+      "postalCode":"53-610",
+      "address":"ul. Góralska 5",
+      "location":{
+        "latitude":51.11042,
+        "longitude":17.00319
+      }
+    }
   },
   {
-    "id": "Z698xZQpZaeMD",
-    "name": "Koncert Hawdalowy - SZTETL - POWRÓT DO DOMU",
-    "image": "https://s1.ticketm.net/dam/c/f6d/6f417e97-2981-4605-a837-a307d33e3f6d_105491_TABLET_LANDSCAPE_LARGE_16_9.jpg",
-    "date": "2019-04-28",
-    "time": "18S00S00",
-    "type": "Music",
-    "promoter": "Fundacja „PRO ARTE 2002”",
-    "price": [],
-    "place": {
-      "name": "Synagoga Pod Białym Bocianem",
-      "postalCode": "50-072",
-      "address": "Włodkowica 7",
-      "country": "Poland",
-      "city": "Wroclaw",
-      "location": {
-        "latitude": 51.10846,
-        "longitude": 17.02306
-      }
+    "id":"Z698xZQpZaeID",
+    "name":"The Cinematic Orchestra",
+    "image":"https://s1.ticketm.net/dam/a/828/62cefbdf-9e6c-42f2-aac6-d8e915ad8828_945321_EVENT_DETAIL_PAGE_16_9.jpg",
+    "date":"2019-06-17T18:00:00.000Z",
+    "type":"Music",
+    "promoter":"5AM ARTISTS",
+    "price":{
+      "min":90,
+      "max":379,
+      "currency":"PLN"
     },
-    "interested": 758
+    "place":{
+      "name":"Centrum Koncertowe A2",
+      "postalCode":"53-610",
+      "address":"ul. Góralska 5",
+      "location":{
+        "latitude":51.11042,
+        "longitude":17.00319
+      }
+    }
   },
   {
-    "id": "Z698xZQpZaew5",
-    "name": "Piaf! The Show",
-    "image": "https://s1.ticketm.net/dam/a/e3e/b8719a54-ffca-443d-abb9-d23094d4de3e_946171_CUSTOM.jpg",
-    "date": "2019-04-28",
-    "time": "20S00S00",
-    "type": "Music",
-    "promoter": "Good Walk Sp. z o.o.",
-    "price": [],
-    "place": {
-      "name": "Wrocławskie Centrum Kongresowe",
-      "postalCode": "51-618",
-      "address": "Wystawowa 1",
-      "country": "Poland",
-      "city": "Wroclaw",
-      "location": {
-        "latitude": 51.10685,
-        "longitude": 17.07736
-      }
+    "id":"Z698xZQpZaeDt",
+    "name":"Koncert Hawdalowy - NINA STILLER - JIDYSZE PERŁ",
+    "image":"https://s1.ticketm.net/dam/c/f6d/6f417e97-2981-4605-a837-a307d33e3f6d_105491_TABLET_LANDSCAPE_LARGE_16_9.jpg",
+    "date":"2019-06-26T16:00:00.000Z",
+    "type":"Music",
+    "promoter":"Fundacja „PRO ARTE 2002”",
+    "price":{
+      "min":90,
+      "max":379,
+      "currency":"PLN"
     },
-    "interested": 9
+    "place":{
+      "name":"Synagoga Pod Białym Bocianem",
+      "postalCode":"50-072",
+      "address":"Włodkowica 7",
+      "location":{
+        "latitude":51.10846,
+        "longitude":17.02306
+      }
+    }
   },
   {
-    "id": "Z598xZQpZ1AAe",
-    "name": "The Chicago Blues Brothers",
-    "image": "https://s1.ticketm.net/dam/a/080/526ca4e2-1e51-46a5-944fc985d65de080_868731_EVENT_DETAIL_PAGE_16_9.jpg",
-    "date": "2019-04-30",
-    "time": "20S00S00",
-    "type": "Arts & Theatre",
-    "promoter": "Agencja Artystyczno Reklamowa PASJA",
-    "price": [
-      {
-        "type": "standard including fees",
-        "currency": "PLN",
-        "min": 99,
-        "max": 99
-      },
-      {
-        "type": "standard",
-        "currency": "PLN",
-        "min": 99,
-        "max": 99
-      }
-    ],
-    "place": {
-      "name": "Centrum Koncertowe A2",
-      "postalCode": "53-610",
-      "address": "ul. Góralska 5",
-      "country": "Poland",
-      "city": "Wroclaw",
-      "location": {
-        "latitude": 51.11042,
-        "longitude": 17.00319
-      }
+    "id":"Z698xZQpZaeBL",
+    "name":"SIMCHA - KLEZMERSKA HAWDALA – NEOKLEZ",
+    "image":"https://s1.ticketm.net/dam/a/f49/6183e5fa-4094-45bf-8221-6eaf2e5a2f49_1028891_RECOMENDATION_16_9.jpg",
+    "date":"2019-07-01T20:08:00.000Z",
+    "type":"Miscellaneous",
+    "promoter":"Fundacja „PRO ARTE 2002”",
+    "price":{
+      "min":90,
+      "max":379,
+      "currency":"PLN"
     },
-    "interested": 263
+    "place":{
+      "name":"Synagoga Pod Białym Bocianem",
+      "postalCode":"50-072",
+      "address":"Włodkowica 7",
+      "location":{
+        "latitude":51.10846,
+        "longitude":17.02306
+      }
+    }
   },
   {
-    "id": "Z698xZQpZaeYM",
-    "name": "Morcheeba",
-    "image": "https://s1.ticketm.net/dam/c/df8/81eadad8-4449-412ea2b1-3d8bbb78edf8_106181_RETINA_LANDSCAPE_16_9.jpg",
-    "date": "2019-05-08",
-    "time": "20S00S00",
-    "type": "Music",
-    "promoter": "Fource Entertainment sp. z o.o.",
-    "price": [
-      {
-        "type": "standard",
-        "currency": "PLN",
-        "min": 110,
-        "max": 110
-      },
-      {
-        "type": "standard including fees",
-        "currency": "PLN",
-        "min": 110,
-        "max": 110
-      }
-    ],
-    "place": {
-      "name": "Centrum Koncertowe A2",
-      "postalCode": "53-610",
-      "address": "ul. Góralska 5",
-      "country": "Poland",
-      "city": "Wroclaw",
-      "location": {
-        "latitude": 51.11042,
-        "longitude": 17.00319
-      }
+    "id":"Z698xZQpZaeBE",
+    "name":"SIMCHA -POWRÓT DO KORZENI - YAMMA ENSEMBLE /Izrael/",
+    "image":"https://s1.ticketm.net/dam/a/f49/6183e5fa-4094-45bf-8221-6eaf2e5a2f49_1028891_RECOMENDATION_16_9.jpg",
+    "date":"2019-07-02T18:00:00.000Z",
+    "type":"Miscellaneous",
+    "promoter":"Fundacja „PRO ARTE 2002”",
+    "price":{
+      "min":90,
+      "max":379,
+      "currency":"PLN"
     },
-    "interested": 147
+    "place":{
+      "name":"Synagoga Pod Białym Bocianem",
+      "postalCode":"50-072",
+      "address":"Włodkowica 7",
+      "location":{
+        "latitude":51.10846,
+        "longitude":17.02306
+      }
+    }
   },
   {
-    "id": "Z698xZQpZaetP",
-    "name": "Little Big",
-    "image": "https://s1.ticketm.net/dam/a/87b/9a9f97e2-9ddd-4bfda60c-41b57378a87b_907141_TABLET_LANDSCAPE_16_9.jpg",
-    "date": "2019-05-10",
-    "time": "20S00S00",
-    "type": "Music",
-    "promoter": "WINIARY BOOKINGS Masłowski Stobiński Spółka Cywilna",
-    "price": [
-      {
-        "type": "standard",
-        "currency": "PLN",
-        "min": 105,
-        "max": 105
-      },
-      {
-        "type": "standard including fees",
-        "currency": "PLN",
-        "min": 105,
-        "max": 105
-      }
-    ],
-    "place": {
-      "name": "Centrum Koncertowe A2",
-      "postalCode": "53-610",
-      "address": "ul. Góralska 5",
-      "country": "Poland",
-      "city": "Wroclaw",
-      "location": {
-        "latitude": 51.11042,
-        "longitude": 17.00319
-      }
+    "id":"Z698xZQpZaesK",
+    "name":"Tim Bowness with band",
+    "image":"https://s1.ticketm.net/dam/a/e74/51346a92-39e4-45b4-b89f-fc26a2915e74_981681_ARTIST_PAGE_3_2.jpg",
+    "date":"2019-07-02T18:00:00.000Z",
+    "type":"Music",
+    "promoter":"Rock Serwis Piotr Kosiński",
+    "price":{
+      "min":90,
+      "max":379,
+      "currency":"PLN"
     },
-    "interested": 61
+    "place":{
+      "name":"Firlej",
+      "postalCode":"53-504",
+      "address":"ul. Grabiszyńska 56",
+      "location":{
+        "latitude":51.10244,
+        "longitude":17.01451
+      }
+    }
   },
   {
-    "id": "Z698xZQpZaeID",
-    "name": "The Cinematic Orchestra",
-    "image": "https://s1.ticketm.net/dam/a/828/62cefbdf-9e6c-42f2-aac6-d8e915ad8828_945321_EVENT_DETAIL_PAGE_16_9.jpg",
-    "date": "2019-05-17",
-    "time": "20S00S00",
-    "type": "Music",
-    "promoter": "5AM ARTISTS",
-    "price": [
-      {
-        "type": "standard including fees",
-        "currency": "PLN",
-        "min": 130,
-        "max": 130
-      },
-      {
-        "type": "standard",
-        "currency": "PLN",
-        "min": 130,
-        "max": 130
-      }
-    ],
-    "place": {
-      "name": "Centrum Koncertowe A2",
-      "postalCode": "53-610",
-      "address": "ul. Góralska 5",
-      "country": "Poland",
-      "city": "Wroclaw",
-      "location": {
-        "latitude": 51.11042,
-        "longitude": 17.00319
-      }
+    "id":"Z698xZQpZaeBt",
+    "name":"SIMCHA - KONCERT PAMIĘCI LEOPOLDA KOZŁOWSKIEGO",
+    "image":"https://s1.ticketm.net/dam/a/f49/6183e5fa-4094-45bf-8221-6eaf2e5a2f49_1028891_RECOMENDATION_16_9.jpg",
+    "date":"2019-07-03T18:00:00.000Z",
+    "type":"Miscellaneous",
+    "promoter":"Fundacja „PRO ARTE 2002”",
+    "price":{
+      "min":90,
+      "max":379,
+      "currency":"PLN"
     },
-    "interested": 23
+    "place":{
+      "name":"Synagoga Pod Białym Bocianem",
+      "postalCode":"50-072",
+      "address":"Włodkowica 7",
+      "location":{
+        "latitude":51.10846,
+        "longitude":17.02306
+      }
+    }
   },
   {
-    "id": "Z698xZQpZaesK",
-    "name": "Tim Bowness with band",
-    "image": "https://s1.ticketm.net/dam/a/e74/51346a92-39e4-45b4-b89ffc26a2915e74_981681_ARTIST_PAGE_3_2.jpg",
-    "date": "2019-06-02",
-    "time": "20S00S00",
-    "type": "Music",
-    "promoter": "Rock Serwis Piotr Kosiński",
-    "price": [],
-    "place": {
-      "name": "Firlej",
-      "postalCode": "53-504",
-      "address": "ul. Grabiszyńska 56",
-      "country": "Poland",
-      "city": "Wroclaw",
-      "location": {
-        "latitude": 51.10244,
-        "longitude": 17.01451
-      }
+    "id":"Z698xZQpZaeBl",
+    "name":"SIMCHA - KLEZMERZY Z HAMBURGA - MISCHPOKE KLEZMER BAND /Niemcy/",
+    "image":"https://s1.ticketm.net/dam/a/f49/6183e5fa-4094-45bf-8221-6eaf2e5a2f49_1028891_RECOMENDATION_16_9.jpg",
+    "date":"2019-07-04T18:00:00.000Z",
+    "type":"Miscellaneous",
+    "promoter":"Fundacja „PRO ARTE 2002”",
+    "price":{
+      "min":90,
+      "max":379,
+      "currency":"PLN"
     },
-    "interested": 835
+    "place":{
+      "name":"Synagoga Pod Białym Bocianem",
+      "postalCode":"50-072",
+      "address":"Włodkowica 7",
+      "location":{
+        "latitude":51.10846,
+        "longitude":17.02306
+      }
+    }
   },
   {
-    "id": "Z698xZQpZaeYt",
-    "name": "Anthrax",
-    "image": "https://s1.ticketm.net/dam/a/f3a/435d425f-7905-4287-99b3-73ea58053f3a_939691_CUSTOM.jpg",
-    "date": "2019-06-12",
-    "time": "19S30S00",
-    "type": "Music",
-    "promoter": "WINIARY BOOKINGS Masłowski Stobiński Spółka Cywilna",
-    "price": [
-      {
-        "type": "standard including fees",
-        "currency": "PLN",
-        "min": 130,
-        "max": 130
-      },
-      {
-        "type": "standard",
-        "currency": "PLN",
-        "min": 130,
-        "max": 130
-      }
-    ],
-    "place": {
-      "name": "Centrum Koncertowe A2",
-      "postalCode": "53-610",
-      "address": "ul. Góralska 5",
-      "country": "Poland",
-      "city": "Wroclaw",
-      "location": {
-        "latitude": 51.11042,
-        "longitude": 17.00319
-      }
+    "id":"Z698xZQpZaeMl",
+    "name":"Cigarettes After Sex",
+    "image":"https://s1.ticketm.net/dam/a/2c9/41f9787e-6634-49a7-b3b7-8a44521302c9_1016421_TABLET_LANDSCAPE_16_9.jpg",
+    "date":"2019-07-04T18:00:00.000Z",
+    "type":"Music",
+    "promoter":"Go-Ahead",
+    "price":{
+      "min":90,
+      "max":379,
+      "currency":"PLN"
     },
-    "interested": 27
+    "place":{
+      "name":"Centrum Koncertowe A2",
+      "postalCode":"53-610",
+      "address":"ul. Góralska 5",
+      "location":{
+        "latitude":51.11042,
+        "longitude":17.00319
+      }
+    }
   },
   {
-    "id": "Z698xZQpZaePD",
-    "name": "Christian Death",
-    "image": "https://s1.ticketm.net/dam/a/451/aae7367a-7b61-446ca187-8754aad3f451_936421_TABLET_LANDSCAPE_16_9.jpg",
-    "date": "2019-06-21",
-    "time": "20S00S00",
-    "type": "Music",
-    "promoter": "Events Piotr Walczuk",
-    "price": [
-      {
-        "type": "standard",
-        "currency": "PLN",
-        "min": 55,
-        "max": 55
-      },
-      {
-        "type": "standard including fees",
-        "currency": "PLN",
-        "min": 55,
-        "max": 55
-      }
-    ],
-    "place": {
-      "name": "Klub Liverpool",
-      "postalCode": "11-400",
-      "address": "ul. Świdnicka 37",
-      "country": "Poland",
-      "city": "Wroclaw",
-      "location": {
-        "latitude": 51.10395,
-        "longitude": 17.03038
-      }
+    "id":"Z698xZQpZaeBc",
+    "name":"SIMCHA -  SYMCHA KELLER Z ZESPOŁEM",
+    "image":"https://s1.ticketm.net/dam/a/f49/6183e5fa-4094-45bf-8221-6eaf2e5a2f49_1028891_RECOMENDATION_16_9.jpg",
+    "date":"2019-07-05T18:00:00.000Z",
+    "type":"Miscellaneous",
+    "promoter":"Fundacja „PRO ARTE 2002”",
+    "price":{
+      "min":90,
+      "max":379,
+      "currency":"PLN"
     },
-    "interested": 569
+    "place":{
+      "name":"Synagoga Pod Białym Bocianem",
+      "postalCode":"50-072",
+      "address":"Włodkowica 7",
+      "location":{
+        "latitude":51.10846,
+        "longitude":17.02306
+      }
+    }
   },
   {
-    "id": "Z698xZQpZaeVN",
-    "name": "Mistrzowie Flamenco - W hołdzie dla \"La Chany\"",
-    "image": "https://s1.ticketm.net/dam/a/6f4/1048d98e-a88a-4757-a7db-7b8ca97776f4_574611_RECOMENDATION_16_9.jpg",
-    "date": "2019-06-30",
-    "time": "19S00S00",
-    "type": "Music",
-    "promoter": "Arte Flamenco",
-    "price": [],
-    "place": {
-      "name": "Synagoga Pod Białym Bocianem",
-      "postalCode": "50-072",
-      "address": "Włodkowica 7",
-      "country": "Poland",
-      "city": "Wroclaw",
-      "location": {
-        "latitude": 51.10846,
-        "longitude": 17.02306
-      }
+    "id":"Z698xZQpZaeBs",
+    "name":"SIMCHA - PIOTR WOJTASIK - JAZZ IN THE SYNAGOGUE",
+    "image":"https://s1.ticketm.net/dam/a/f49/6183e5fa-4094-45bf-8221-6eaf2e5a2f49_1028891_RECOMENDATION_16_9.jpg",
+    "date":"2019-07-06T18:00:00.000Z",
+    "type":"Miscellaneous",
+    "promoter":"Fundacja „PRO ARTE 2002”",
+    "price":{
+      "min":90,
+      "max":379,
+      "currency":"PLN"
     },
-    "interested": 32
+    "place":{
+      "name":"Synagoga Pod Białym Bocianem",
+      "postalCode":"50-072",
+      "address":"Włodkowica 7",
+      "location":{
+        "latitude":51.10846,
+        "longitude":17.02306
+      }
+    }
   },
   {
-    "id": "Z698xZQpZaeVs",
-    "name": "Hooverphonic",
-    "image": "https://s1.ticketm.net/dam/a/5f3/8b5b2a73-02bb-4fbd-8803-60b6edf145f3_999431_ARTIST_PAGE_3_2.jpg",
-    "date": "2019-10-05",
-    "time": "19S00S00",
-    "type": "Music",
-    "promoter": "Fource Entertainment sp. z o.o.",
-    "price": [],
-    "place": {
-      "name": "Centrum Koncertowe A2",
-      "postalCode": "53-610",
-      "address": "ul. Góralska 5",
-      "country": "Poland",
-      "city": "Wroclaw",
-      "location": {
-        "latitude": 51.11042,
-        "longitude": 17.00319
-      }
+    "id":"Z698xZQpZaeYt",
+    "name":"Anthrax, Acid Drinkers",
+    "image":"https://s1.ticketm.net/dam/a/f3a/435d425f-7905-4287-99b3-73ea58053f3a_939691_CUSTOM.jpg",
+    "date":"2019-07-12T17:30:00.000Z",
+    "type":"Music",
+    "promoter":"WINIARY BOOKINGS Masłowski Stobiński Spółka Cywilna",
+    "price":{
+      "min":90,
+      "max":379,
+      "currency":"PLN"
     },
-    "interested": 97
+    "place":{
+      "name":"Centrum Koncertowe A2",
+      "postalCode":"53-610",
+      "address":"ul. Góralska 5",
+      "location":{
+        "latitude":51.11042,
+        "longitude":17.00319
+      }
+    }
   },
   {
-    "id": "Z698xZQpZaegA",
-    "name": "Nils Frahm",
-    "image": "https://s1.ticketm.net/dam/a/3f8/8e438c9cf423-4a67-80ed-6579bd8133f8_756941_TABLET_LANDSCAPE_16_9.jpg",
-    "date": "2019-10-13",
-    "time": "20S00S00",
-    "type": "Music",
-    "promoter": "More Music Agency",
-    "price": [],
-    "place": {
-      "name": "Narodowe Forum Muzyki",
-      "postalCode": "50-071",
-      "address": "Plac Wolności 1",
-      "country": "Poland",
-      "city": "Wroclaw",
-      "location": {
-        "latitude": 51.10708,
-        "longitude": 17.02574
-      }
+    "id":"Z698xZQpZaePD",
+    "name":"Christian Death",
+    "image":"https://s1.ticketm.net/dam/a/451/aae7367a-7b61-446c-a187-8754aad3f451_936421_TABLET_LANDSCAPE_16_9.jpg",
+    "date":"2019-07-21T18:00:00.000Z",
+    "type":"Music",
+    "promoter":"Events Piotr Walczuk",
+    "price":{
+      "min":55,
+      "max":379,
+      "currency":"PLN"
     },
-    "interested": 132
+    "place":{
+      "name":"Klub Liverpool",
+      "postalCode":"11-400",
+      "address":"ul. Świdnicka 37",
+      "location":{
+        "latitude":51.10395,
+        "longitude":17.03038
+      }
+    }
   },
   {
-    "id": "Z698xZQpZaei2",
-    "name": "Archive",
-    "image": "https://s1.ticketm.net/dam/a/5fb/370235ef-9e14-47b2-b69a-4c9dd02b65fb_411011_TABLET_LANDSCAPE_16_9.jpg",
-    "date": "2019-10-22",
-    "time": "20S00S00",
-    "type": "Music",
-    "promoter": "Go-Ahead",
-    "price": [
-      {
-        "type": "standard",
-        "currency": "PLN",
-        "min": 125,
-        "max": 125
-      },
-      {
-        "type": "standard including fees",
-        "currency": "PLN",
-        "min": 125,
-        "max": 125
-      }
-    ],
-    "place": {
-      "name": "Centrum Koncertowe A2",
-      "postalCode": "53-610",
-      "address": "ul. Góralska 5",
-      "country": "Poland",
-      "city": "Wroclaw",
-      "location": {
-        "latitude": 51.11042,
-        "longitude": 17.00319
-      }
+    "id":"Z698xZQpZaeVN",
+    "name":"Mistrzowie Flamenco - W hołdzie dla \"La Chany\"",
+    "image":"https://s1.ticketm.net/dam/a/6f4/1048d98e-a88a-4757-a7db-7b8ca97776f4_574611_RECOMENDATION_16_9.jpg",
+    "date":"2019-07-30T17:00:00.000Z",
+    "type":"Music",
+    "promoter":"Arte Flamenco",
+    "price":{
+      "min":55,
+      "max":379,
+      "currency":"PLN"
     },
-    "interested": 24
+    "place":{
+      "name":"Synagoga Pod Białym Bocianem",
+      "postalCode":"50-072",
+      "address":"Włodkowica 7",
+      "location":{
+        "latitude":51.10846,
+        "longitude":17.02306
+      }
+    }
   },
   {
-    "id": "Z698xZQpZaeg2",
-    "name": "Muzyka zespołu Queen Symfonicznie",
-    "image": "https://s1.ticketm.net/dam/a/f53/221ca641-f3ef-4216-bd1b-5aae06b3af53_557501_RECOMENDATION_16_9.jpg",
-    "date": "2019-11-02",
-    "time": "19S30S00",
-    "type": "Music",
-    "promoter": "Piosenka Plus",
-    "price": [],
-    "place": {
-      "name": "Sala Koncertowa Radia Wrocław",
-      "postalCode": "53-015",
-      "address": "Aleja Karkonoska 10",
-      "country": "Poland",
-      "city": "Wroclaw",
-      "location": {
-        "latitude": 51.07191,
-        "longitude": 17.00654
-      }
+    "id":"Z698xZQpZaeB5",
+    "name":"God Is An Astronaut",
+    "image":"https://s1.ticketm.net/dam/a/622/3255eab7-6de5-48c8-aa42-bb009e24a622_1026831_ARTIST_PAGE_3_2.jpg",
+    "date":"2019-08-17T18:00:00.000Z",
+    "type":"Music",
+    "promoter":"WINIARY BOOKINGS Masłowski Stobiński Spółka Cywilna",
+    "price":{
+      "min":55,
+      "max":379,
+      "currency":"PLN"
     },
-    "interested": 0
+    "place":{
+      "name":"Zaklęte Rewiry",
+      "postalCode":"50-001",
+      "address":"ul. Krakowska 100",
+      "location":{
+        "latitude":51.09049,
+        "longitude":17.06583
+      }
+    }
   }
 ]

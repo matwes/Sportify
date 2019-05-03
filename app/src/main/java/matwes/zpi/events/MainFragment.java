@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 
 import com.leavjenn.smoothdaterangepicker.date.SmoothDateRangePickerFragment;
 
+import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,9 +39,9 @@ public abstract class MainFragment extends Fragment {
     protected View parentView;
     protected LoadingDialog dialog;
     protected List<Event> events;
-    protected Date maxDate, minDate, maxDateSelected, minDateSelected;
-    protected String selectedSport, selectedCity;
-    protected boolean filtered;
+    protected Date maxDateSelected, minDateSelected;
+    protected String selectedName, selectedMaxPrice;
+    protected List<Boolean> selectedCheckboxes;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -49,12 +50,15 @@ public abstract class MainFragment extends Fragment {
 
         dialog = new LoadingDialog(getContext());
 
-        maxDate = maxDateSelected = new Date(Long.MIN_VALUE);
-        minDate = minDateSelected = new Date(Long.MAX_VALUE);
+        maxDateSelected = new Date(Long.MIN_VALUE);
+        minDateSelected = new Date(Long.MAX_VALUE);
+        selectedCheckboxes = new ArrayList<>();
+        selectedCheckboxes.add(false);
+        selectedCheckboxes.add(false);
+        selectedCheckboxes.add(false);
 
-        selectedSport = "Wszystkie";
-        selectedCity = "Wrocław";
-        filtered = false;
+        selectedName = "";
+        selectedMaxPrice = "";
 
         events = new ArrayList<>();
     }
@@ -75,48 +79,55 @@ public abstract class MainFragment extends Fragment {
     void getEvents() {
         SharedPreferences prefs = getActivity().getSharedPreferences("EVENTS", Context.MODE_PRIVATE);
         ArrayList<Event> e = Event.jsonEventsToList(prefs.getString("EVENTS_JSON", "[]"));
+
         if (e.isEmpty()) {
             downloadEvents(true, true);
         } else {
-            updateList(e);
+            updateList(filterEvents(e));
         }
     }
 
     void updateList(List<Event> e) {
-        if (!filtered) {
-            boolean minDateChanged = false;
-            boolean maxDateChanged = false;
 
-            minDate = new Date(Long.MAX_VALUE);
-            maxDate = new Date(Long.MIN_VALUE);
-
-            for (Event event : e) {
-                if (event.getDateObject().before(minDate)) {
-                    minDateChanged = true;
-                    minDate = event.getDateObject();
-                }
-                if (event.getDateObject().after(maxDate)) {
-                    maxDateChanged = true;
-                    maxDate = event.getDateObject();
-                }
-            }
-
-            if (!minDateChanged) {
-                minDate = new Date();
-            }
-            if (!maxDateChanged) {
-                maxDate = new Date();
-            }
-
-            minDateSelected = minDate;
-            maxDateSelected = maxDate;
-        }
+//        if (!filtered) {
+//            boolean minDateChanged = false;
+//            boolean maxDateChanged = false;
+//
+//            minDate = new Date(Long.MAX_VALUE);
+//            maxDate = new Date(Long.MIN_VALUE);
+//
+//            for (Event event : e) {
+//                if (event.getDateObject().before(minDate)) {
+//                    minDateChanged = true;
+//                    minDate = event.getDateObject();
+//                }
+//                if (event.getDateObject().after(maxDate)) {
+//                    maxDateChanged = true;
+//                    maxDate = event.getDateObject();
+//                }
+//            }
+//
+//            if (!minDateChanged) {
+//                minDate = new Date();
+//            }
+//            if (!maxDateChanged) {
+//                maxDate = new Date();
+//            }
+//
+//            minDateSelected = minDate;
+//            maxDateSelected = maxDate;
+//        }
 
         events.clear();
-        if (filtered) {
-            filterEvents(e);
-        }
+//        if (filtered) {
+//            List<Event> dest= new ArrayList<Event>();
+//            dest.addAll(e);
+//
+//            filterEvents(dest);
+//        }else {
         events.addAll(e);
+//        }
+
         Collections.sort(events);
     }
 
@@ -151,6 +162,7 @@ public abstract class MainFragment extends Fragment {
                         }
 
                         List<Event> events = (List<Event>) data;
+
                         if (events != null) {
                             updateList(events);
                         }
@@ -166,23 +178,34 @@ public abstract class MainFragment extends Fragment {
     }
 
     void filterDialog() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.sport_list2, R.layout.spinner_item);
-        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(getContext(), R.array.cities_list, R.layout.spinner_item);
-        final FilterDialog filterDialog = new FilterDialog(getContext(), adapter, adapter2);
+//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.sport_list2, R.layout.spinner_item);
+//        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(getContext(), R.array.cities_list, R.layout.spinner_item);
+        List<String> eventsNames = new ArrayList<String>();
 
-        if (filtered) {
-            filterDialog.update(selectedSport, selectedCity, minDateSelected, maxDateSelected);
-        } else {
-            filterDialog.update(selectedSport, selectedCity, minDate, maxDate);
+        for (Event ev: EventService.getInstance().originalListOfEvents) {
+            eventsNames.add(ev.getName());
         }
+
+        ArrayAdapter<String> eventAdapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_item, eventsNames);
+
+
+        final FilterDialog filterDialog = new FilterDialog(getContext(), eventAdapter);
+
+//        if (filtered) {
+            filterDialog.update(selectedName, selectedMaxPrice, minDateSelected, maxDateSelected);
+//        } else {
+//            filterDialog.update(selectedName, selectedMaxPrice, minDate, maxDate);
+//        }
 
         filterDialog.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedSport = filterDialog.getSelectedSport();
-                selectedCity = filterDialog.getSelectedCity();
+                selectedName = filterDialog.getSelectedEventName();
+                selectedMaxPrice = filterDialog.getSelectedPrice();
+                selectedCheckboxes = filterDialog.getSelectedCheckboxes();
+
                 filterDialog.dismiss();
-                filtered = true;
+//                filtered = true;
 
                 getEvents();
 
@@ -211,16 +234,32 @@ public abstract class MainFragment extends Fragment {
         filterDialog.show();
     }
 
-    void filterEvents(List<Event> events) {
-        Iterator<Event> i = events.iterator();
-        while (i.hasNext()) {
-            Event event = i.next();
-            if (/*(!event.getSportName().equals(selectedSport) && !selectedSport.equals("Wszystkie")) ||*/
-                    event.getDateObject().before(minDateSelected) ||
-                    event.getDateObject().after(maxDateSelected) ||
-                    (!event.getPlace().getCity().equals(selectedCity) && !selectedCity.equals("Wszystkie miasta")))
-                i.remove();
+    List<Event> filterEvents(List<Event> events) {
+
+        if (!this.selectedCheckboxes.get(0) || !this.selectedCheckboxes.get(1) || !this.selectedCheckboxes.get(2)) {
+
+            Iterator<Event> i = events.iterator();
+
+            while (i.hasNext()) {
+                Event event = i.next();
+                if (this.selectedCheckboxes.get(2) &&
+                        event.getDateObject().before(minDateSelected) &&
+                        event.getDateObject().after(maxDateSelected)
+                ) {
+                    i.remove();
+                }
+
+                if ((this.selectedCheckboxes.get(0) && !event.getName().contains(selectedName))) {
+                    i.remove();
+                }
+
+                if (this.selectedCheckboxes.get(1) && (event.getPrice().getMin() >= Double.parseDouble((selectedMaxPrice)))) {
+                    i.remove();
+                }
+            }
         }
+
+        return events;
     }
 
     @Override

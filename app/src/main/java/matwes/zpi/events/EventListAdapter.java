@@ -30,6 +30,10 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Holder> {
     private List<Event> events;
     private EventItemListener listener;
 
+    public void setEvents (List<Event> events) {
+        this.events = events;
+    }
+
     EventListAdapter(Context context, List<Event> events, EventItemListener listener) {
         this.context = context;
         this.events = events;

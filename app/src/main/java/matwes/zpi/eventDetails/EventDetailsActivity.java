@@ -82,10 +82,10 @@ public class EventDetailsActivity extends AppCompatActivity {
         ePlace2.setText(event.getPlace().getAddress());
         eMembers.setText(getString(R.string.people_interested) + " " + event.getInterested());
 
-        if (event.getPrice().isEmpty()) {
+        if (event.getPrice() != null) {
             eMoney.setText("???");
         } else {
-            Price price = event.getPrice().get(0);
+            Price price = event.getPrice();
             eMoney.setText(price.getMin() + " - " + price.getMax() + " " + price.getCurrency());
         }
 

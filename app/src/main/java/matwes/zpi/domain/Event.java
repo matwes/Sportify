@@ -25,18 +25,33 @@ public class Event implements Comparable {
     private String time;
     private String type;
     private String promoter;
-    private List<Price> price;
+    private Price price;
     private Place place;
     private int interested;
     private String creatorId;
 
-    public Event(String id, String name, String image, String date, String time, String type,
-                 String promoter, List<Price> price, Place place, int interested, String creatorId) {
+    public Event(String id, String name, String image, String date, String type,
+                 String promoter, Price price, Place place, int interested, String creatorId) {
         this.id = id;
         this.name = name;
         this.image = image;
-        this.date = date;
-        this.time = time;
+        this.date = "";
+        this.time = "";
+        //todo Ola
+//        try {
+//
+//            Date sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(date);
+//            System.out.println("Cos tam" + sdf.getTime());
+////            System.out.println(sdf.getTime());
+//
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+
+//        new SimpleDateFormat("MM/dd/yyyy").parse("08/16/2011")
+//        this.date = date;
+//        SimpleDateFormat ss = new SimpleDateFormat(date);
+
         this.type = type;
         this.promoter = promoter;
         this.price = price;
@@ -77,11 +92,14 @@ public class Event implements Comparable {
     }
 
     public String getDateWithTimeString() {
-        Date dateObject = getDateWithTime();
+        //todo Ola
+        return "";
 
-        DateFormat df = new SimpleDateFormat("EEEE, d MMMM, HH:mm", Locale.ENGLISH);
-
-        return df.format(dateObject);
+//        Date dateObject = getDateWithTime();
+//
+//        DateFormat df = new SimpleDateFormat("EEEE, d MMMM, HH:mm", Locale.ENGLISH);
+//
+//        return df.format(dateObject);
     }
 
     private String parseTime() {
@@ -153,11 +171,11 @@ public class Event implements Comparable {
         this.promoter = promoter;
     }
 
-    public List<Price> getPrice() {
+    public Price getPrice() {
         return price;
     }
 
-    public void setPrice(List<Price> price) {
+    public void setPrice(Price price) {
         this.price = price;
     }
 

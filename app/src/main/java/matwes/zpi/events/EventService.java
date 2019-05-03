@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import matwes.zpi.Common;
@@ -19,6 +20,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 class EventService {
+
     private static final EventService ourInstance = new EventService();
 
     static EventService getInstance() {
@@ -28,8 +30,13 @@ class EventService {
     private ApiInterface api;
 
     private EventService() {
+
+        this.originalListOfEvents = new ArrayList<>();
+
         api = RestService.getApiInstance();
     }
+
+    public List<Event> originalListOfEvents;
 
     void downloadEvents(Context context, final boolean connectionError, EventFragmentType pageType, callbackInterface callback) {
         if (Common.isMocked()) {
@@ -53,7 +60,7 @@ class EventService {
             json = new Gson().toJson(events);
             SharedPreferences prefs = context.getSharedPreferences("EVENTS", Context.MODE_PRIVATE);
             prefs.edit().putString("EVENTS_JSON", json).apply();
-
+            originalListOfEvents = events;
             callback.onDownloadFinished(events, null);
         } catch (Exception ignored) {
             callback.onDownloadFinished(null, R.string.error_message);
@@ -72,6 +79,7 @@ class EventService {
                         json = new Gson().toJson(events);
                         SharedPreferences prefs = context.getSharedPreferences("EVENTS", Context.MODE_PRIVATE);
                         prefs.edit().putString("EVENTS_JSON", json).apply();
+                        originalListOfEvents = events;
 
                         callback.onDownloadFinished(events, null);
                     } catch (Exception ignored) {
@@ -99,6 +107,7 @@ class EventService {
                         json = new Gson().toJson(events);
                         SharedPreferences prefs = context.getSharedPreferences("EVENTS", Context.MODE_PRIVATE);
                         prefs.edit().putString("EVENTS_JSON", json).apply();
+                        originalListOfEvents = events;
 
                         callback.onDownloadFinished(events, null);
                     } catch (Exception ignored) {
