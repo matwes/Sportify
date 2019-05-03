@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Locale;
 
 import matwes.zpi.R;
-import matwes.zpi.domain.Event;
 
 /**
  * Created by Mateusz Wesołowski
@@ -41,18 +40,26 @@ class FilterDialog extends Dialog {
         this.eventsAdatper = eventsAdatper;
     }
 
-    void update(String selectedName, String selectedPrice, Date minSelectedDate, Date maxSelectedDate) {
+    void update(String selectedName, String selectedPrice, Date minSelectedDate, Date maxSelectedDate, List<Boolean> selectedCheckBoxes) {
         LinearLayout layout = findViewById(R.id.dialog_filter);
-
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH);
-
         button = layout.findViewById(R.id.btnFilter);
         filterDate = layout.findViewById(R.id.filterDate);
-        filterDate.setText(String.format("%s - %s", sdf.format(minSelectedDate), sdf.format(maxSelectedDate)));
 
+        if (maxSelectedDate == null || minSelectedDate == null) {
+            filterDate.setHint("Wybierz przedział");
+            filterDate.setText("");
+        }else {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH);
+            filterDate.setText(String.format("%s - %s", sdf.format(minSelectedDate), sdf.format(maxSelectedDate)));
+            CharSequence ss = filterDate.getText();
+        }
         nameCheckBox = findViewById(R.id.checkButtonEventName);
         priceCheckBox = findViewById(R.id.checkButtonPrice);
         dateCheckBox  = findViewById(R.id.checkButtonDate);
+
+        nameCheckBox.setSelected(selectedCheckBoxes.get(0));
+        priceCheckBox.setSelected(selectedCheckBoxes.get(1));
+        dateCheckBox.setSelected(selectedCheckBoxes.get(2));
 
         autoCompleteTextView = findViewById(R.id.autoCompleteTextView2);
         autoCompleteTextView.setAdapter(null);
@@ -68,18 +75,7 @@ class FilterDialog extends Dialog {
         autoCompleteTextView.setAdapter(eventsAdatper);
 
         autoCompleteTextView2 = findViewById(R.id.maxPriceEditText);
-//        autoCompleteTextView2.setAdapter(null);
-//        autoCompleteTextView2.setKeyListener(null);
-//        autoCompleteTextView2.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                ((AutoCompleteTextView) v).showDropDown();
-//                return false;
-//            }
-//        });
         autoCompleteTextView2.setText(selectedPrice);
-//        autoCompleteTextView2.setAdapter(cityAdapter);
-
     }
 
     String getSelectedEventName() {
@@ -87,8 +83,13 @@ class FilterDialog extends Dialog {
     }
 
     void setSelectedDates(Date minSelectedDate, Date maxSelectedDate) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH);
-        filterDate.setText(String.format("%s - %s", sdf.format(minSelectedDate), sdf.format(maxSelectedDate)));
+        if (maxSelectedDate == null || minSelectedDate == null) {
+            filterDate.setHint("Wybierz przedział");
+            filterDate.setText("");
+        }else {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH);
+            filterDate.setText(String.format("%s - %s", sdf.format(minSelectedDate), sdf.format(maxSelectedDate)));
+        }
     }
 
     String getSelectedPrice() {

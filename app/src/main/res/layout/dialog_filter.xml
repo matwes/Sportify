@@ -94,35 +94,32 @@
             android:layout_gravity="center_vertical"
             android:buttonTint="@color/white"/>
 
-        <TextView
-            android:layout_marginLeft="5dp"
-            android:id="@+id/textView"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/data"
-            android:textColor="@color/white" />
-
-        <LinearLayout
-            android:layout_marginLeft="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_marginLeft="5dp"
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/data"
+                android:textColor="@color/white"
+                />
 
             <TextView
+                android:layout_below="@id/textView"
+                android:layout_marginLeft="5dp"
                 android:id="@+id/filterDate"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:background="@color/colorPrimary"
                 android:fontFamily="sans-serif-smallcaps"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 tools:text="10.05.2017 - 11.03.2018" />
-        </LinearLayout>
-
+        </RelativeLayout>
     </LinearLayout>
 
 

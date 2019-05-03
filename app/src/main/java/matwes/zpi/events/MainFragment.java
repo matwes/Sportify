@@ -50,8 +50,8 @@ public abstract class MainFragment extends Fragment {
 
         dialog = new LoadingDialog(getContext());
 
-        maxDateSelected = new Date(Long.MIN_VALUE);
-        minDateSelected = new Date(Long.MAX_VALUE);
+        maxDateSelected = null;
+        minDateSelected = null;
         selectedCheckboxes = new ArrayList<>();
         selectedCheckboxes.add(false);
         selectedCheckboxes.add(false);
@@ -178,8 +178,7 @@ public abstract class MainFragment extends Fragment {
     }
 
     void filterDialog() {
-//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.sport_list2, R.layout.spinner_item);
-//        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(getContext(), R.array.cities_list, R.layout.spinner_item);
+
         List<String> eventsNames = new ArrayList<String>();
 
         for (Event ev: EventService.getInstance().originalListOfEvents) {
@@ -192,7 +191,7 @@ public abstract class MainFragment extends Fragment {
         final FilterDialog filterDialog = new FilterDialog(getContext(), eventAdapter);
 
 //        if (filtered) {
-            filterDialog.update(selectedName, selectedMaxPrice, minDateSelected, maxDateSelected);
+            filterDialog.update(selectedName, selectedMaxPrice, minDateSelected, maxDateSelected, selectedCheckboxes);
 //        } else {
 //            filterDialog.update(selectedName, selectedMaxPrice, minDate, maxDate);
 //        }
