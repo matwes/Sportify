@@ -57,9 +57,9 @@ class FilterDialog extends Dialog {
         priceCheckBox = findViewById(R.id.checkButtonPrice);
         dateCheckBox  = findViewById(R.id.checkButtonDate);
 
-        nameCheckBox.setSelected(selectedCheckBoxes.get(0));
-        priceCheckBox.setSelected(selectedCheckBoxes.get(1));
-        dateCheckBox.setSelected(selectedCheckBoxes.get(2));
+        nameCheckBox.setChecked(selectedCheckBoxes.get(0));
+        priceCheckBox.setChecked(selectedCheckBoxes.get(1));
+        dateCheckBox.setChecked(selectedCheckBoxes.get(2));
 
         autoCompleteTextView = findViewById(R.id.autoCompleteTextView2);
         autoCompleteTextView.setAdapter(null);

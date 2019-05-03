@@ -241,11 +241,14 @@ public abstract class MainFragment extends Fragment {
 
             while (i.hasNext()) {
                 Event event = i.next();
-                if (this.selectedCheckboxes.get(2) &&
-                        event.getDateObject().before(minDateSelected) &&
-                        event.getDateObject().after(maxDateSelected)
-                ) {
-                    i.remove();
+                Date act = event.getDateObject();
+                if (minDateSelected != null && maxDateSelected != null) {
+                    if (this.selectedCheckboxes.get(2) &&
+                            (event.getDateObject().before(minDateSelected) ||
+                            event.getDateObject().after(maxDateSelected))
+                    ) {
+                        i.remove();
+                    }
                 }
 
                 if ((this.selectedCheckboxes.get(0) && !event.getName().contains(selectedName))) {
