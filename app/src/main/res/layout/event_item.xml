@@ -44,6 +44,7 @@
                     android:fontFamily="sans-serif-condensed-light"
                     android:textColor="@android:color/white"
                     android:textSize="18sp"
+                    android:layout_marginEnd="35dp"
                     android:textStyle="bold"
                     tools:text="Nazwa wydarzenia\nd" />
 

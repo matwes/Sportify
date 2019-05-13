@@ -216,15 +216,17 @@ public abstract class MainFragment extends Fragment {
                     }
                 }
 
-                if ((this.selectedCheckboxes.get(0) && !event.getName().contains(selectedName))) {
+                if ((this.selectedCheckboxes.get(0) && !event.getName().toLowerCase().contains(selectedName.toLowerCase().trim()))) {
                     i.remove();
                     continue;
                 }
 
                 if (selectedMaxPrice != null && !selectedMaxPrice.equals("")) {
-                    if (this.selectedCheckboxes.get(1) && (event.getPrice().getMin() >= Double.parseDouble((selectedMaxPrice)))) {
-                        i.remove();
-                        continue;
+                    if (event.getPrice() != null) {
+                        if (this.selectedCheckboxes.get(1) && (event.getPrice().getMin() >= Double.parseDouble((selectedMaxPrice)))) {
+                            i.remove();
+                            continue;
+                        }
                     }
                 }
             }

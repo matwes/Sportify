@@ -82,7 +82,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         ePlace2.setText(event.getPlace().getAddress());
         eMembers.setText(getString(R.string.people_interested) + " " + event.getInterested());
 
-        if (event.getPrice() != null) {
+        if (event.getPrice() == null) {
             eMoney.setText("???");
         } else {
             Price price = event.getPrice();

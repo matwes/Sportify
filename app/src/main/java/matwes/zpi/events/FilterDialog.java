@@ -62,15 +62,15 @@ class FilterDialog extends Dialog {
         dateCheckBox.setChecked(selectedCheckBoxes.get(2));
 
         autoCompleteTextView = findViewById(R.id.autoCompleteTextView2);
-        autoCompleteTextView.setAdapter(null);
-        autoCompleteTextView.setKeyListener(null);
-        autoCompleteTextView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                ((AutoCompleteTextView) v).showDropDown();
-                return false;
-            }
-        });
+//        autoCompleteTextView.setAdapter(null);
+//        autoCompleteTextView.setKeyListener(null);
+//        autoCompleteTextView.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                ((AutoCompleteTextView) v).showDropDown();
+//                return false;
+//            }
+//        });
         autoCompleteTextView.setText(selectedName);
         autoCompleteTextView.setAdapter(eventsAdatper);
 
