@@ -1,6 +1,7 @@
 package matwes.zpi.events;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -166,7 +167,6 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
     }
 
     private void createEvent() {
-        dialog.showLoadingDialog(getString(R.string.loading));
 
         Event newEvent = new Event();
         String eventName =  etName.getText().toString().trim();
@@ -184,8 +184,11 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
 
 
         if (eventName.equals("") && eventPrice == null && eventType.equals("") && eventDateTime.length != 2 && address == null && !placeWasSet && promotor.equals("")) {
+            CustomDialog.showError(AddEventActivity.this, "Wszystkie pola są wymagane");
             return;
         }
+
+        dialog.showLoadingDialog(getString(R.string.loading));
 
         newEvent.setName(eventName);
         newEvent.setPrice(eventPrice);
