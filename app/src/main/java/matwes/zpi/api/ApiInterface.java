@@ -2,14 +2,16 @@ package matwes.zpi.api;
 
 import java.util.List;
 
+import matwes.zpi.domain.AuthToken;
 import matwes.zpi.domain.Event;
-import matwes.zpi.domain.Member;
+import matwes.zpi.domain.SuccessResponse;
 import matwes.zpi.domain.User;
 import retrofit2.Call;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
@@ -22,13 +24,14 @@ public interface ApiInterface {
      ****** LOGIN AND REGISTER ******
      *********************************/
 
-    @POST("/login")
-    Call<User> login(
+    @FormUrlEncoded
+    @POST("/auth/authenticate")
+    Call<AuthToken> login(
             @Field("email") String email,
             @Field("password") String code);
 
     @POST("/login/facebook")
-    Call<User> loginByFacebook(
+    Call<AuthToken> loginByFacebook(
             @Field("token") String token);
 
     @POST("/login/code")
@@ -40,8 +43,8 @@ public interface ApiInterface {
     Call<User> resetPassword(
             @Field("email") String email);
 
-    @POST("/register")
-    Call<User> register(
+    @POST("/registration")
+    Call<AuthToken> register(
             @Field("email") String email,
             @Field("password") String password,
             @Field("firstName") String firstName,
@@ -66,7 +69,7 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("/event/{eventId}")
     Call<Void> updateEvent(
-            @Path("eventId") long eventId,
+            @Path("eventId") String eventId,
             @Field("date") String date,
             @Field("description") String description,
             @Field("maxMembers") String maxMembers,
@@ -75,39 +78,43 @@ public interface ApiInterface {
             @Field("longitude") double longitude,
             @Field("time") String time);
 
-    @GET("/event/{eventId}")
+    @GET("/events/{eventId}")
     Call<Event> getEvent(
-            @Path("eventId") long eventId
+            @Header("authorization") String token,
+            @Path("eventId") String eventId
     );
 
-    @GET("/events?size=99")
-    Call<List<Event>> getEvents();
-
-    @GET("/unblocked_events?size=99")
-    Call<List<Event>> getBlockedEvents();
-
-    @POST("/event/interested")
-    Call<Void> interested(
-            @Field("eventId") long eventId
+    @GET("/events")
+    Call<List<Event>> getEvents(
+            @Header("authorization") String token
     );
 
-    @POST("/event/cancelInterested")
-    Call<Void> cancelInterested(
-            @Field("eventId") long eventId
+    @GET("/events/type/notInteresting")
+    Call<List<Event>> getBlockedEvents(
+            @Header("authorization") String token
     );
 
-    @POST("/event/notInterested")
-    Call<Void> notInterested(
-            @Field("eventId") long eventId
+    @POST("/events/event/interesting/{eventId}")
+    Call<SuccessResponse> interested(
+            @Header("authorization") String token,
+            @Path("eventId") String eventId
     );
 
-    @GET("/event/{eventId}/members")
-    Call<List<Member>> getMemebers(
-            @Path("eventId") long eventId
+    @POST("/events/event/resetInterest/{eventId}")
+    Call<SuccessResponse> cancelInterested(
+            @Header("authorization") String token,
+            @Path("eventId") String eventId
     );
 
-    @DELETE("/event/{eventId}")
+    @POST("/events/event/notInteresting/{eventId}")
+    Call<SuccessResponse> notInterested(
+            @Header("authorization") String token,
+            @Path("eventId") String eventId
+    );
+
+    @DELETE("/events/{eventId}")
     Call<Void> deleteEvent(
-            @Path("eventId") long eventId
+            @Header("authorization") String token,
+            @Path("eventId") String eventId
     );
 }

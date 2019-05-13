@@ -143,7 +143,7 @@ public class MapFragment extends MainFragment implements OnMapReadyCallback {
         List<Event> list = new ArrayList<>();
         for (EventsCluster item : items) {
             Event event = events.get(item.getLocalId());
-            ids[i] = event.getId();
+            ids[i] = event.get_id();
             list.add(event);
             i++;
         }
@@ -170,8 +170,8 @@ public class MapFragment extends MainFragment implements OnMapReadyCallback {
                 Event event = getItem(position);
                 holder.name.setText(event.getName());
                 holder.date.setText(event.getDateWithTimeString());
-                holder.members.setText(event.getInterested()+"");
-                if(event.getImage()!=null && event.getImage()!="") {
+                holder.members.setText(event.getInterested() + "");
+                if (event.getImage() != null && event.getImage() != "") {
                     Picasso.get().load(event.getImage()).into(holder.icon);
                 }
 
@@ -207,9 +207,9 @@ public class MapFragment extends MainFragment implements OnMapReadyCallback {
     @Override
     void updateList(List<Event> e) {
         super.updateList(e);
-            clusterManager.clearItems();
-            addItems();
-            clusterManager.cluster();
+        clusterManager.clearItems();
+        addItems();
+        clusterManager.cluster();
     }
 
     @Override
@@ -233,7 +233,7 @@ public class MapFragment extends MainFragment implements OnMapReadyCallback {
 
     @Override
     List<Event> filterEvents(List<Event> events) {
-        List<Event> dest= new ArrayList<Event>();
+        List<Event> dest = new ArrayList<Event>();
         dest.addAll(EventService.getInstance().originalListOfEvents);
 
         List<Event> filteredEvents = super.filterEvents(dest);

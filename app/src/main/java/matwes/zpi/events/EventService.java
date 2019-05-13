@@ -22,11 +22,7 @@ import retrofit2.Response;
 class EventService {
 
     private static final EventService ourInstance = new EventService();
-
-    static EventService getInstance() {
-        return ourInstance;
-    }
-
+    List<Event> originalListOfEvents;
     private ApiInterface api;
 
     private EventService() {
@@ -36,18 +32,20 @@ class EventService {
         api = RestService.getApiInstance();
     }
 
-    public List<Event> originalListOfEvents;
+    static EventService getInstance() {
+        return ourInstance;
+    }
 
-    void downloadEvents(Context context, final boolean connectionError, EventFragmentType pageType, callbackInterface callback) {
+    void downloadEvents(Context context, EventFragmentType pageType, callbackInterface callback) {
         if (Common.isMocked()) {
             getMockedEvents(context, callback);
         } else {
             switch (pageType) {
                 case blocked:
-                    downloadBlockedEvents(context, connectionError, callback);
+                    downloadBlockedEvents(context, callback);
                     break;
                 case unblocked:
-                    downloadUnblockedEvents(context, connectionError, callback);
+                    downloadUnblockedEvents(context, callback);
                     break;
             }
         }
@@ -62,65 +60,64 @@ class EventService {
             prefs.edit().putString("EVENTS_JSON", json).apply();
             originalListOfEvents = events;
             callback.onDownloadFinished(events, null);
-        } catch (Exception ignored) {
-            callback.onDownloadFinished(null, R.string.error_message);
+        } catch (Exception ex) {
+            callback.onDownloadFinished(null, context.getString(R.string.error_message) + ": " + ex);
         }
     }
 
-    private void downloadUnblockedEvents(final Context context, final boolean connectionError, final callbackInterface callback) {
+    private void downloadUnblockedEvents(final Context context, final callbackInterface callback) {
 
-            api.getEvents().enqueue(new Callback<List<Event>>() {
-                @Override
-                public void onResponse(@NonNull Call<List<Event>> call, @NonNull Response<List<Event>> response) {
-                    List<Event> events = response.body();
-                    String json;
+        api.getEvents(Common.getToken(context)).enqueue(new Callback<List<Event>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Event>> call, @NonNull Response<List<Event>> response) {
+                List<Event> events = response.body();
 
-                    try {
-                        json = new Gson().toJson(events);
-                        SharedPreferences prefs = context.getSharedPreferences("EVENTS", Context.MODE_PRIVATE);
-                        prefs.edit().putString("EVENTS_JSON", json).apply();
-                        originalListOfEvents = events;
+                try {
+                    String json = new Gson().toJson(events);
+                    SharedPreferences prefs = context.getSharedPreferences("EVENTS", Context.MODE_PRIVATE);
+                    prefs.edit().putString("EVENTS_JSON", json).apply();
+                    originalListOfEvents = events;
 
-                        callback.onDownloadFinished(events, null);
-                    } catch (Exception ignored) {
-                        callback.onDownloadFinished(null, R.string.error_message);
+                    callback.onDownloadFinished(events, null);
+                } catch (Exception ex) {
+                    callback.onDownloadFinished(null, context.getString(R.string.error_message) + ": " + ex);
 
-                    }
                 }
+            }
 
-                @Override
-                public void onFailure(@NonNull Call<List<Event>> call, @NonNull Throwable t) {
-                    getMockedEvents(context, callback);
-                   // callback.onDownloadFinished(null, R.string.error_message);
-                }
-            });
+            @Override
+            public void onFailure(@NonNull Call<List<Event>> call, @NonNull Throwable t) {
+                //getMockedEvents(context, callback);
+                callback.onDownloadFinished(null, context.getString(R.string.error_message) + ": " + t);
+            }
+        });
     }
 
-    private void downloadBlockedEvents(final Context context, final boolean connectionError, final callbackInterface callback) {
-            api.getBlockedEvents().enqueue(new Callback<List<Event>>() {
-                @Override
-                public void onResponse(@NonNull Call<List<Event>> call, @NonNull Response<List<Event>> response) {
-                    List<Event> events = response.body();
-                    String json;
+    private void downloadBlockedEvents(final Context context, final callbackInterface callback) {
+        api.getBlockedEvents(Common.getToken(context)).enqueue(new Callback<List<Event>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Event>> call, @NonNull Response<List<Event>> response) {
+                List<Event> events = response.body();
+                String json;
 
-                    try {
-                        json = new Gson().toJson(events);
-                        SharedPreferences prefs = context.getSharedPreferences("EVENTS", Context.MODE_PRIVATE);
-                        prefs.edit().putString("EVENTS_JSON", json).apply();
-                        originalListOfEvents = events;
+                try {
+                    json = new Gson().toJson(events);
+                    SharedPreferences prefs = context.getSharedPreferences("EVENTS", Context.MODE_PRIVATE);
+                    prefs.edit().putString("EVENTS_JSON", json).apply();
+                    originalListOfEvents = events;
 
-                        callback.onDownloadFinished(events, null);
-                    } catch (Exception ignored) {
-                        callback.onDownloadFinished(null, R.string.error_message);
-                    }
+                    callback.onDownloadFinished(events, null);
+                } catch (Exception ex) {
+                    callback.onDownloadFinished(null, context.getString(R.string.error_message) + ": " + ex);
                 }
+            }
 
-                @Override
-                public void onFailure(@NonNull Call<List<Event>> call, @NonNull Throwable t) {
-                    getMockedEvents(context, callback);
+            @Override
+            public void onFailure(@NonNull Call<List<Event>> call, @NonNull Throwable t) {
+                //getMockedEvents(context, callback);
 
-//                    callback.onDownloadFinished(null, R.string.error_message);
-                }
-            });
+                callback.onDownloadFinished(null, context.getString(R.string.error_message) + ": " + t);
+            }
+        });
     }
 }

@@ -25,7 +25,7 @@ import matwes.zpi.MainActivity;
 import matwes.zpi.R;
 import matwes.zpi.api.ApiInterface;
 import matwes.zpi.api.RestService;
-import matwes.zpi.domain.User;
+import matwes.zpi.domain.AuthToken;
 import matwes.zpi.utils.CustomDialog;
 import matwes.zpi.utils.LoadingDialog;
 import retrofit2.Call;
@@ -126,22 +126,31 @@ public class SignInActivity extends AppCompatActivity {
         }
     }
 
-    private void handleLogin(Call<User> call) {
-        call.enqueue(new Callback<User>() {
+    private void handleLogin(Call<AuthToken> call) {
+        call.enqueue(new Callback<AuthToken>() {
             @Override
-            public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
+            public void onResponse(@NonNull Call<AuthToken> call, @NonNull Response<AuthToken> response) {
 
-                Intent intent = new Intent(SignInActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                Common.setLoginStatus(SignInActivity.this, true);
+                AuthToken token = response.body();
 
-                dialog.hideLoadingDialog();
+                if (token != null) {
+                    Common.setToken(SignInActivity.this, token.getToken());
 
-                startActivity(intent);
+                    Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    Common.setLoginStatus(SignInActivity.this, true);
+                    dialog.hideLoadingDialog();
+
+                    startActivity(intent);
+                } else {
+                    CustomDialog.showError(SignInActivity.this, getString(R.string.wrongLoginPass));
+                    dialog.hideLoadingDialog();
+                }
+
             }
 
             @Override
-            public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<AuthToken> call, @NonNull Throwable t) {
                 dialog.hideLoadingDialog();
                 CustomDialog.showError(SignInActivity.this, getString(R.string.error_message));
                 LoginManager.getInstance().logOut();

@@ -11,13 +11,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 /**
  * Created by Mateusz Wesołowski
  */
 public class Event implements Comparable {
+    private String _id;
     private String id;
     private String name;
     private String image;
@@ -28,14 +28,17 @@ public class Event implements Comparable {
     private Price price;
     private Place place;
     private int interested;
+    private boolean isInterested;
+    private boolean isNotInterested;
     private String creatorId;
 
     public Event() {
-
     }
 
-    public Event(String id, String name, String image, String date, String time, String type,
-                 String promoter, Price price, Place place, int interested, String creatorId) {
+    public Event(String _id, String id, String name, String image, String date, String time,
+                 String type, String promoter, Price price, Place place, int interested,
+                 boolean isInterested, boolean isNotInterested, String creatorId) {
+        this._id = _id;
         this.id = id;
         this.name = name;
         this.image = image;
@@ -46,6 +49,8 @@ public class Event implements Comparable {
         this.price = price;
         this.place = place;
         this.interested = interested;
+        this.isInterested = isInterested;
+        this.isNotInterested = isNotInterested;
         this.creatorId = creatorId;
     }
 
@@ -61,7 +66,7 @@ public class Event implements Comparable {
 
         if (date != null)
             try {
-                return df.parse(date);
+                return df.parse(date.substring(0, 10));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -81,7 +86,7 @@ public class Event implements Comparable {
     }
 
     public String getDateWithTimeString() {
-        Date dateObject = getDateWithTime();
+        Date dateObject = getDateObject();
 
         DateFormat df = new SimpleDateFormat("EEEE, d MMMM, HH:mm", Locale.ENGLISH);
 
@@ -97,8 +102,16 @@ public class Event implements Comparable {
         interested++;
     }
 
-    public  void decreaseInterested() {
+    public void decreaseInterested() {
         interested--;
+    }
+
+    public String get_id() {
+        return _id;
+    }
+
+    public void set_id(String _id) {
+        this._id = _id;
     }
 
     public String getId() {
@@ -177,8 +190,16 @@ public class Event implements Comparable {
         return interested;
     }
 
+    public boolean isInterested() {
+        return isInterested;
+    }
+
     public void setInterested(int interested) {
         this.interested = interested;
+    }
+
+    public void setInterested(boolean interested) {
+        isInterested = interested;
     }
 
     public String getCreatorId() {
@@ -189,10 +210,36 @@ public class Event implements Comparable {
         this.creatorId = creatorId;
     }
 
+    public boolean isNotInterested() {
+        return isNotInterested;
+    }
+
+    public void setNotInterested(boolean notInterested) {
+        isNotInterested = notInterested;
+    }
+
     @Override
     public int compareTo(@NonNull Object o) {
         Date d1 = this.getDateObject();
         Date d2 = ((Event) o).getDateObject();
-        return d1.compareTo(d2);
+        return d1 == null ? -1 : d1.compareTo(d2);
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "_id='" + _id + '\'' +
+                ", id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", image='" + image + '\'' +
+                ", date='" + date + '\'' +
+                ", time='" + time + '\'' +
+                ", type='" + type + '\'' +
+                ", promoter='" + promoter + '\'' +
+                ", price=" + price +
+                ", place=" + place +
+                ", interested=" + interested +
+                ", creatorId='" + creatorId + '\'' +
+                '}';
     }
 }

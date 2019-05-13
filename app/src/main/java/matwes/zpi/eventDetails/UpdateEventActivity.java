@@ -27,6 +27,7 @@ import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.model.LatLng;
 
+import matwes.zpi.Common;
 import matwes.zpi.R;
 import matwes.zpi.api.ApiInterface;
 import matwes.zpi.api.RestService;
@@ -44,7 +45,7 @@ public class UpdateEventActivity extends AppCompatActivity implements GoogleApiC
     private ArrayAdapter<CharSequence> adapter;
     private LoadingDialog dialog;
 
-    private long eventId;
+    private String eventId;
     private String sDate, sTime;
     private double dLat, dLng;
 
@@ -61,7 +62,7 @@ public class UpdateEventActivity extends AppCompatActivity implements GoogleApiC
         initGooglePlaceApi();
 
         Intent intent = getIntent();
-        eventId = intent.getLongExtra("eventId", -1);
+        eventId = intent.getStringExtra("eventId");
 
         dialog = new LoadingDialog(this);
         name = findViewById(R.id.etEventName);
@@ -132,7 +133,7 @@ public class UpdateEventActivity extends AppCompatActivity implements GoogleApiC
             @Override
             public void onClick(View v) {
                 dialog.showLoadingDialog(getString(R.string.loading));
-                Call<Void> call = api.deleteEvent(eventId);
+                Call<Void> call = api.deleteEvent(Common.getToken(getApplicationContext()), eventId);
                 call.enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
@@ -152,20 +153,17 @@ public class UpdateEventActivity extends AppCompatActivity implements GoogleApiC
 
     private void getEvent() {
         dialog.showLoadingDialog(getString(R.string.loading));
-        Call<Event> eventCall = api.getEvent(eventId);
+        Call<Event> eventCall = api.getEvent(Common.getToken(getApplicationContext()), eventId);
         eventCall.enqueue(new Callback<Event>() {
             @Override
             public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
                 Event event = response.body();
 
                 name.setText(event.getName());
-                //description.setText(event.getDescription());
                 members.setText(event.getInterested() + "");
                 date.setText(event.getDateWithTimeString());
                 placeAutocompleteFragment.setText(event.getPlace().getName());
-                //autoCompleteTextView.setText(event.getSport().getName());
                 autoCompleteTextView.setAdapter(adapter);
-                //placeId = event.getPlace().getGoogleId();
                 sTime = event.getTime();
                 sDate = event.getDate();
 

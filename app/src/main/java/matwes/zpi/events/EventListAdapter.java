@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.Date;
 import java.util.List;
 
 import matwes.zpi.Common;
@@ -30,14 +29,14 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Holder> {
     private List<Event> events;
     private EventItemListener listener;
 
-    public void setEvents (List<Event> events) {
-        this.events = events;
-    }
-
     EventListAdapter(Context context, List<Event> events, EventItemListener listener) {
         this.context = context;
         this.events = events;
         this.listener = listener;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
     }
 
     @Override
@@ -46,7 +45,7 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Holder> {
     }
 
     @Override
-    public void onBindViewHolder(Holder holder, int position) {
+    public void onBindViewHolder(final Holder holder, int position) {
         final Event event = events.get(position);
         holder.title.setText(event.getName());
         holder.date.setText(event.getDateWithTimeString());
@@ -64,16 +63,16 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Holder> {
                     .into(holder.eventImage);
         }
 
-        if (event.getDateWithTime() == null || event.getDateWithTime().before(new Date())) {
-            holder.changeCardColor();
-        }
-
-
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                long now = System.currentTimeMillis();
+                if (now - holder.mLastClickTime < Holder.CLICK_TIME_INTERVAL) {
+                    return;
+                }
+                holder.mLastClickTime = now;
                 Intent intent = new Intent(context, EventDetailsActivity.class);
-                intent.putExtra("eventId", event.getId());
+                intent.putExtra("eventId", event.get_id());
                 context.startActivity(intent);
             }
         });
@@ -95,11 +94,13 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Holder> {
     }
 
     class Holder extends RecyclerView.ViewHolder {
+        static final long CLICK_TIME_INTERVAL = 1000;
         TextView title, date, members, place;
         CardView eventCard;
         ImageView eventImage;
         View eventInfoView;
         ImageView blockedIcon;
+        long mLastClickTime = System.currentTimeMillis();
 
         Holder(View itemView) {
             super(itemView);
@@ -128,10 +129,6 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Holder> {
                     }
                 }
             });
-        }
-
-        void changeCardColor() {
-            //eventInfoView.setBackgroundColor(Color.parseColor("#B30b5e9d"));
         }
     }
 }

@@ -1,12 +1,10 @@
 package matwes.zpi.eventDetails;
 
-
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -26,8 +24,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-
 import matwes.zpi.Common;
 import matwes.zpi.R;
 import matwes.zpi.api.ApiInterface;
@@ -36,87 +32,62 @@ import matwes.zpi.domain.Event;
 import matwes.zpi.domain.Location;
 import matwes.zpi.domain.Place;
 import matwes.zpi.domain.Price;
-import matwes.zpi.utils.LoadingDialog;
-
+import matwes.zpi.domain.SuccessResponse;
+import matwes.zpi.utils.CustomDialog;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class EventDetailsActivity extends AppCompatActivity {
-    private LoadingDialog dialog;
-
     private Event event;
-    private String userId;
-
     private ApiInterface api;
+    private ImageView eImage;
+    private TextView eName, eType, eTime, ePlace, ePlace2, eMoney, eMembers;
+    private Button btnInt, btnNInt;
 
-    private boolean interested, nInterested;
-
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_details);
 
         api = RestService.getApiInstance();
-        initializeMap();
 
         Intent intent = getIntent();
         final String eventId = intent.getStringExtra("eventId");
-        userId = Common.getCurrentUserId(this);
 
-        event = getEvent(eventId);
+        getEvent(eventId);
+        eImage = findViewById(R.id.eventImage);
+        eName = findViewById(R.id.eventName);
+        eType = findViewById(R.id.eventType);
+        eTime = findViewById(R.id.eventTime);
+        ePlace = findViewById(R.id.eventPlace);
+        ePlace2 = findViewById(R.id.eventAddress);
+        eMoney = findViewById(R.id.eventMoney);
+        eMembers = findViewById(R.id.eventMembers);
 
-        dialog = new LoadingDialog(this);
-        ImageView eImage = findViewById(R.id.eventImage);
-        TextView eName = findViewById(R.id.eventName);
-        TextView eType = findViewById(R.id.eventType);
-        TextView eTime = findViewById(R.id.eventTime);
-        TextView ePlace = findViewById(R.id.eventPlace);
-        TextView ePlace2 = findViewById(R.id.eventAddress);
-        TextView eMoney = findViewById(R.id.eventMoney);
-        final TextView eMembers = findViewById(R.id.eventMembers);
-        final Button btnInt = findViewById(R.id.btnInterested);
-        final Button btnNInt = findViewById(R.id.btnNotInterested);
+        btnInt = findViewById(R.id.btnInterested);
+        btnNInt = findViewById(R.id.btnNotInterested);
 
-        eName.setText(event.getName());
-        eType.setText(event.getType() + ", " + event.getPromoter());
-        eTime.setText(event.getDateWithTimeString());
-        ePlace.setText(event.getPlace().getName());
-        ePlace2.setText(event.getPlace().getAddress());
-        eMembers.setText(getString(R.string.people_interested) + " " + event.getInterested());
-
-        if (event.getPrice() == null) {
-            eMoney.setText("???");
-        } else {
-            Price price = event.getPrice();
-            eMoney.setText(price.getMin() + " - " + price.getMax() + " " + price.getCurrency());
-        }
-
-
-        if (event.getImage() == null || event.getImage().equals("")) {
-            Picasso.get()
-                    .load(Common.getEventPlaceholder())
-                    .placeholder(Common.getEventPlaceholder())
-                    .into(eImage);
-        } else {
-            Picasso.get()
-                    .load(event.getImage())
-                    .placeholder(Common.getEventPlaceholder())
-                    .into(eImage);
-        }
+        final String token = Common.getToken(getApplicationContext());
 
         btnInt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (interested) {
+                if (event.isInterested()) {
                     deactivateButton(btnInt);
-                    interested = false;
+                    event.setInterested(false);
                     event.decreaseInterested();
+                    handleResponse(api.cancelInterested(token, event.get_id()));
                 } else {
                     activateButton(btnInt);
-                    if (nInterested) {
+                    if (event.isNotInterested()) {
                         deactivateButton(btnNInt);
-                        nInterested = false;
+                        event.setNotInterested(false);
                     }
-                    interested = true;
+                    event.setInterested(true);
                     event.increaseInterested();
+                    handleResponse(api.interested(token, event.get_id()));
                 }
                 updateInterestedNote(eMembers);
             }
@@ -125,19 +96,44 @@ public class EventDetailsActivity extends AppCompatActivity {
         btnNInt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (nInterested) {
+                if (event.isNotInterested()) {
                     deactivateButton(btnNInt);
-                    nInterested = false;
+                    event.setNotInterested(false);
+                    handleResponse(api.cancelInterested(token, event.get_id()));
                 } else {
                     activateButton(btnNInt);
-                    if (interested) {
+                    if (event.isInterested()) {
                         deactivateButton(btnInt);
-                        interested = false;
+                        event.setInterested(false);
                         event.decreaseInterested();
                     }
-                    nInterested = true;
+                    event.setNotInterested(true);
+                    handleResponse(api.notInterested(token, event.get_id()));
                 }
                 updateInterestedNote(eMembers);
+            }
+        });
+    }
+
+    private void handleResponse(Call<SuccessResponse> call) {
+        call.enqueue(new Callback<SuccessResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<SuccessResponse> call, @NonNull Response<SuccessResponse> response) {
+
+                SuccessResponse successResponse = response.body();
+
+                System.out.println("DUPA: " + successResponse);
+
+                if (successResponse != null) {
+                    if (!successResponse.isSuccess()) {
+                        CustomDialog.showError(EventDetailsActivity.this, getString(R.string.error_message));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<SuccessResponse> call, @NonNull Throwable t) {
+                CustomDialog.showError(EventDetailsActivity.this, getString(R.string.error_message));
             }
         });
     }
@@ -156,16 +152,63 @@ public class EventDetailsActivity extends AppCompatActivity {
         button.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_gray));
     }
 
-    @Nullable
-    private Event getEvent(String id) {
-        SharedPreferences prefs = getSharedPreferences("EVENTS", Context.MODE_PRIVATE);
-        ArrayList<Event> events = Event.jsonEventsToList(prefs.getString("EVENTS_JSON", "[]"));
-        for (Event e : events) {
-            if (e.getId().equals(id)) {
-                return e;
+    private void getEvent(String id) {
+
+        api.getEvent(Common.getToken(getApplicationContext()), id).enqueue(new Callback<Event>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
+
+                event = response.body();
+
+                if (event == null) {
+                    CustomDialog.showError(EventDetailsActivity.this, getString(R.string.error_message));
+                }
+
+                eName.setText(event.getName());
+                eType.setText(event.getType() + ", " + event.getPromoter());
+                eTime.setText(event.getDateWithTimeString());
+                ePlace.setText(event.getPlace().getName());
+                ePlace2.setText(event.getPlace().getAddress());
+                eMembers.setText(getString(R.string.people_interested) + " " + event.getInterested());
+
+                if (event.isInterested()) {
+                    activateButton(btnInt);
+                } else if (event.isNotInterested()) {
+                    activateButton(btnNInt);
+                }
+
+                if (event.getPrice() == null) {
+                    eMoney.setText("???");
+                } else {
+                    Price price = event.getPrice();
+                    eMoney.setText(price.getMin() + " - " + price.getMax() + " " + price.getCurrency());
+                }
+
+                if (event.getImage() == null || event.getImage().equals("")) {
+                    Picasso.get()
+                            .load(Common.getEventPlaceholder())
+                            .placeholder(Common.getEventPlaceholder())
+                            .into(eImage);
+                } else {
+                    Picasso.get()
+                            .load(event.getImage())
+                            .placeholder(Common.getEventPlaceholder())
+                            .into(eImage);
+                }
+
+                updateInterestedNote(eMembers);
+
+                System.out.println(event);
+
+                initializeMap();
             }
-        }
-        return null;
+
+            @Override
+            public void onFailure(@NonNull Call<Event> call, @NonNull Throwable t) {
+                CustomDialog.showError(EventDetailsActivity.this, getString(R.string.error_message));
+            }
+        });
     }
 
     private void initializeMap() {

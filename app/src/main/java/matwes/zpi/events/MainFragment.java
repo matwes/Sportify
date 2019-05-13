@@ -1,7 +1,5 @@
 package matwes.zpi.events;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -12,7 +10,6 @@ import android.widget.ArrayAdapter;
 
 import com.leavjenn.smoothdaterangepicker.date.SmoothDateRangePickerFragment;
 
-import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -65,26 +62,16 @@ public abstract class MainFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case (R.id.filter):
-                filterDialog();
-                return true;
-//            case (R.id.refresh):
-//                downloadEvents(true, true);
+        if (item.getItemId() == R.id.filter) {
+            filterDialog();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
     void getEvents() {
-        SharedPreferences prefs = getActivity().getSharedPreferences("EVENTS", Context.MODE_PRIVATE);
-        ArrayList<Event> e = Event.jsonEventsToList(prefs.getString("EVENTS_JSON", "[]"));
-
-        if (e.isEmpty()) {
-            downloadEvents(true, true);
-        } else {
-            updateList(e);
-        }
+        downloadEvents(true, true);
     }
 
     void updateList(List<Event> e) {
@@ -97,15 +84,15 @@ public abstract class MainFragment extends Fragment {
 
     void downloadEvents(final boolean connectionError, final boolean dialogLoading) {
         if (Common.isMocked()) {
-            EventService.getInstance().downloadEvents(getContext(), connectionError, type, new callbackInterface() {
+            EventService.getInstance().downloadEvents(getContext(), type, new callbackInterface() {
                 @Override
-                public <T> void onDownloadFinished(T data, Integer error) {
+                public <T> void onDownloadFinished(T data, String error) {
                     List<Event> events = (List<Event>) data;
                     if (events != null) {
                         updateList(events);
                     }
                     if (error != null) {
-                        CustomDialog.showError(getContext(), getString(error));
+                        CustomDialog.showError(getContext(), error);
                     }
                     onApiResponse();
                 }
@@ -116,9 +103,9 @@ public abstract class MainFragment extends Fragment {
                 if (dialogLoading) {
                     dialog.showLoadingDialog(getString(R.string.loading));
                 }
-                EventService.getInstance().downloadEvents(getContext(), connectionError, type, new callbackInterface() {
+                EventService.getInstance().downloadEvents(getContext(), type, new callbackInterface() {
                     @Override
-                    public <T> void onDownloadFinished(T data, Integer error) {
+                    public <T> void onDownloadFinished(T data, String error) {
                         if (dialogLoading) {
                             dialog.hideLoadingDialog();
                         } else {
@@ -131,7 +118,7 @@ public abstract class MainFragment extends Fragment {
                             updateList(events);
                         }
                         if (error != null) {
-                            CustomDialog.showError(getContext(), getString(error));
+                            CustomDialog.showError(getContext(), error);
                         }
                     }
                 });
@@ -143,19 +130,19 @@ public abstract class MainFragment extends Fragment {
 
     void filterDialog() {
 
-        List<String> eventsNames = new ArrayList<String>();
+        List<String> eventsNames = new ArrayList<>();
 
-        for (Event ev: EventService.getInstance().originalListOfEvents) {
+        for (Event ev : EventService.getInstance().originalListOfEvents) {
             eventsNames.add(ev.getName());
         }
 
-        ArrayAdapter<String> eventAdapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_item, eventsNames);
+        ArrayAdapter<String> eventAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner_item, eventsNames);
 
 
         final FilterDialog filterDialog = new FilterDialog(getContext(), eventAdapter);
 
 //        if (filtered) {
-            filterDialog.update(selectedName, selectedMaxPrice, minDateSelected, maxDateSelected, selectedCheckboxes);
+        filterDialog.update(selectedName, selectedMaxPrice, minDateSelected, maxDateSelected, selectedCheckboxes);
 //        } else {
 //            filterDialog.update(selectedName, selectedMaxPrice, minDate, maxDate);
 //        }
@@ -209,7 +196,7 @@ public abstract class MainFragment extends Fragment {
                 if (minDateSelected != null && maxDateSelected != null) {
                     if (this.selectedCheckboxes.get(2) &&
                             (event.getDateObject().before(minDateSelected) ||
-                            event.getDateObject().after(maxDateSelected))
+                                    event.getDateObject().after(maxDateSelected))
                     ) {
                         i.remove();
                         continue;

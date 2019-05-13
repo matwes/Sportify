@@ -22,10 +22,11 @@ import matwes.zpi.domain.Event;
 
 public class Common {
     public static final String[] permission = {"email", "public_profile"};
-    public static String URL = "http://10.0.2.2:8080";
+    private static final String AUTHORIZATION = "authorization";
+    public static String URL = "https://nodedziesiedzieje.herokuapp.com";
 
     public static boolean isMocked() {
-        return true;
+        return false;
     }
 
     public static boolean isEmailWrong(String email) {
@@ -63,6 +64,16 @@ public class Common {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    public static void setToken(Context context, String token) {
+        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putString(AUTHORIZATION, token);
+        editor.apply();
+    }
+
+    public static String getToken(Context context) {
+        return getSharedPreferences(context).getString(AUTHORIZATION, "");
     }
 
     public static int getEventPlaceholder() {

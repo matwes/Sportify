@@ -26,7 +26,7 @@ import matwes.zpi.MainActivity;
 import matwes.zpi.R;
 import matwes.zpi.api.ApiInterface;
 import matwes.zpi.api.RestService;
-import matwes.zpi.domain.User;
+import matwes.zpi.domain.AuthToken;
 import matwes.zpi.utils.CustomDialog;
 import matwes.zpi.utils.LoadingDialog;
 import retrofit2.Call;
@@ -105,17 +105,16 @@ public class SignUpActivity extends AppCompatActivity {
             etEmail.setError(getString(R.string.error_wrong_email));
         } else {
             dialog.showLoadingDialog(getString(R.string.loading));
-            Call<User> register = api.register(email, password, firstName, lastName);
+            Call<AuthToken> register = api.register(email, password, firstName, lastName);
             handleRegister(register, false);
         }
     }
 
-    private void handleRegister(Call<User> call, final boolean facebook) {
+    private void handleRegister(Call<AuthToken> call, final boolean facebook) {
 
-
-        call.enqueue(new Callback<User>() {
+        call.enqueue(new Callback<AuthToken>() {
             @Override
-            public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
+            public void onResponse(@NonNull Call<AuthToken> call, @NonNull Response<AuthToken> response) {
                 dialog.hideLoadingDialog();
                 Class className;
                 if (facebook) {
@@ -131,7 +130,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<AuthToken> call, @NonNull Throwable t) {
                 final EditText input = new EditText(SignUpActivity.this);
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams
                         (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
