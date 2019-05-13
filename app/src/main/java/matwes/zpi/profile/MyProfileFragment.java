@@ -120,7 +120,7 @@ public class MyProfileFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.findItem(R.id.filter).setVisible(false);
         menu.findItem(R.id.change_view).setVisible(false);
-        menu.findItem(R.id.refresh).setVisible(false);
+//        menu.findItem(R.id.refresh).setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

@@ -69,8 +69,8 @@ public abstract class MainFragment extends Fragment {
             case (R.id.filter):
                 filterDialog();
                 return true;
-            case (R.id.refresh):
-                downloadEvents(true, true);
+//            case (R.id.refresh):
+//                downloadEvents(true, true);
         }
 
         return super.onOptionsItemSelected(item);
