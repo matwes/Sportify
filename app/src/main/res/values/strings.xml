@@ -33,6 +33,7 @@
     <string name="eventDescription">Description</string>
     <string name="eventsInLocation">events in this location</string>
     <string name="addNewEvent">Add new event</string>
+    <string name="eventType">Typ eventu</string>
 
     <string-array name="sport_list">
         <item>Piłka nożna</item>

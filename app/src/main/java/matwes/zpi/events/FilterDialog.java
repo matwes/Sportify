@@ -7,6 +7,7 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -32,9 +33,10 @@ class FilterDialog extends Dialog {
     private AutoCompleteTextView autoCompleteTextView;
     private ArrayAdapter<String> eventsAdatper;
     private AppCompatCheckBox nameCheckBox, priceCheckBox, dateCheckBox;
-
+    private Context viewContext;
     FilterDialog(@NonNull Context context, ArrayAdapter<String> eventsAdatper) {
         super(context);
+        this.viewContext = context;
         setTitle(R.string.filter);
         setContentView(R.layout.dialog_filter);
         this.eventsAdatper = eventsAdatper;
@@ -42,6 +44,14 @@ class FilterDialog extends Dialog {
 
     void update(String selectedName, String selectedPrice, Date minSelectedDate, Date maxSelectedDate, List<Boolean> selectedCheckBoxes) {
         LinearLayout layout = findViewById(R.id.dialog_filter);
+        layout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                InputMethodManager inputManager = (InputMethodManager) viewContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
+                return false;
+            }
+        });
         button = layout.findViewById(R.id.btnFilter);
         filterDate = layout.findViewById(R.id.filterDate);
 

@@ -77,5 +77,6 @@
     <string name="place">place</string>
     <string name="blocked">Blokowane wydarzenia</string>
     <string name="blocked_events_title">Blokowane</string>
+    <string name="eventType">Typ eventu</string>
 
 </resources>

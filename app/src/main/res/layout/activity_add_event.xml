@@ -6,6 +6,7 @@
     android:background="@color/colorPrimary"
     android:orientation="vertical"
     android:padding="@dimen/activityPadding"
+    android:id="@+id/addEventMainActivity"
     tools:context="matwes.zpi.events.AddEventActivity">
 
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -14,109 +15,137 @@
         android:layout_gravity="center"
         card_view:cardElevation="2dp"
         card_view:cardUseCompatPadding="true"
-        card_view:contentPadding="5dp">
+        card_view:contentPadding="5dp"
+        android:id="@+id/addEventCardView">
 
-        <LinearLayout
+        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp">
-
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/etEventName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/eventName"
-                    android:textColor="@color/colorPrimary" />
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp">
-
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/etEventDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/eventDescription"
-                    android:textColor="@color/colorPrimary" />
-            </android.support.design.widget.TextInputLayout>
-
-            <fragment
-                android:id="@+id/place_fragment"
-                android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                tools:layout="@layout/place_autocomplete_fragment" />
-
-            <LinearLayout
+            <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:stretchColumns="1">
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="10dp"
-                    android:layout_weight="1">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/etEventDate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:editable="false"
-                        android:hint="@string/date"
-                        android:textColor="@color/colorPrimary" />
-                </android.support.design.widget.TextInputLayout>
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="10dp"
-                    android:layout_weight="1">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/etEventMembers"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:hint="@string/max_members"
-                        android:inputType="number"
-                        android:textColor="@color/colorPrimary" />
-                </android.support.design.widget.TextInputLayout>
-            </LinearLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp">
-
-                <AutoCompleteTextView
-                    android:id="@+id/autoCompleteTextView"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Sport"
-                    android:textColor="@color/colorPrimary" />
+                    android:orientation="vertical">
 
-            </android.support.design.widget.TextInputLayout>
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp">
 
-            <Button
-                android:id="@+id/btnAddEvent"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="1"
-                android:text="@string/add_event" />
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/etEventName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/eventName"
+                            android:textColor="@color/colorPrimary" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/etEventDescription"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/eventType"
+                            android:textColor="@color/colorPrimary" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <fragment
+                        android:id="@+id/place_fragment"
+                        android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        tools:layout="@layout/place_autocomplete_fragment" />
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_weight="1">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/etEventDate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:editable="false"
+                            android:hint="@string/date"
+                            android:textColor="@color/colorPrimary" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="10dp"
+                            android:layout_weight="1">
+
+                            <android.support.design.widget.TextInputEditText
+                                android:id="@+id/minPrice"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:editable="false"
+                                android:hint="min. cena"
+                                android:textColor="@color/colorPrimary" />
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="10dp"
+                            android:layout_weight="1">
+
+                            <android.support.design.widget.TextInputEditText
+                                android:id="@+id/maxPrice"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:ems="10"
+                                android:hint="max. price"
+                                android:inputType="number"
+                                android:textColor="@color/colorPrimary" />
+                        </android.support.design.widget.TextInputLayout>
+                    </LinearLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/autoCompleteTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Promotor"
+                            android:textColor="@color/colorPrimary" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <Button
+                        android:id="@+id/btnAddEvent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_weight="1"
+                        android:text="@string/add_event" />
+                </LinearLayout>
+            </TableLayout>
+        </ScrollView>
 
 
-        </LinearLayout>
 
     </android.support.v7.widget.CardView>
 

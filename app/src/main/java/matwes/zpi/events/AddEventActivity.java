@@ -3,19 +3,24 @@ package matwes.zpi.events;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.icu.util.Calendar;
+import android.inputmethodservice.Keyboard;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TimePicker;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -44,6 +49,8 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
     private double dLat, dLng;
 
     private ApiInterface api;
+    private LinearLayout mainLinearLayout;
+    private CardView cardView;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -59,7 +66,17 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
         etDescription = findViewById(R.id.etEventDescription);
         etMembers = findViewById(R.id.etEventMembers);
         etDate = findViewById(R.id.etEventDate);
+        mainLinearLayout = findViewById(R.id.addEventMainActivity);
+        cardView = findViewById(R.id.addEventCardView);
 
+        mainLinearLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                InputMethodManager inputManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
+                return false;
+            }
+        });
         final TimePickerDialog.OnTimeSetListener timePicker = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
