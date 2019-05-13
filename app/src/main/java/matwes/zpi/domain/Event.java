@@ -30,6 +30,10 @@ public class Event implements Comparable {
     private int interested;
     private String creatorId;
 
+    public Event() {
+
+    }
+
     public Event(String id, String name, String image, String date, String time, String type,
                  String promoter, Price price, Place place, int interested, String creatorId) {
         this.id = id;

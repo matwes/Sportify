@@ -30,11 +30,18 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import matwes.zpi.Common;
 import matwes.zpi.R;
 import matwes.zpi.api.ApiInterface;
 import matwes.zpi.api.RestService;
+import matwes.zpi.domain.Event;
+import matwes.zpi.domain.Location;
+import matwes.zpi.domain.Place;
+import matwes.zpi.domain.Price;
 import matwes.zpi.utils.CustomDialog;
 import matwes.zpi.utils.LoadingDialog;
 import retrofit2.Call;
@@ -42,32 +49,36 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AddEventActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
-    private AutoCompleteTextView autoCompleteTextView;
-    private EditText etName, etDescription, etMembers, etDate;
+
+    @BindView(R.id.etEventName) EditText etName;
+    @BindView(R.id.addEventMainActivity) LinearLayout mainLinearLayout;
+    @BindView(R.id.etEventType) EditText etType;
+    @BindView(R.id.etEventDate) EditText etDate;
+    @BindView(R.id.minPrice) EditText minPrice;
+    @BindView(R.id.maxPrice) EditText maxPrice;
+    @BindView(R.id.addEventCardView) CardView cardView;
+    @BindView(R.id.promotorTextView) EditText promotorTextView;
+    PlaceAutocompleteFragment placeAutocompleteFragment;
+
     private LoadingDialog dialog;
     private String sDate, sTime;
+    private String address;
     private double dLat, dLng;
+    boolean placeWasSet = false;
 
     private ApiInterface api;
-    private LinearLayout mainLinearLayout;
-    private CardView cardView;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_event);
+        ButterKnife.bind(this);
 
         api = RestService.getApiInstance();
         initGooglePlaceApi();
 
         dialog = new LoadingDialog(this);
-        etName = findViewById(R.id.etEventName);
-        etDescription = findViewById(R.id.etEventDescription);
-        etMembers = findViewById(R.id.etEventMembers);
-        etDate = findViewById(R.id.etEventDate);
-        mainLinearLayout = findViewById(R.id.addEventMainActivity);
-        cardView = findViewById(R.id.addEventCardView);
 
         mainLinearLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -77,6 +88,7 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
                 return false;
             }
         });
+
         final TimePickerDialog.OnTimeSetListener timePicker = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -112,18 +124,6 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
             }
         });
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.sport_list, R.layout.spinner_item);
-        autoCompleteTextView = findViewById(R.id.autoCompleteTextView);
-        autoCompleteTextView.setAdapter(adapter);
-        autoCompleteTextView.setKeyListener(null);
-        autoCompleteTextView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                ((AutoCompleteTextView) v).showDropDown();
-                return false;
-            }
-        });
-
         Button addEvent = findViewById(R.id.btnAddEvent);
         addEvent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,12 +141,14 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
                 .build();
 
         Fragment placeFragment = getFragmentManager().findFragmentById(R.id.place_fragment);
-        PlaceAutocompleteFragment placeAutocompleteFragment = (PlaceAutocompleteFragment) placeFragment;
+        placeAutocompleteFragment = (PlaceAutocompleteFragment) placeFragment;
         placeAutocompleteFragment.setHint(getString(R.string.place));
         placeAutocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(com.google.android.gms.location.places.Place place) {
                 LatLng latLng = place.getLatLng();
+                placeWasSet = true;
+                address = place.getAddress().toString();
                 dLat = latLng.latitude;
                 dLng = latLng.longitude;
             }
@@ -166,26 +168,48 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
     private void createEvent() {
         dialog.showLoadingDialog(getString(R.string.loading));
 
-        String id = Common.getCurrentUserId(this);
-        String date = sDate;
-        String description = etDescription.getText().toString();
-        String maxMembers = etMembers.getText().toString();
-        String name = etName.getText().toString();
-        String time = sTime;
+        Event newEvent = new Event();
+        String eventName =  etName.getText().toString().trim();
+        String minPriceData = minPrice.getText().toString();
+        String maxPriceData = maxPrice.getText().toString();
+        Price eventPrice = null;
+        if (!minPriceData.equals("") && !maxPriceData.equals("")) {
+            eventPrice = new Price("PLN", Integer.parseInt(minPriceData), Integer.parseInt(maxPriceData));
+        }
+        String eventType = etType.getText().toString().trim();
+        String[] eventDateTime = etDate.getText().toString().trim().split(" ");
+        Location location = new Location(dLat,dLng);
+        Place place = new Place("","", address ,"", "", location);
+        String promotor = promotorTextView.getText().toString().trim();
 
-        Call<Void> call = api.createEvent(id, date, description, maxMembers, name, dLat, dLng, time);
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-                dialog.hideLoadingDialog();
-                finish();
-            }
 
-            @Override
-            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
-                dialog.hideLoadingDialog();
-                CustomDialog.showError(AddEventActivity.this, getString(R.string.error_message));
-            }
-        });
+        if (eventName.equals("") && eventPrice == null && eventType.equals("") && eventDateTime.length != 2 && address == null && !placeWasSet && promotor.equals("")) {
+            return;
+        }
+
+        newEvent.setName(eventName);
+        newEvent.setPrice(eventPrice);
+        newEvent.setType(eventType);
+        newEvent.setDate(eventDateTime[0]);
+        newEvent.setTime(eventDateTime[1]);
+        newEvent.setPlace(place);
+        newEvent.setPromoter(promotor);
+        Gson gson = new Gson();
+        String json = gson.toJson(newEvent);
+        System.out.println(json);
+//        Call<Void> call = api.createEvent(id, date, description, maxMembers, name, dLat, dLng, time);
+//        call.enqueue(new Callback<Void>() {
+//            @Override
+//            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+//                dialog.hideLoadingDialog();
+//                finish();
+//            }
+//
+//            @Override
+//            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+//                dialog.hideLoadingDialog();
+//                CustomDialog.showError(AddEventActivity.this, getString(R.string.error_message));
+//            }
+//        });
     }
 }
