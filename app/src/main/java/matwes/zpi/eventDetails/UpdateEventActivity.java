@@ -228,20 +228,20 @@ public class UpdateEventActivity extends AppCompatActivity implements GoogleApiC
 
         NewEvent newEvent = new NewEvent(eventId, name.getText().toString(), null, longDate, "", "", null, null);
 
-        Call<ResponseBody> call = api.createEvent(Common.getToken(this), newEvent);
-
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                dialog.hideLoadingDialog();
-                finish();
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                dialog.hideLoadingDialog();
-                CustomDialog.showError(UpdateEventActivity.this, getString(R.string.error_message));
-            }
-        });
+//        Call<ResponseBody> call = api.createEvent(Common.getToken(this), newEvent);
+//
+//        call.enqueue(new Callback<ResponseBody>() {
+//            @Override
+//            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+//                dialog.hideLoadingDialog();
+//                finish();
+//            }
+//
+//            @Override
+//            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+//                dialog.hideLoadingDialog();
+//                CustomDialog.showError(UpdateEventActivity.this, getString(R.string.error_message));
+//            }
+//        });
     }
 }

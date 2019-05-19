@@ -64,6 +64,8 @@ public class EventDetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         eventId = intent.getStringExtra("eventId");
 
+        getEvent(eventId);
+
         editButtonImage.setVisibility(View.GONE);
 
         eImage = findViewById(R.id.eventImage);
@@ -129,13 +131,27 @@ public class EventDetailsActivity extends AppCompatActivity {
     public void editEvent() {
         Intent intent = new Intent(this, AddEventActivity.class);
         intent.putExtra("event", event);
-        startActivity(intent);
+        startActivityForResult(intent, 1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (intent != null) {
+            Bundle b = intent.getExtras();
+            String str = b.getString("deleted");
+            if (str != null) {
+                finish();
+                return;
+            }
+        }
+        getEvent(eventId);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        getEvent(eventId);
+
     }
 
     private void handleResponse(Call<SuccessResponse> call) {

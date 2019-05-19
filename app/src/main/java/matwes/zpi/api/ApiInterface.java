@@ -6,6 +6,7 @@ import matwes.zpi.domain.AuthToken;
 import matwes.zpi.domain.Event;
 import matwes.zpi.domain.NewEvent;
 import matwes.zpi.domain.RegisterData;
+import matwes.zpi.domain.ReturnEvent;
 import matwes.zpi.domain.SuccessResponse;
 import matwes.zpi.domain.User;
 import okhttp3.ResponseBody;
@@ -59,7 +60,7 @@ public interface ApiInterface {
 
     @POST("/events")
     @Headers({"Content-Type: application/json"})
-    Call<ResponseBody> createEvent(
+    Call<ReturnEvent> createEvent(
             @Header("authorization") String token,
             @Body NewEvent newEvent);
 

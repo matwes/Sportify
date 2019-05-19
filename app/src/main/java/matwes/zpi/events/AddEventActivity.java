@@ -29,6 +29,8 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -48,7 +50,9 @@ import matwes.zpi.domain.Location;
 import matwes.zpi.domain.NewEvent;
 import matwes.zpi.domain.Place;
 import matwes.zpi.domain.Price;
+import matwes.zpi.domain.ReturnEvent;
 import matwes.zpi.eventDetails.EventDetailsActivity;
+import matwes.zpi.eventDetails.UpdateEventActivity;
 import matwes.zpi.utils.CustomDialog;
 import matwes.zpi.utils.LoadingDialog;
 import okhttp3.ResponseBody;
@@ -74,6 +78,8 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
     CardView cardView;
     @BindView(R.id.promotorTextView)
     EditText promoterTextView;
+    @BindView(R.id.btnDeleteEvent)
+    Button buttonDeleteEvent;
 
     PlaceAutocompleteFragment placeAutocompleteFragment;
     Event event = null;
@@ -97,6 +103,7 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
 
         Fragment placeFragment = getFragmentManager().findFragmentById(R.id.place_fragment);
         placeAutocompleteFragment = (PlaceAutocompleteFragment) placeFragment;
+        buttonDeleteEvent.setVisibility(View.GONE);
 
         if (event != null) {
             etName.setText(event.getName());
@@ -112,6 +119,7 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
             placeAutocompleteFragment.setText(event.getPlace().getAddress());
             promoterTextView.setText(event.getPromoter());
             addEvent.setText(R.string.updateBtn);
+            buttonDeleteEvent.setVisibility(View.VISIBLE);
         }
 
         api = RestService.getApiInstance();
@@ -169,15 +177,38 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
         createEvent();
     }
 
+    @OnClick(R.id.btnDeleteEvent)
+    public void deleteEventTap() {
+        if (event != null) {
+            dialog.showLoadingDialog(getString(R.string.loading));
+            Call<Void> call = api.deleteEvent(Common.getToken(getApplicationContext()), event.get_id());
+            call.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                    dialog.hideLoadingDialog();
+                    Intent data = new Intent();
+                    data.putExtra("deleted", "");
+                    setResult(RESULT_OK, data);
+                    finish();
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                    dialog.hideLoadingDialog();
+                    CustomDialog.showError(AddEventActivity.this, getString(R.string.error_message));
+                }
+            });
+        }
+    }
+
+
+
     private void initGooglePlaceApi() {
         new GoogleApiClient.Builder(this)
                 .addApi(Places.GEO_DATA_API)
                 .addApi(Places.PLACE_DETECTION_API)
                 .enableAutoManage(this, this)
                 .build();
-
-//        Fragment placeFragment = getFragmentManager().findFragmentById(R.id.place_fragment);
-//        placeAutocompleteFragment = (PlaceAutocompleteFragment) placeFragment;
 
         placeAutocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
@@ -243,10 +274,10 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
             newEvent.set_id(event.get_id());
         }
 
-        Call<ResponseBody> call = api.createEvent(Common.getToken(this), newEvent);
-        call.enqueue(new Callback<ResponseBody>() {
+        Call<ReturnEvent> call = api.createEvent(Common.getToken(this), newEvent);
+        call.enqueue(new Callback<ReturnEvent>() {
             @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+            public void onResponse(@NonNull Call<ReturnEvent> call, @NonNull Response<ReturnEvent> response) {
 
                 dialog.hideLoadingDialog();
 
@@ -263,21 +294,21 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
                     CustomDialog.showError(AddEventActivity.this, getString(R.string.error_message));
                 } else {
                     dialog.hideLoadingDialog();
-                    if (event == null) {
+                    if (response.body() != null && response.body().getEventId() != null && event == null) {
+                        String eventId = response.body().getEventId();
                         Intent intent = new Intent(AddEventActivity.this, EventDetailsActivity.class);
-                        intent.putExtra("eventId", event.get_id());
+                        intent.putExtra("eventId", eventId);
                         finish();
                         startActivity(intent);
                         return;
                     }
-
                 }
 
                 finish();
             }
 
             @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<ReturnEvent> call, @NonNull Throwable t) {
                 dialog.hideLoadingDialog();
                 CustomDialog.showError(AddEventActivity.this, getString(R.string.error_message));
             }

@@ -13,6 +13,10 @@ public class NewEvent {
     private Price price;
     private Place place;
 
+    public NewEvent(String eventId) {
+        this._id = eventId;
+    }
+
     public NewEvent(String _id, String name, String image, String date, String type, String promoter, Price price, Place place) {
         this._id = _id;
         this.name = name;
