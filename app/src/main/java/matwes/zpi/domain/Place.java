@@ -1,9 +1,11 @@
 package matwes.zpi.domain;
 
+import java.io.Serializable;
+
 /**
  * Created by Mateusz Wesołowski
  */
-public class Place {
+public class Place implements Serializable {
     private String name;
     private String postalCode;
     private String address;

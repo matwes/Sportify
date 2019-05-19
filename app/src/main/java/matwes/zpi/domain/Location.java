@@ -1,9 +1,11 @@
 package matwes.zpi.domain;
 
+import java.io.Serializable;
+
 /**
  * Created by Mateusz Wesołowski
  */
-public class Location {
+public class Location implements Serializable {
     private double latitude;
     private double longitude;
 

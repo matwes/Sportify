@@ -1,9 +1,11 @@
 package matwes.zpi.domain;
 
+import java.io.Serializable;
+
 /**
  * Created by Mateusz Wesołowski
  */
-public class Price {
+public class Price implements Serializable {
     private String currency;
     private double min;
     private double max;

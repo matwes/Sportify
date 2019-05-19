@@ -24,6 +24,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import matwes.zpi.Common;
 import matwes.zpi.R;
 import matwes.zpi.api.ApiInterface;
@@ -33,6 +35,7 @@ import matwes.zpi.domain.Location;
 import matwes.zpi.domain.Place;
 import matwes.zpi.domain.Price;
 import matwes.zpi.domain.SuccessResponse;
+import matwes.zpi.events.AddEventActivity;
 import matwes.zpi.utils.CustomDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,6 +53,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_details);
+        ButterKnife.bind(this);
 
         api = RestService.getApiInstance();
 
@@ -113,6 +117,13 @@ public class EventDetailsActivity extends AppCompatActivity {
                 updateInterestedNote(eMembers);
             }
         });
+    }
+
+    @OnClick(R.id.editButton)
+    public void editEvent() {
+        Intent intent = new Intent(this, AddEventActivity.class);
+        intent.putExtra("event", event);
+        startActivity(intent);
     }
 
     private void handleResponse(Call<SuccessResponse> call) {

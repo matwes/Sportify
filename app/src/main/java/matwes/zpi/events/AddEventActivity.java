@@ -35,6 +35,7 @@ import com.google.gson.Gson;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import matwes.zpi.Common;
 import matwes.zpi.R;
 import matwes.zpi.api.ApiInterface;
@@ -69,12 +70,31 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
 
     private ApiInterface api;
 
+    Event event = null;
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_event);
         ButterKnife.bind(this);
+
+        Button addEvent = findViewById(R.id.btnAddEvent);
+
+        event = (Event) getIntent().getSerializableExtra("event");
+
+        if (event != null) {
+            event = event;
+            etName.setText(event.getName());
+            etType.setText(event.getType());
+            etDate.setText(event.getDate() + " " + event.getTime());
+            if (event.getPrice() != null) {
+                minPrice.setText(Double.toString(event.getPrice().getMin()));
+                maxPrice.setText(Double.toString(event.getPrice().getMax()));
+            }
+            promotorTextView.setText(event.getPromoter());
+            addEvent.setText(R.string.updateBtn);
+        }
 
         api = RestService.getApiInstance();
         initGooglePlaceApi();
@@ -125,13 +145,11 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
             }
         });
 
-        Button addEvent = findViewById(R.id.btnAddEvent);
-        addEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createEvent();
-            }
-        });
+    }
+
+    @OnClick(R.id.btnAddEvent)
+    public void addEventTap() {
+        createEvent();
     }
 
     private void initGooglePlaceApi() {

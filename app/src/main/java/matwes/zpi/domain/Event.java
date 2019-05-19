@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,7 +17,7 @@ import java.util.Locale;
 /**
  * Created by Mateusz Wesołowski
  */
-public class Event implements Comparable {
+public class Event implements Comparable, Serializable {
     private String _id;
     private String id;
     private String name;
