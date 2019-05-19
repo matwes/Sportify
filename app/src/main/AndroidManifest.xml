@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="matwes.zpi">
 
@@ -15,8 +16,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".login.ResendLinkActivity"></activity>
         <activity
-            android:name="matwes.zpi.login.WelcomeActivity"
+            android:name=".login.WelcomeActivity"
             android:label="@string/appName"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -26,13 +28,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="matwes.zpi.login.SignUpActivity"
+            android:name=".login.SignUpActivity"
             android:label="@string/sign_up" />
         <activity
-            android:name="matwes.zpi.login.SignInActivity"
+            android:name=".login.SignInActivity"
             android:label="@string/sign_in" />
         <activity
-            android:name="matwes.zpi.login.ResetPassActivity"
+            android:name=".login.ResetPassActivity"
             android:label="@string/resetPassword" />
 
         <meta-data
@@ -40,37 +42,36 @@
             android:value="@string/facebook_app_id" />
 
         <activity
-            android:name="matwes.zpi.login.SignInByCodeActivity"
+            android:name=".login.SignInByCodeActivity"
             android:label="Logowanie kodem" />
         <activity
-            android:name="matwes.zpi.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <!--
             <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
         -->
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_place_key" />
 
         <activity
-            android:name="matwes.zpi.events.AddEventActivity"
+            android:name=".events.AddEventActivity"
             android:label="@string/addNewEvent" />
         <activity
-            android:name="matwes.zpi.eventDetails.EventDetailsActivity"
+            android:name=".eventDetails.EventDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="matwes.zpi.messages.MessageActivity"
+            android:name=".messages.MessageActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="matwes.zpi.eventDetails.UpdateEventActivity"
+            android:name=".eventDetails.UpdateEventActivity"
             android:label="@string/updateLabel" />
         <activity
-            android:name="matwes.zpi.profile.ChangePasswordActivity"
+            android:name=".profile.ChangePasswordActivity"
             android:label="Zmiana hasła" />
     </application>
+
 </manifest>

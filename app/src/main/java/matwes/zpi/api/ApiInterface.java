@@ -103,4 +103,9 @@ public interface ApiInterface {
             @Header("authorization") String token,
             @Path("eventId") String eventId
     );
+
+    @POST("/registration/resend?email={email}")
+    Call<SuccessResponse> resendEmail(
+            @Path("email") String eventId
+    );
 }
