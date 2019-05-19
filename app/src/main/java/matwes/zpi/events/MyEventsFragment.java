@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import java.util.Iterator;
 import java.util.List;
 
-import matwes.zpi.Common;
 import matwes.zpi.R;
 import matwes.zpi.domain.Event;
 
@@ -78,7 +77,7 @@ public class MyEventsFragment extends MainFragment implements EventListAdapter.E
         Iterator<Event> i = events.iterator();
         while (i.hasNext()) {
             Event event = i.next();
-            if (!event.getCreatorId().equals(Common.getCurrentUserId(getContext()))) {
+            if (!event.isCreator()) {
                 i.remove();
             }
         }

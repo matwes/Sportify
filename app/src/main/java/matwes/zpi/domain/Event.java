@@ -30,14 +30,14 @@ public class Event implements Comparable {
     private int interested;
     private boolean isInterested;
     private boolean isNotInterested;
-    private String creatorId;
+    private boolean isCreator;
 
     public Event() {
     }
 
     public Event(String _id, String id, String name, String image, String date, String time,
                  String type, String promoter, Price price, Place place, int interested,
-                 boolean isInterested, boolean isNotInterested, String creatorId) {
+                 boolean isInterested, boolean isNotInterested, boolean isCreator) {
         this._id = _id;
         this.id = id;
         this.name = name;
@@ -51,7 +51,7 @@ public class Event implements Comparable {
         this.interested = interested;
         this.isInterested = isInterested;
         this.isNotInterested = isNotInterested;
-        this.creatorId = creatorId;
+        this.isCreator = isCreator;
     }
 
     public static ArrayList<Event> jsonEventsToList(String json) {
@@ -202,12 +202,12 @@ public class Event implements Comparable {
         isInterested = interested;
     }
 
-    public String getCreatorId() {
-        return creatorId;
+    public boolean isCreator() {
+        return isCreator;
     }
 
-    public void setCreatorId(String creatorId) {
-        this.creatorId = creatorId;
+    public void setCreator(boolean creator) {
+        isCreator = creator;
     }
 
     public boolean isNotInterested() {
@@ -239,7 +239,7 @@ public class Event implements Comparable {
                 ", price=" + price +
                 ", place=" + place +
                 ", interested=" + interested +
-                ", creatorId='" + creatorId + '\'' +
+                ", isCreator='" + isCreator + '\'' +
                 '}';
     }
 }

@@ -1,7 +1,6 @@
 package matwes.zpi.login;
 
 import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.icu.util.Calendar;
 import android.os.Bundle;
@@ -10,12 +9,10 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.TimePicker;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -38,10 +35,7 @@ import matwes.zpi.MainActivity;
 import matwes.zpi.R;
 import matwes.zpi.api.ApiInterface;
 import matwes.zpi.api.RestService;
-import matwes.zpi.domain.AuthToken;
 import matwes.zpi.domain.RegisterData;
-import matwes.zpi.domain.SuccessResponse;
-import matwes.zpi.events.AddEventActivity;
 import matwes.zpi.utils.CustomDialog;
 import matwes.zpi.utils.LoadingDialog;
 import okhttp3.ResponseBody;
@@ -50,18 +44,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SignUpActivity extends AppCompatActivity {
-    private EditText etFirstName, etLastName, etEmail, etPassword;
-    private CallbackManager callbackManager;
-    private LoadingDialog dialog;
-
-    private ApiInterface api;
     @BindView(R.id.plec_man)
     RadioButton sex_man;
     @BindView(R.id.plec_woman)
     RadioButton sex_woman;
     @BindView(R.id.birth_date)
     TextInputEditText birthDate;
-
+    private EditText etFirstName, etLastName, etEmail, etPassword;
+    private CallbackManager callbackManager;
+    private LoadingDialog dialog;
+    private ApiInterface api;
     private String sDate, sTime;
     private double dLat, dLng;
 
@@ -79,27 +71,14 @@ public class SignUpActivity extends AppCompatActivity {
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
 
-        final TimePickerDialog.OnTimeSetListener timePicker = new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                String date = birthDate.getText().toString();
-                sTime = String.format("%02d:%02d", hourOfDay, minute);
-                birthDate.setText(String.format("%s %d:%d", date, hourOfDay, minute));
-            }
-        };
-
         final Calendar calendar;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             calendar = Calendar.getInstance();
             final DatePickerDialog.OnDateSetListener datePicker = new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker view, int year, int month, int day) {
-                    int hour = calendar.get(Calendar.HOUR_OF_DAY);
-                    int minute = calendar.get(Calendar.MINUTE);
-
-                    new TimePickerDialog(SignUpActivity.this, timePicker, hour, minute, true).show();
                     sDate = String.format("%02d-%02d-%02d", year, month + 1, day);
-                    birthDate.setText(String.format("%d-%d-%d", day, month + 1, year));
+                    birthDate.setText(String.format("%d-%d-%d", year, month + 1, day));
                 }
             };
 
@@ -115,7 +94,7 @@ public class SignUpActivity extends AppCompatActivity {
                     }
                 }
             });
-        }else {
+        } else {
             birthDate.setText("1995-04-02");
         }
 
@@ -196,28 +175,22 @@ public class SignUpActivity extends AppCompatActivity {
                 if (facebook) {
                     className = MainActivity.class;
                     Common.setLoginStatus(SignUpActivity.this, true);
-                } else {
-//                    String tokenResponse = response.body();
-                    if (response.code() != 200) {
-
-                        CustomDialog.showError(SignUpActivity.this, "Cos poszlo nie tak, sprobuj ponownie pozniej " + Integer.toString(response.code()));
-
+                } else if (response.errorBody() != null) {
+                    try {
+                        CustomDialog.showError(SignUpActivity.this, response.errorBody().string());
+                    } catch (IOException e) {
+                        CustomDialog.showError(SignUpActivity.this, getString(R.string.error_message));
+                        e.printStackTrace();
                     }
+                } else if (response.code() != 200 || response.body() == null) {
+                    CustomDialog.showError(SignUpActivity.this, getString(R.string.error_message));
+                } else {
+
                     try {
                         CustomDialog.showError(SignUpActivity.this, response.body().string());
                     } catch (IOException e) {
-                        CustomDialog.showError(SignUpActivity.this, "Cos poszlo nie tak, sprobuj ponownie pozniej " + Integer.toString(response.code()));
+                        CustomDialog.showError(SignUpActivity.this, getString(R.string.error_message));
                     }
-
-//                    String w = tokenResponse;
-//
-//                    if (tokenResponse.getToken() != null) {
-//                        CustomDialog.showError(SignUpActivity.this, "Udalo sie!, sprawdz email");
-//                        //                    className = SignInByCodeActivity.class;
-//                    }else {
-//                        CustomDialog.showError(SignUpActivity.this, "Cos poszlo nie tak, sprobuj ponownie pozniej");
-//                    }
-
                 }
 
                 if (className != null) {

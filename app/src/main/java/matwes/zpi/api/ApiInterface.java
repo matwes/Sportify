@@ -68,7 +68,6 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("/events")
     Call<Void> createEvent(
-            @Field("creator_id") String creatorId,
             @Field("date") String date,
             @Field("description") String description,
             @Field("maxMembers") String maxMembers,
