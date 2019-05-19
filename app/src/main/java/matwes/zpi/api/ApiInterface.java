@@ -4,14 +4,18 @@ import java.util.List;
 
 import matwes.zpi.domain.AuthToken;
 import matwes.zpi.domain.Event;
+import matwes.zpi.domain.RegisterData;
 import matwes.zpi.domain.SuccessResponse;
 import matwes.zpi.domain.User;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
@@ -43,12 +47,19 @@ public interface ApiInterface {
     Call<User> resetPassword(
             @Field("email") String email);
 
+
+//    @Headers({"Accept: application/json"})
     @POST("/registration")
-    Call<AuthToken> register(
-            @Field("email") String email,
-            @Field("password") String password,
-            @Field("firstName") String firstName,
-            @Field("lastName") String lastName);
+    @Headers({
+            "Content-Type: application/json",
+    })
+    Call<ResponseBody> register(@Body RegisterData body);
+//            @Field("email") String email,
+//            @Field("password") String password,
+//            @Field("name") String firstName,
+//            @Field("surname") String lastName,
+//            @Field("birthday") String birthday,
+//            @Field("sex") String sex);
 
     /*******************
      ****** EVENTS ******
@@ -57,7 +68,6 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("/events")
     Call<Void> createEvent(
-            @Field("creator_id") String creatorId,
             @Field("date") String date,
             @Field("description") String description,
             @Field("maxMembers") String maxMembers,

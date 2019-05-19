@@ -20,6 +20,8 @@ import com.facebook.login.widget.LoginButton;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
+
 import matwes.zpi.Common;
 import matwes.zpi.MainActivity;
 import matwes.zpi.R;
@@ -131,10 +133,17 @@ public class SignInActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call<AuthToken> call, @NonNull Response<AuthToken> response) {
 
-                AuthToken tokenResponse = response.body();
-
-                if (tokenResponse.getToken() != null) {
-                    Common.setToken(SignInActivity.this, tokenResponse.getToken());
+                if(response.errorBody()!=null) {
+                    try {
+                        String errorMessage = response.errorBody().string();
+                        CustomDialog.showError(SignInActivity.this, errorMessage);
+                    } catch (IOException e) {
+                        CustomDialog.showError(SignInActivity.this, getString(R.string.error_message));
+                        e.printStackTrace();
+                    }
+                    dialog.hideLoadingDialog();
+                } else if(response.body()!=null && response.body().getToken()!=null) {
+                    Common.setToken(SignInActivity.this, response.body().getToken());
 
                     Intent intent = new Intent(SignInActivity.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
