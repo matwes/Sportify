@@ -87,6 +87,9 @@ public class Event implements Comparable, Serializable {
     }
 
     public String getDateWithTimeString() {
+        if (time == null) {
+            return "";
+        }
         Date dateObject = getDateObject();
 
         DateFormat df = new SimpleDateFormat("EEEE, d MMMM, HH:mm", Locale.ENGLISH);

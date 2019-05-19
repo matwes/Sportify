@@ -48,33 +48,21 @@ public interface ApiInterface {
             @Field("email") String email);
 
 
-//    @Headers({"Accept: application/json"})
     @POST("/registration")
     @Headers({
             "Content-Type: application/json",
     })
     Call<ResponseBody> register(@Body RegisterData body);
-//            @Field("email") String email,
-//            @Field("password") String password,
-//            @Field("name") String firstName,
-//            @Field("surname") String lastName,
-//            @Field("birthday") String birthday,
-//            @Field("sex") String sex);
 
     /*******************
      ****** EVENTS ******
      *********************/
 
-    @FormUrlEncoded
     @POST("/events")
-    Call<Void> createEvent(
-            @Field("date") String date,
-            @Field("description") String description,
-            @Field("maxMembers") String maxMembers,
-            @Field("name") String name,
-            @Field("latitude") double latitude,
-            @Field("longitude") double longitude,
-            @Field("time") String time);
+    @Headers({
+            "Content-Type: application/json",
+    })
+    Call<ResponseBody> createEvent(@Body Event event);
 
     @FormUrlEncoded
     @POST("/event/{eventId}")

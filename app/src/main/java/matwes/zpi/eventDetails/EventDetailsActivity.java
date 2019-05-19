@@ -24,6 +24,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import matwes.zpi.Common;
@@ -47,6 +48,8 @@ public class EventDetailsActivity extends AppCompatActivity {
     private ImageView eImage;
     private TextView eName, eType, eTime, ePlace, ePlace2, eMoney, eMembers;
     private Button btnInt, btnNInt;
+
+    @BindView(R.id.editButton) ImageView editButtonImage;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -117,6 +120,12 @@ public class EventDetailsActivity extends AppCompatActivity {
                 updateInterestedNote(eMembers);
             }
         });
+
+//        if (event.isCreator()) {
+//            editButtonImage.setVisibility(View.VISIBLE);
+//        }else {
+//            editButtonImage.setVisibility(View.GONE);
+//        }
     }
 
     @OnClick(R.id.editButton)

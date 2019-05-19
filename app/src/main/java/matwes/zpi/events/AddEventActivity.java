@@ -43,6 +43,7 @@ import matwes.zpi.domain.Place;
 import matwes.zpi.domain.Price;
 import matwes.zpi.utils.CustomDialog;
 import matwes.zpi.utils.LoadingDialog;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -81,7 +82,6 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
         event = (Event) getIntent().getSerializableExtra("event");
 
         if (event != null) {
-            event = event;
             etName.setText(event.getName());
             etType.setText(event.getType());
             etDate.setText(event.getDate() + " " + event.getTime());
@@ -89,6 +89,7 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
                 minPrice.setText(Double.toString(event.getPrice().getMin()));
                 maxPrice.setText(Double.toString(event.getPrice().getMax()));
             }
+            placeAutocompleteFragment.setText(event.getPlace().getAddress());
             promotorTextView.setText(event.getPromoter());
             addEvent.setText(R.string.updateBtn);
         }
@@ -146,6 +147,7 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
 
     @OnClick(R.id.btnAddEvent)
     public void addEventTap() {
+
         createEvent();
     }
 
@@ -182,8 +184,10 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
     }
 
     private void createEvent() {
-
         Event newEvent = new Event();
+        if (event != null) {
+            newEvent = event;
+        }
         String eventName =  etName.getText().toString().trim();
         String minPriceData = minPrice.getText().toString();
         String maxPriceData = maxPrice.getText().toString();
@@ -212,22 +216,23 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
         newEvent.setTime(eventDateTime[1]);
         newEvent.setPlace(place);
         newEvent.setPromoter(promotor);
-        Gson gson = new Gson();
-        String json = gson.toJson(newEvent);
-        System.out.println(json);
-//        Call<Void> call = api.createEvent(id, date, description, maxMembers, name, dLat, dLng, time);
-//        call.enqueue(new Callback<Void>() {
-//            @Override
-//            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-//                dialog.hideLoadingDialog();
-//                finish();
-//            }
-//
-//            @Override
-//            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
-//                dialog.hideLoadingDialog();
-//                CustomDialog.showError(AddEventActivity.this, getString(R.string.error_message));
-//            }
-//        });
+
+//        Gson gson = new Gson();
+//        String json = gson.toJson(newEvent);
+//        System.out.println(json);
+        Call<ResponseBody> call = api.createEvent(newEvent);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                dialog.hideLoadingDialog();
+                finish();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                dialog.hideLoadingDialog();
+                CustomDialog.showError(AddEventActivity.this, getString(R.string.error_message));
+            }
+        });
     }
 }
