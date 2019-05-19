@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.icu.util.Calendar;
 import android.os.Build;
 import android.os.Bundle;
@@ -47,6 +48,7 @@ import matwes.zpi.domain.Location;
 import matwes.zpi.domain.NewEvent;
 import matwes.zpi.domain.Place;
 import matwes.zpi.domain.Price;
+import matwes.zpi.eventDetails.EventDetailsActivity;
 import matwes.zpi.utils.CustomDialog;
 import matwes.zpi.utils.LoadingDialog;
 import okhttp3.ResponseBody;
@@ -93,10 +95,16 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
 
         event = (Event) getIntent().getSerializableExtra("event");
 
+        Fragment placeFragment = getFragmentManager().findFragmentById(R.id.place_fragment);
+        placeAutocompleteFragment = (PlaceAutocompleteFragment) placeFragment;
+
         if (event != null) {
             etName.setText(event.getName());
             etType.setText(event.getType());
-            etDate.setText(event.getDate());
+            String date = event.getDate().replace("T", " ");
+            date = date.replace(".000Z", "");
+            etDate.setText(date);
+
             if (event.getPrice() != null) {
                 minPrice.setText(Double.toString(event.getPrice().getMin()));
                 maxPrice.setText(Double.toString(event.getPrice().getMax()));
@@ -168,9 +176,9 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
                 .enableAutoManage(this, this)
                 .build();
 
-        Fragment placeFragment = getFragmentManager().findFragmentById(R.id.place_fragment);
-        placeAutocompleteFragment = (PlaceAutocompleteFragment) placeFragment;
-        placeAutocompleteFragment.setHint(getString(R.string.place));
+//        Fragment placeFragment = getFragmentManager().findFragmentById(R.id.place_fragment);
+//        placeAutocompleteFragment = (PlaceAutocompleteFragment) placeFragment;
+
         placeAutocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(com.google.android.gms.location.places.Place place) {
@@ -202,7 +210,7 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
         String maxPriceData = maxPrice.getText().toString();
         Price price = null;
         if (!minPriceData.equals("") && !maxPriceData.equals("")) {
-            price = new Price("PLN", Integer.parseInt(minPriceData), Integer.parseInt(maxPriceData));
+            price = new Price("PLN", Double.parseDouble(minPriceData), Double.parseDouble(maxPriceData));
         }
         String type = etType.getText().toString().trim();
         String date = etDate.getText().toString().trim();
@@ -210,8 +218,8 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
         Place place = new Place(placeName, "", placeAddress, "", "", location);
         String promoter = promoterTextView.getText().toString().trim();
 
-        if (name.equals("") || price == null && type.equals("") || date.equals("") || !placeWasSet || promoter.equals("")) {
-            CustomDialog.showError(AddEventActivity.this, "Wszystkie pola są wymagane");
+        if (name.equals("") && date.equals("") && !placeWasSet) {
+            CustomDialog.showError(AddEventActivity.this, "Nazwa, data oraz miejsce musza zostac podane ");
             return;
         }
 
@@ -230,6 +238,10 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
         dialog.showLoadingDialog(getString(R.string.loading));
 
         NewEvent newEvent = new NewEvent(null, name, null, longDate, type, promoter, price, place);
+
+        if (event != null) {
+            newEvent.set_id(event.get_id());
+        }
 
         Call<ResponseBody> call = api.createEvent(Common.getToken(this), newEvent);
         call.enqueue(new Callback<ResponseBody>() {
@@ -250,8 +262,15 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
                 } else if (response.body() == null) {
                     CustomDialog.showError(AddEventActivity.this, getString(R.string.error_message));
                 } else {
-                    CustomDialog.showError(AddEventActivity.this, "Pomyślnie utworzono nowe wydarzenie!");
                     dialog.hideLoadingDialog();
+                    if (event == null) {
+                        Intent intent = new Intent(AddEventActivity.this, EventDetailsActivity.class);
+                        intent.putExtra("eventId", event.get_id());
+                        finish();
+                        startActivity(intent);
+                        return;
+                    }
+
                 }
 
                 finish();

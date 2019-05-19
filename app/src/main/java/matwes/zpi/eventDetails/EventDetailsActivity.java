@@ -49,7 +49,8 @@ public class EventDetailsActivity extends AppCompatActivity {
     private TextView eName, eType, eTime, ePlace, ePlace2, eMoney, eMembers;
     private Button btnInt, btnNInt;
 
-    @BindView(R.id.editButton) ImageView editButtonImage;
+    String eventId = "";
+    @BindView(R.id.editButton) Button editButtonImage;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -61,9 +62,10 @@ public class EventDetailsActivity extends AppCompatActivity {
         api = RestService.getApiInstance();
 
         Intent intent = getIntent();
-        final String eventId = intent.getStringExtra("eventId");
+        eventId = intent.getStringExtra("eventId");
 
-        getEvent(eventId);
+        editButtonImage.setVisibility(View.GONE);
+
         eImage = findViewById(R.id.eventImage);
         eName = findViewById(R.id.eventName);
         eType = findViewById(R.id.eventType);
@@ -121,11 +123,6 @@ public class EventDetailsActivity extends AppCompatActivity {
             }
         });
 
-//        if (event.isCreator()) {
-//            editButtonImage.setVisibility(View.VISIBLE);
-//        }else {
-//            editButtonImage.setVisibility(View.GONE);
-//        }
     }
 
     @OnClick(R.id.editButton)
@@ -133,6 +130,12 @@ public class EventDetailsActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AddEventActivity.class);
         intent.putExtra("event", event);
         startActivity(intent);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getEvent(eventId);
     }
 
     private void handleResponse(Call<SuccessResponse> call) {
@@ -222,6 +225,11 @@ public class EventDetailsActivity extends AppCompatActivity {
                 System.out.println(event);
 
                 initializeMap();
+                if (event.isCreator()) {
+                    editButtonImage.setVisibility(View.VISIBLE);
+                }else {
+                    editButtonImage.setVisibility(View.GONE);
+                }
             }
 
             @Override

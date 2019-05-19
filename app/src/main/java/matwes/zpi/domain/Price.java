@@ -10,7 +10,7 @@ public class Price implements Serializable {
     private double min;
     private double max;
 
-    public Price(String currency, int min, int max) {
+    public Price(String currency, double min, double max) {
         this.currency = currency;
         this.min = min;
         this.max = max;

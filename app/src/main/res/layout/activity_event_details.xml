@@ -22,17 +22,19 @@
             android:scaleType="centerCrop"
             android:src="@drawable/event_placeholder" />
 
-        <ImageView
+        <Button
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
             android:layout_alignParentRight="true"
             android:id="@+id/editButton"
-            android:layout_width="45dp"
+            android:layout_width="100dp"
             android:layout_height="45dp"
-            android:src="@drawable/edit_icon"
-            android:scaleType="centerCrop"
-            android:background="@color/white"
+            android:text="Edytuj"
+            android:elevation="10dp"
+            android:shadowColor="@color/blackColor"
+            android:background="@color/colorPrimary"
             />
+        <!--android:src="@drawable/edit_icon"-->
 
         <ScrollView
             android:layout_width="match_parent"
