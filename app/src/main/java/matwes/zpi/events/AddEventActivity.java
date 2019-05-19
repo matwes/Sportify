@@ -1,5 +1,6 @@
 package matwes.zpi.events;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
@@ -14,7 +15,6 @@ import android.support.v7.widget.CardView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -28,7 +28,12 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.gson.Gson;
+
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,6 +44,7 @@ import matwes.zpi.api.ApiInterface;
 import matwes.zpi.api.RestService;
 import matwes.zpi.domain.Event;
 import matwes.zpi.domain.Location;
+import matwes.zpi.domain.NewEvent;
 import matwes.zpi.domain.Place;
 import matwes.zpi.domain.Price;
 import matwes.zpi.utils.CustomDialog;
@@ -50,26 +56,32 @@ import retrofit2.Response;
 
 public class AddEventActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
-    @BindView(R.id.etEventName) EditText etName;
-    @BindView(R.id.addEventMainActivity) LinearLayout mainLinearLayout;
-    @BindView(R.id.etEventType) EditText etType;
-    @BindView(R.id.etEventDate) EditText etDate;
-    @BindView(R.id.minPrice) EditText minPrice;
-    @BindView(R.id.maxPrice) EditText maxPrice;
-    @BindView(R.id.addEventCardView) CardView cardView;
-    @BindView(R.id.promotorTextView) EditText promotorTextView;
+    @BindView(R.id.etEventName)
+    EditText etName;
+    @BindView(R.id.addEventMainActivity)
+    LinearLayout mainLinearLayout;
+    @BindView(R.id.etEventType)
+    EditText etType;
+    @BindView(R.id.etEventDate)
+    EditText etDate;
+    @BindView(R.id.minPrice)
+    EditText minPrice;
+    @BindView(R.id.maxPrice)
+    EditText maxPrice;
+    @BindView(R.id.addEventCardView)
+    CardView cardView;
+    @BindView(R.id.promotorTextView)
+    EditText promoterTextView;
+
     PlaceAutocompleteFragment placeAutocompleteFragment;
-
-    private LoadingDialog dialog;
-    private String sDate, sTime;
-    private String address;
-    private double dLat, dLng;
+    Event event = null;
     boolean placeWasSet = false;
-
+    private LoadingDialog dialog;
+    private String placeAddress, placeName;
+    private double dLat, dLng;
     private ApiInterface api;
 
-    Event event = null;
-
+    @SuppressLint("ClickableViewAccessibility")
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,13 +96,13 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
         if (event != null) {
             etName.setText(event.getName());
             etType.setText(event.getType());
-            etDate.setText(event.getDate() + " " + event.getTime());
+            etDate.setText(event.getDate());
             if (event.getPrice() != null) {
                 minPrice.setText(Double.toString(event.getPrice().getMin()));
                 maxPrice.setText(Double.toString(event.getPrice().getMax()));
             }
             placeAutocompleteFragment.setText(event.getPlace().getAddress());
-            promotorTextView.setText(event.getPromoter());
+            promoterTextView.setText(event.getPromoter());
             addEvent.setText(R.string.updateBtn);
         }
 
@@ -109,24 +121,24 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
         });
 
         final TimePickerDialog.OnTimeSetListener timePicker = new TimePickerDialog.OnTimeSetListener() {
+            @SuppressLint("DefaultLocale")
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 String date = etDate.getText().toString();
-                sTime = String.format("%02d:%02d", hourOfDay, minute);
-                etDate.setText(String.format("%s %d:%d", date, hourOfDay, minute));
+                etDate.setText(String.format("%s %02d:%02d", date, hourOfDay, minute));
             }
         };
 
         final Calendar calendar = Calendar.getInstance();
         final DatePickerDialog.OnDateSetListener datePicker = new DatePickerDialog.OnDateSetListener() {
+            @SuppressLint("DefaultLocale")
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
                 int hour = calendar.get(Calendar.HOUR_OF_DAY);
                 int minute = calendar.get(Calendar.MINUTE);
 
                 new TimePickerDialog(AddEventActivity.this, timePicker, hour, minute, true).show();
-                sDate = String.format("%02d-%02d-%02d", year, month + 1, day);
-                etDate.setText(String.format("%d-%d-%d", day, month + 1, year));
+                etDate.setText(String.format("%d-%02d-%02d", year, month + 1, day));
             }
         };
 
@@ -142,12 +154,10 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
                 }
             }
         });
-
     }
 
     @OnClick(R.id.btnAddEvent)
     public void addEventTap() {
-
         createEvent();
     }
 
@@ -166,7 +176,10 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
             public void onPlaceSelected(com.google.android.gms.location.places.Place place) {
                 LatLng latLng = place.getLatLng();
                 placeWasSet = true;
-                address = place.getAddress().toString();
+                if (place.getAddress() != null) {
+                    placeAddress = place.getAddress().toString();
+                }
+                placeName = place.getName().toString();
                 dLat = latLng.latitude;
                 dLng = latLng.longitude;
             }
@@ -184,47 +197,63 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
     }
 
     private void createEvent() {
-        Event newEvent = new Event();
-        if (event != null) {
-            newEvent = event;
-        }
-        String eventName =  etName.getText().toString().trim();
+        String name = etName.getText().toString().trim();
         String minPriceData = minPrice.getText().toString();
         String maxPriceData = maxPrice.getText().toString();
-        Price eventPrice = null;
+        Price price = null;
         if (!minPriceData.equals("") && !maxPriceData.equals("")) {
-            eventPrice = new Price("PLN", Integer.parseInt(minPriceData), Integer.parseInt(maxPriceData));
+            price = new Price("PLN", Integer.parseInt(minPriceData), Integer.parseInt(maxPriceData));
         }
-        String eventType = etType.getText().toString().trim();
-        String[] eventDateTime = etDate.getText().toString().trim().split(" ");
-        Location location = new Location(dLat,dLng);
-        Place place = new Place("","", address ,"", "", location);
-        String promotor = promotorTextView.getText().toString().trim();
+        String type = etType.getText().toString().trim();
+        String date = etDate.getText().toString().trim();
+        Location location = new Location(dLat, dLng);
+        Place place = new Place(placeName, "", placeAddress, "", "", location);
+        String promoter = promoterTextView.getText().toString().trim();
 
-
-        if (eventName.equals("") && eventPrice == null && eventType.equals("") && eventDateTime.length != 2 && address == null && !placeWasSet && promotor.equals("")) {
+        if (name.equals("") || price == null && type.equals("") || date.equals("") || !placeWasSet || promoter.equals("")) {
             CustomDialog.showError(AddEventActivity.this, "Wszystkie pola są wymagane");
             return;
         }
 
+        DateFormat shortFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", java.util.Locale.getDefault());
+        DateFormat longFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.getDefault());
+
+        Date shortDate;
+        try {
+            shortDate = shortFormat.parse(date);
+        } catch (ParseException e) {
+            CustomDialog.showError(AddEventActivity.this, "Wprowadzona data jest niepoprawnie sformatowana");
+            return;
+        }
+        String longDate = longFormat.format(shortDate);
+
         dialog.showLoadingDialog(getString(R.string.loading));
 
-        newEvent.setName(eventName);
-        newEvent.setPrice(eventPrice);
-        newEvent.setType(eventType);
-        newEvent.setDate(eventDateTime[0]);
-        newEvent.setTime(eventDateTime[1]);
-        newEvent.setPlace(place);
-        newEvent.setPromoter(promotor);
+        NewEvent newEvent = new NewEvent(null, name, null, longDate, type, promoter, price, place);
 
-//        Gson gson = new Gson();
-//        String json = gson.toJson(newEvent);
-//        System.out.println(json);
-        Call<ResponseBody> call = api.createEvent(newEvent);
+        Call<ResponseBody> call = api.createEvent(Common.getToken(this), newEvent);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+
                 dialog.hideLoadingDialog();
+
+                if (response.errorBody() != null) {
+                    try {
+                        String errorMessage = response.errorBody().string();
+                        CustomDialog.showError(AddEventActivity.this, errorMessage);
+                    } catch (IOException e) {
+                        CustomDialog.showError(AddEventActivity.this, getString(R.string.error_message));
+                        e.printStackTrace();
+                    }
+                    dialog.hideLoadingDialog();
+                } else if (response.body() == null) {
+                    CustomDialog.showError(AddEventActivity.this, getString(R.string.error_message));
+                } else {
+                    CustomDialog.showError(AddEventActivity.this, "Pomyślnie utworzono nowe wydarzenie!");
+                    dialog.hideLoadingDialog();
+                }
+
                 finish();
             }
 

@@ -1,5 +1,6 @@
 package matwes.zpi.eventDetails;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -27,30 +28,37 @@ import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import matwes.zpi.Common;
 import matwes.zpi.R;
 import matwes.zpi.api.ApiInterface;
 import matwes.zpi.api.RestService;
 import matwes.zpi.domain.Event;
+import matwes.zpi.domain.NewEvent;
 import matwes.zpi.utils.CustomDialog;
 import matwes.zpi.utils.LoadingDialog;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class UpdateEventActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
     private PlaceAutocompleteFragment placeAutocompleteFragment;
-    private EditText name, description, members, date;
+    private EditText name, date;
     private AutoCompleteTextView autoCompleteTextView;
     private ArrayAdapter<CharSequence> adapter;
     private LoadingDialog dialog;
 
     private String eventId;
-    private String sDate, sTime;
     private double dLat, dLng;
 
     private ApiInterface api;
 
+    @SuppressLint("ClickableViewAccessibility")
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,30 +74,28 @@ public class UpdateEventActivity extends AppCompatActivity implements GoogleApiC
 
         dialog = new LoadingDialog(this);
         name = findViewById(R.id.etEventName);
-        description = findViewById(R.id.etEventDescription);
-        members = findViewById(R.id.etEventMembers);
         date = findViewById(R.id.etEventDate);
 
         getEvent();
 
         final TimePickerDialog.OnTimeSetListener timePicker = new TimePickerDialog.OnTimeSetListener() {
+            @SuppressLint("DefaultLocale")
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                sTime = String.format("%02d:%02d", hourOfDay, minute);
-                date.setText(String.format("%s %d:%d", date.getText().toString(), hourOfDay, minute));
+                date.setText(String.format("%s %02d:%02d", date.getText().toString(), hourOfDay, minute));
             }
         };
 
         final Calendar calendar = Calendar.getInstance();
         final DatePickerDialog.OnDateSetListener datePicker = new DatePickerDialog.OnDateSetListener() {
+            @SuppressLint("DefaultLocale")
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
                 int hour = calendar.get(Calendar.HOUR_OF_DAY);
                 int minute = calendar.get(Calendar.MINUTE);
 
                 new TimePickerDialog(UpdateEventActivity.this, timePicker, hour, minute, true).show();
-                sDate = String.format("%02d-%02d-%02d", year, month + 1, day);
-                date.setText(String.format("%d-%d-%d", day, month + 1, year));
+                date.setText(String.format("%d-%02d-%02d", year, month + 1, day));
             }
         };
 
@@ -160,12 +166,10 @@ public class UpdateEventActivity extends AppCompatActivity implements GoogleApiC
                 Event event = response.body();
 
                 name.setText(event.getName());
-                members.setText(event.getInterested() + "");
-                date.setText(event.getDateWithTimeString());
+                date.setText(event.getDateWithoutTimeString());
                 placeAutocompleteFragment.setText(event.getPlace().getName());
                 autoCompleteTextView.setAdapter(adapter);
-                sTime = event.getTime();
-                sDate = event.getDate();
+                date.setText(event.getFormDateString());
 
                 dialog.hideLoadingDialog();
             }
@@ -208,19 +212,33 @@ public class UpdateEventActivity extends AppCompatActivity implements GoogleApiC
     }
 
     private void updateEvent() {
-        dialog.showLoadingDialog(getString(R.string.loading));
-        Call<Void> call = api.updateEvent(eventId, sDate, description.getText().toString(),
-                members.getText().toString(), name.getText().toString(), dLat, dLng, sTime);
+        DateFormat shortFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", java.util.Locale.getDefault());
+        DateFormat longFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.getDefault());
 
-        call.enqueue(new Callback<Void>() {
+        Date shortDate;
+        try {
+            shortDate = shortFormat.parse(date.getText().toString());
+        } catch (ParseException e) {
+            CustomDialog.showError(UpdateEventActivity.this, "Wprowadzona data jest niepoprawnie sformatowana");
+            return;
+        }
+        String longDate = longFormat.format(shortDate);
+
+        dialog.showLoadingDialog(getString(R.string.loading));
+
+        NewEvent newEvent = new NewEvent(eventId, name.getText().toString(), null, longDate, "", "", null, null);
+
+        Call<ResponseBody> call = api.createEvent(Common.getToken(this), newEvent);
+
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 dialog.hideLoadingDialog();
                 finish();
             }
 
             @Override
-            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 dialog.hideLoadingDialog();
                 CustomDialog.showError(UpdateEventActivity.this, getString(R.string.error_message));
             }

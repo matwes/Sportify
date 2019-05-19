@@ -2,17 +2,11 @@ package matwes.zpi.domain;
 
 import android.support.annotation.NonNull;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
 
 /**
  * Created by Mateusz Wesołowski
@@ -23,7 +17,6 @@ public class Event implements Comparable, Serializable {
     private String name;
     private String image;
     private String date;
-    private String time;
     private String type;
     private String promoter;
     private Price price;
@@ -36,15 +29,14 @@ public class Event implements Comparable, Serializable {
     public Event() {
     }
 
-    public Event(String _id, String id, String name, String image, String date, String time,
-                 String type, String promoter, Price price, Place place, int interested,
-                 boolean isInterested, boolean isNotInterested, boolean isCreator) {
+    public Event(String _id, String id, String name, String image, String date, String type,
+                 String promoter, Price price, Place place, int interested, boolean isInterested,
+                 boolean isNotInterested, boolean isCreator) {
         this._id = _id;
         this.id = id;
         this.name = name;
         this.image = image;
         this.date = date;
-        this.time = time;
         this.type = type;
         this.promoter = promoter;
         this.price = price;
@@ -55,51 +47,41 @@ public class Event implements Comparable, Serializable {
         this.isCreator = isCreator;
     }
 
-    public static ArrayList<Event> jsonEventsToList(String json) {
-        Gson gson = new GsonBuilder().create();
-        TypeToken<ArrayList<Event>> token = new TypeToken<ArrayList<Event>>() {
-        };
-        return gson.fromJson(json, token.getType());
-    }
-
     public Date getDateObject() {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.getDefault());
 
-        if (date != null)
+        if (date != null) {
             try {
-                return df.parse(date.substring(0, 10));
+                return df.parse(date);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-        return null;
-    }
-
-    public Date getDateWithTime() {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH);
-
-        if (date != null && time != null)
-            try {
-                return df.parse(date + " " + parseTime());
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        return null;
+        }
+        return new Date();
     }
 
     public String getDateWithTimeString() {
-        if (time == null) {
-            return "";
-        }
         Date dateObject = getDateObject();
 
-        DateFormat df = new SimpleDateFormat("EEEE, d MMMM, HH:mm", Locale.ENGLISH);
+        DateFormat df = new SimpleDateFormat("EEEE, d MMMM, HH:mm", java.util.Locale.getDefault());
 
         return df.format(dateObject);
     }
 
-    private String parseTime() {
-        String[] s = time.split(":");
-        return String.format("%s:%s", s[0], s[1]);
+    public String getDateWithoutTimeString() {
+        Date dateObject = getDateObject();
+
+        DateFormat df = new SimpleDateFormat("EEEE, d MMMM", java.util.Locale.getDefault());
+
+        return df.format(dateObject);
+    }
+
+    public String getFormDateString() {
+        Date dateObject = getDateObject();
+
+        DateFormat shortFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", java.util.Locale.getDefault());
+
+        return shortFormat.format(dateObject);
     }
 
     public void increaseInterested() {
@@ -148,14 +130,6 @@ public class Event implements Comparable, Serializable {
 
     public void setDate(String date) {
         this.date = date;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
     }
 
     public String getType() {
@@ -237,7 +211,6 @@ public class Event implements Comparable, Serializable {
                 ", name='" + name + '\'' +
                 ", image='" + image + '\'' +
                 ", date='" + date + '\'' +
-                ", time='" + time + '\'' +
                 ", type='" + type + '\'' +
                 ", promoter='" + promoter + '\'' +
                 ", price=" + price +

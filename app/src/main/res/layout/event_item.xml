@@ -53,9 +53,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/tvEventName"
-                    android:fontFamily="sans-serif-smallcaps"
+                    android:fontFamily="sans-serif"
                     android:textColor="@android:color/white"
-                    tools:text="12.07.2017" />
+                    tools:text="Piątek, 21 czerwca" />
 
                 <TextView
                     android:id="@+id/tvEventMembers"

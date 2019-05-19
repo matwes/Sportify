@@ -225,7 +225,7 @@ public class MapFragment extends MainFragment implements OnMapReadyCallback {
         Iterator<Event> i = events.iterator();
         while (i.hasNext()) {
             Event event = i.next();
-            if (event.getDateWithTime() == null || event.getDateWithTime().before(date)) {
+            if (event.getDateObject() == null || event.getDateObject().before(date)) {
                 i.remove();
             }
         }

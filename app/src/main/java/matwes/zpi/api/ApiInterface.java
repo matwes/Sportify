@@ -4,6 +4,7 @@ import java.util.List;
 
 import matwes.zpi.domain.AuthToken;
 import matwes.zpi.domain.Event;
+import matwes.zpi.domain.NewEvent;
 import matwes.zpi.domain.RegisterData;
 import matwes.zpi.domain.SuccessResponse;
 import matwes.zpi.domain.User;
@@ -49,9 +50,7 @@ public interface ApiInterface {
 
 
     @POST("/registration")
-    @Headers({
-            "Content-Type: application/json",
-    })
+    @Headers({"Content-Type: application/json"})
     Call<ResponseBody> register(@Body RegisterData body);
 
     /*******************
@@ -59,22 +58,10 @@ public interface ApiInterface {
      *********************/
 
     @POST("/events")
-    @Headers({
-            "Content-Type: application/json",
-    })
-    Call<ResponseBody> createEvent(@Body Event event);
-
-    @FormUrlEncoded
-    @POST("/event/{eventId}")
-    Call<Void> updateEvent(
-            @Path("eventId") String eventId,
-            @Field("date") String date,
-            @Field("description") String description,
-            @Field("maxMembers") String maxMembers,
-            @Field("name") String name,
-            @Field("latitude") double latitude,
-            @Field("longitude") double longitude,
-            @Field("time") String time);
+    @Headers({"Content-Type: application/json"})
+    Call<ResponseBody> createEvent(
+            @Header("authorization") String token,
+            @Body NewEvent newEvent);
 
     @GET("/events/{eventId}")
     Call<Event> getEvent(
