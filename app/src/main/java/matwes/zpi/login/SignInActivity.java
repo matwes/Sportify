@@ -131,10 +131,10 @@ public class SignInActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call<AuthToken> call, @NonNull Response<AuthToken> response) {
 
-                AuthToken token = response.body();
+                AuthToken tokenResponse = response.body();
 
-                if (token != null) {
-                    Common.setToken(SignInActivity.this, token.getToken());
+                if (tokenResponse.getToken() != null) {
+                    Common.setToken(SignInActivity.this, tokenResponse.getToken());
 
                     Intent intent = new Intent(SignInActivity.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
