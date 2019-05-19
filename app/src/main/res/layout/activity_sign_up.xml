@@ -22,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/first_name"
-                android:textColor="@color/textColor" />
+                android:textColor="@color/blackColor" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/last_name"
-                android:textColor="@color/textColor" />
+                android:textColor="@color/blackColor" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/email"
                 android:inputType="textEmailAddress"
-                android:textColor="@color/textColor" />
+                android:textColor="@color/blackColor" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -61,9 +61,45 @@
                 android:ems="10"
                 android:hint="@string/password"
                 android:inputType="textPassword"
-                android:textColor="@color/textColor" />
+                android:textColor="@color/blackColor" />
         </android.support.design.widget.TextInputLayout>
 
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/birth_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:editable="false"
+                android:hint="Data urodzenia"
+                android:textColor="@color/blackColor" />
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Płeć:"
+            android:textColor="@color/blackColor"
+            android:textSize="20dp"/>
+        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <RadioButton android:id="@+id/plec_woman"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Kobieta"
+                android:textSize="17dp"/>
+            <RadioButton android:id="@+id/plec_man"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mężczyzna"
+                android:textSize="17dp" />
+        </RadioGroup>
         <Button
             android:id="@+id/btnSignUp2"
             android:layout_width="match_parent"
@@ -79,7 +115,7 @@
             android:text="@string/reg_or_fb"
             android:textAlignment="center"
             android:textAllCaps="true"
-            android:textColor="@color/textColor" />
+            android:textColor="@color/blackColor" />
 
         <com.facebook.login.widget.LoginButton
             android:id="@+id/btnSignUpFb"
