@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.my_events) {
             fragment = new EventsFragment();
             ((EventsFragment) fragment).type = EventFragmentType.interesting;
-            tag = "MY";
+            tag = "LIST";
         } else if (id == R.id.my_profile) {
             fragment = new MyProfileFragment();
             tag = "MY";
@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.blocked_events) {
             fragment = new EventsFragment();
             ((EventsFragment) fragment).type = EventFragmentType.blocked;
+            tag = "LIST";
         }
 
         fab.setVisibility(fabVisibility);
