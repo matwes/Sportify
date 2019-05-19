@@ -28,6 +28,7 @@ import matwes.zpi.profile.MyProfileFragment;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private FloatingActionButton fab;
+    public EventFragmentType type = EventFragmentType.unblocked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,9 +79,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (id == R.id.change_view) {
             if (isListFragmentAttached()) {
-                replaceFragment(new MapFragment(), "MAP");
+                Fragment mapFragment = new MapFragment();
+                ((MapFragment) mapFragment).type = this.type;
+                replaceFragment(mapFragment, "MAP");
             } else {
-                replaceFragment(new EventsFragment(), "LIST");
+                Fragment eventFragment = new EventsFragment();
+                ((EventsFragment) eventFragment).type = this.type;
+                replaceFragment(eventFragment, "LIST");
             }
             return true;
         }
@@ -98,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.events_list) {
             fragment = new EventsFragment();
             ((EventsFragment) fragment).type = EventFragmentType.unblocked;
+            type = EventFragmentType.unblocked;
             tag = "LIST";
         } else if (id == R.id.events_map) {
             fragment = new MapFragment();
@@ -105,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.my_events) {
             fragment = new EventsFragment();
             ((EventsFragment) fragment).type = EventFragmentType.interesting;
+            type = EventFragmentType.interesting;
             tag = "LIST";
         } else if (id == R.id.my_profile) {
             fragment = new MyProfileFragment();
@@ -115,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.blocked_events) {
             fragment = new EventsFragment();
             ((EventsFragment) fragment).type = EventFragmentType.blocked;
+            type = EventFragmentType.blocked;
             tag = "LIST";
         }
 
