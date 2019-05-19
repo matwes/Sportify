@@ -75,9 +75,10 @@ public abstract class MainFragment extends Fragment {
     }
 
     void updateList(List<Event> e) {
-        filterEvents(e);
+        List<Event> filteredEvents = filterEvents(e);
+        List<Event> ff = new ArrayList<>(filteredEvents);
         events.clear();
-        events.addAll(e);
+        events.addAll(ff);
 
         Collections.sort(events);
     }
