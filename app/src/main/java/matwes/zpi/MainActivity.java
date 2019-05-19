@@ -103,7 +103,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragment = new MapFragment();
             tag = "MAP";
         } else if (id == R.id.my_events) {
-            fragment = new MyEventsFragment();
+            fragment = new EventsFragment();
+            ((EventsFragment) fragment).type = EventFragmentType.interesting;
             tag = "MY";
         } else if (id == R.id.my_profile) {
             fragment = new MyProfileFragment();

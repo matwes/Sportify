@@ -1,5 +1,5 @@
 package matwes.zpi.events;
 
 public enum EventFragmentType {
-    unblocked, blocked
+    unblocked, blocked, interesting
 }

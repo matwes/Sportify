@@ -80,6 +80,11 @@ public interface ApiInterface {
             @Header("authorization") String token
     );
 
+    @GET("/events/type/interesting")
+    Call<List<Event>> getInterestingEvents(
+            @Header("authorization") String token
+    );
+
     @POST("/events/event/interesting/{eventId}")
     Call<SuccessResponse> interested(
             @Header("authorization") String token,
