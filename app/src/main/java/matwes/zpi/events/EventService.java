@@ -50,6 +50,9 @@ class EventService {
                 case interesting:
                     downloadInterestingEvents(context, callback);
                     break;
+                case my_events:
+                    downloadMyEvents(context, callback);
+                    break;
             }
         }
     }
@@ -151,4 +154,33 @@ class EventService {
             }
         });
     }
+
+    private void downloadMyEvents(final Context context, final callbackInterface callback) {
+        api.getMyEvents(Common.getToken(context)).enqueue(new Callback<List<Event>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Event>> call, @NonNull Response<List<Event>> response) {
+                List<Event> events = response.body();
+                String json;
+
+                try {
+                    json = new Gson().toJson(events);
+                    SharedPreferences prefs = context.getSharedPreferences("EVENTS", Context.MODE_PRIVATE);
+                    prefs.edit().putString("EVENTS_JSON", json).apply();
+                    originalListOfEvents = events;
+
+                    callback.onDownloadFinished(events, null);
+                } catch (Exception ex) {
+                    callback.onDownloadFinished(null, context.getString(R.string.error_message) + ": " + ex);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Event>> call, @NonNull Throwable t) {
+                //getMockedEvents(context, callback);
+
+                callback.onDownloadFinished(null, context.getString(R.string.error_message) + ": " + t);
+            }
+        });
+    }
+
 }

@@ -15,6 +15,10 @@
             android:icon="@drawable/my_events"
             android:title="@string/my_events" />
         <item
+            android:id="@+id/interesting_events"
+            android:icon="@drawable/event"
+            android:title="Interesujące wydarzenia" />
+        <item
             android:id="@+id/blocked_events"
             android:icon="@drawable/blocked_events"
             android:title="@string/blocked" />

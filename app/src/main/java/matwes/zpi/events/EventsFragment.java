@@ -64,6 +64,8 @@ public class EventsFragment extends MainFragment implements EventListAdapter.Eve
             case blocked:
                 return getString(R.string.blocked_events_title);
             case interesting:
+                return "Interesujące";
+            case my_events:
                 return getString(R.string.my_events);
         }
         return "";

@@ -110,8 +110,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             tag = "MAP";
         } else if (id == R.id.my_events) {
             fragment = new EventsFragment();
-            ((EventsFragment) fragment).type = EventFragmentType.interesting;
-            type = EventFragmentType.interesting;
+            ((EventsFragment) fragment).type = EventFragmentType.my_events;
+            type = EventFragmentType.my_events;
             tag = "LIST";
         } else if (id == R.id.my_profile) {
             fragment = new MyProfileFragment();
@@ -123,6 +123,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragment = new EventsFragment();
             ((EventsFragment) fragment).type = EventFragmentType.blocked;
             type = EventFragmentType.blocked;
+            tag = "LIST";
+        } else if (id == R.id.interesting_events) {
+            fragment = new EventsFragment();
+            ((EventsFragment) fragment).type = EventFragmentType.interesting;
+            type = EventFragmentType.interesting;
             tag = "LIST";
         }
 
