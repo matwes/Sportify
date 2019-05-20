@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
+    android:layout_margin="1dp"
     android:orientation="vertical">
 
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -11,20 +12,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         card_view:cardBackgroundColor="#00000000"
-        card_view:cardCornerRadius="8dp"
-        card_view:cardElevation="5dp"
+        card_view:cardCornerRadius="6dp"
+        card_view:cardElevation="7dp"
         card_view:cardPreventCornerOverlap="true"
         card_view:cardUseCompatPadding="true">
 
         <RelativeLayout
             android:id="@+id/cell"
             android:layout_width="match_parent"
-            android:layout_height="200dp">
+            android:layout_height="150dp">
 
             <ImageView
                 android:id="@+id/eventImage"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="match_parent"
                 android:scaleType="centerCrop" />
 
             <RelativeLayout
@@ -41,10 +42,10 @@
                     android:layout_width="300dp"
                     android:layout_height="48dp"
                     android:layout_alignParentTop="true"
+                    android:layout_marginEnd="35dp"
                     android:fontFamily="sans-serif-condensed-light"
                     android:textColor="@android:color/white"
                     android:textSize="18sp"
-                    android:layout_marginEnd="35dp"
                     android:textStyle="bold"
                     tools:text="Nazwa wydarzenia\nd" />
 
@@ -76,8 +77,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignBaseline="@id/tvEventDate"
-                    android:layout_marginStart="5dp"
                     android:layout_alignParentEnd="true"
+                    android:layout_marginStart="5dp"
                     android:layout_marginEnd="35dp"
                     android:layout_toEndOf="@id/tvEventDate"
                     android:textColor="@android:color/white"

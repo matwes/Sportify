@@ -48,9 +48,9 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Holder> {
     public void onBindViewHolder(final Holder holder, int position) {
         final Event event = events.get(position);
         holder.title.setText(event.getName());
-        holder.date.setText(event.getDateWithTimeString());
+        holder.date.setText(event.getDateWithoutTimeString());
         holder.members.setText(event.getInterested() + "");
-        holder.place.setText(event.getPlace() != null ? event.getPlace().getName() : "");
+        holder.place.setText(event.getPlace() != null ? " - " + event.getPlace().getName() : "");
         if (event.getImage() == null || event.getImage().equals("")) {
             Picasso.get()
                     .load(Common.getEventPlaceholder())

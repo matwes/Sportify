@@ -186,7 +186,8 @@ public class SignUpActivity extends AppCompatActivity {
                     CustomDialog.showError(SignUpActivity.this, getString(R.string.error_message));
                 } else {
                     try {
-                        CustomDialog.showError(SignUpActivity.this, response.body().string());
+                        CustomDialog.showInfo(SignUpActivity.this, response.body().string());
+                        className = SignInActivity.class;
                     } catch (IOException e) {
                         CustomDialog.showError(SignUpActivity.this, getString(R.string.error_message));
                     }
