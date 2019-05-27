@@ -7,7 +7,6 @@ import matwes.zpi.domain.Event;
 import matwes.zpi.domain.NewEvent;
 import matwes.zpi.domain.RegisterData;
 import matwes.zpi.domain.ReturnEvent;
-import matwes.zpi.domain.SuccessResponse;
 import matwes.zpi.domain.User;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -36,9 +35,10 @@ public interface ApiInterface {
             @Field("email") String email,
             @Field("password") String code);
 
-    @POST("/login/facebook")
+    @FormUrlEncoded
+    @POST("/auth/facebook/token")
     Call<AuthToken> loginByFacebook(
-            @Field("token") String token);
+            @Field("access_token") String token);
 
     @POST("/login/code")
     Call<User> loginByCode(
@@ -91,19 +91,19 @@ public interface ApiInterface {
     );
 
     @POST("/events/event/interesting/{eventId}")
-    Call<SuccessResponse> interested(
+    Call<ResponseBody> interested(
             @Header("authorization") String token,
             @Path("eventId") String eventId
     );
 
     @POST("/events/event/resetInterest/{eventId}")
-    Call<SuccessResponse> cancelInterested(
+    Call<ResponseBody> cancelInterested(
             @Header("authorization") String token,
             @Path("eventId") String eventId
     );
 
     @POST("/events/event/notInteresting/{eventId}")
-    Call<SuccessResponse> notInterested(
+    Call<ResponseBody> notInterested(
             @Header("authorization") String token,
             @Path("eventId") String eventId
     );
@@ -115,7 +115,7 @@ public interface ApiInterface {
     );
 
     @POST("/registration/resend?email={email}")
-    Call<SuccessResponse> resendEmail(
+    Call<ResponseBody> resendEmail(
             @Path("email") String eventId
     );
 }

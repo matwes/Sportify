@@ -24,6 +24,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -35,22 +37,22 @@ import matwes.zpi.domain.Event;
 import matwes.zpi.domain.Location;
 import matwes.zpi.domain.Place;
 import matwes.zpi.domain.Price;
-import matwes.zpi.domain.SuccessResponse;
 import matwes.zpi.events.AddEventActivity;
 import matwes.zpi.utils.CustomDialog;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class EventDetailsActivity extends AppCompatActivity {
+    String eventId = "";
+    @BindView(R.id.editButton)
+    Button editButtonImage;
     private Event event;
     private ApiInterface api;
     private ImageView eImage;
     private TextView eName, eType, eTime, ePlace, ePlace2, eMoney, eMembers;
     private Button btnInt, btnNInt;
-
-    String eventId = "";
-    @BindView(R.id.editButton) Button editButtonImage;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -154,24 +156,25 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     }
 
-    private void handleResponse(Call<SuccessResponse> call) {
-        call.enqueue(new Callback<SuccessResponse>() {
+    private void handleResponse(Call<ResponseBody> call) {
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(@NonNull Call<SuccessResponse> call, @NonNull Response<SuccessResponse> response) {
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
 
-                SuccessResponse successResponse = response.body();
-
-                System.out.println("DUPA: " + successResponse);
-
-                if (successResponse != null) {
-                    if (!successResponse.isSuccess()) {
+                if (response.errorBody() != null) {
+                    try {
+                        CustomDialog.showError(EventDetailsActivity.this, response.errorBody().string());
+                    } catch (IOException e) {
                         CustomDialog.showError(EventDetailsActivity.this, getString(R.string.error_message));
+                        e.printStackTrace();
                     }
+                } else if (response.code() != 200 || response.body() == null) {
+                    CustomDialog.showError(EventDetailsActivity.this, getString(R.string.error_message));
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<SuccessResponse> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 CustomDialog.showError(EventDetailsActivity.this, getString(R.string.error_message));
             }
         });
@@ -207,8 +210,16 @@ public class EventDetailsActivity extends AppCompatActivity {
                 eName.setText(event.getName());
                 eType.setText(event.getType() + ", " + event.getPromoter());
                 eTime.setText(event.getDateWithTimeString());
-                ePlace.setText(event.getPlace().getName());
-                ePlace2.setText(event.getPlace().getAddress());
+                Place place = event.getPlace();
+                if (place != null) {
+                    if (place.getName() != null) {
+                        ePlace.setText(place.getName());
+                    }
+                    if (place.getAddress() != null) {
+                        ePlace2.setText(place.getAddress());
+                    }
+                }
+
                 eMembers.setText(getString(R.string.people_interested) + " " + event.getInterested());
 
                 if (event.isInterested()) {
@@ -243,7 +254,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                 initializeMap();
                 if (event.isCreator()) {
                     editButtonImage.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     editButtonImage.setVisibility(View.GONE);
                 }
             }

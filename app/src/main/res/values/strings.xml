@@ -14,6 +14,7 @@
     <string name="resetPassword">Reset Password</string>
 
     <string name="facebook_app_id" translatable="false">422088551467608</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb422088551467608</string>
     <string name="sign_up_fb">Sign Up with Facebook</string>
     <string name="sign_in_fb" translatable="false">Sign In with Facebook</string>
     <string name="sign_in_code">Sign In Using Code</string>

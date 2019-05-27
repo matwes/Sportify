@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -82,7 +83,8 @@ public class SignInActivity extends AppCompatActivity {
     private void fbButtonSettings() {
         callbackManager = CallbackManager.Factory.create();
         LoginButton btnFbLogin = findViewById(R.id.btnSignInFb);
-        btnFbLogin.setReadPermissions(Common.permission);
+        //btnFbLogin.setReadPermissions(Common.permission);
+        btnFbLogin.setPermissions("email", "public_profile");
         btnFbLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -90,7 +92,7 @@ public class SignInActivity extends AppCompatActivity {
                         new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
-
+                                System.out.println(object);
                             }
                         });
                 Bundle parameters = new Bundle();
@@ -98,7 +100,9 @@ public class SignInActivity extends AppCompatActivity {
                 request.setParameters(parameters);
                 request.executeAsync();
 
-                handleLogin(api.loginByFacebook(loginResult.getAccessToken().getToken()));
+                AccessToken accessToken = loginResult.getAccessToken();
+
+                handleLogin(api.loginByFacebook(accessToken.getToken()), true);
             }
 
             @Override
@@ -124,16 +128,19 @@ public class SignInActivity extends AppCompatActivity {
             startActivity(intent);
         } else {
             dialog.showLoadingDialog(getString(R.string.loading));
-            handleLogin(api.login(email, password));
+            handleLogin(api.login(email, password), false);
         }
     }
 
-    private void handleLogin(Call<AuthToken> call) {
+    private void handleLogin(Call<AuthToken> call, final boolean facebook) {
         call.enqueue(new Callback<AuthToken>() {
             @Override
             public void onResponse(@NonNull Call<AuthToken> call, @NonNull Response<AuthToken> response) {
 
-                if(response.errorBody()!=null) {
+                if (response.errorBody() != null) {
+                    if (facebook) {
+                        LoginManager.getInstance().logOut();
+                    }
                     try {
                         String errorMessage = response.errorBody().string();
                         CustomDialog.showError(SignInActivity.this, errorMessage);
@@ -142,7 +149,7 @@ public class SignInActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     dialog.hideLoadingDialog();
-                } else if(response.body()!=null && response.body().getToken()!=null) {
+                } else if (response.body() != null && response.body().getToken() != null) {
                     Common.setToken(SignInActivity.this, response.body().getToken());
 
                     Intent intent = new Intent(SignInActivity.this, MainActivity.class);
@@ -152,6 +159,9 @@ public class SignInActivity extends AppCompatActivity {
 
                     startActivity(intent);
                 } else {
+                    if (facebook) {
+                        LoginManager.getInstance().logOut();
+                    }
                     CustomDialog.showError(SignInActivity.this, getString(R.string.wrongLoginPass));
                     dialog.hideLoadingDialog();
                 }
@@ -169,7 +179,7 @@ public class SignInActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

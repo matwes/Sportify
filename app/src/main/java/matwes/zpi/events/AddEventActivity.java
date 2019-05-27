@@ -29,8 +29,6 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -52,10 +50,8 @@ import matwes.zpi.domain.Place;
 import matwes.zpi.domain.Price;
 import matwes.zpi.domain.ReturnEvent;
 import matwes.zpi.eventDetails.EventDetailsActivity;
-import matwes.zpi.eventDetails.UpdateEventActivity;
 import matwes.zpi.utils.CustomDialog;
 import matwes.zpi.utils.LoadingDialog;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -202,7 +198,6 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
     }
 
 
-
     private void initGooglePlaceApi() {
         new GoogleApiClient.Builder(this)
                 .addApi(Places.GEO_DATA_API)
@@ -246,10 +241,18 @@ public class AddEventActivity extends AppCompatActivity implements GoogleApiClie
         String type = etType.getText().toString().trim();
         String date = etDate.getText().toString().trim();
         Location location = new Location(dLat, dLng);
-        Place place = new Place(placeName, "", placeAddress, "", "", location);
+        Place place;
+        if (placeWasSet) {
+            place = new Place(placeName, "", placeAddress, location);
+        } else if (event != null) {
+            place = event.getPlace();
+            placeWasSet = true;
+        } else {
+            place = null;
+        }
         String promoter = promoterTextView.getText().toString().trim();
 
-        if (name.equals("") && date.equals("") && !placeWasSet) {
+        if (name.equals("") || date.equals("") || !placeWasSet) {
             CustomDialog.showError(AddEventActivity.this, "Nazwa, data oraz miejsce musza zostac podane ");
             return;
         }
