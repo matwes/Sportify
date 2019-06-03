@@ -70,6 +70,11 @@ public interface ApiInterface {
             @Path("eventId") String eventId
     );
 
+    @GET("/user")
+    Call<User> getUser(
+            @Header("authorization") String token
+    );
+
     @GET("/events")
     Call<List<Event>> getEvents(
             @Header("authorization") String token
