@@ -184,25 +184,31 @@ public class MyProfileFragment extends Fragment {
     }
 
     private void updateEvent() {
+        if ((etDescription.getText().toString().trim().equals("")) || (etFirstName.getText().toString().trim().equals("")) || (etLastName.getText().toString().trim().equals(""))) {
+            CustomDialog.showError(MyProfileFragment.this.getContext(), "Imię, nazwisko oraz e-mail są wymagane");
+            return;
+        }
+        
         dialog.showLoadingDialog("");
+
         User user = new User();
-        if (etDescription.getText().toString().trim() != "") {
+        if (!etDescription.getText().toString().trim().equals("")) {
             user.setEmail(etDescription.getText().toString());
         }
 
-        if (etFirstName.getText().toString().trim() != "") {
+        if (!etFirstName.getText().toString().trim().equals("")) {
             user.setEmail(etFirstName.getText().toString());
         }
 
-        if (etLastName.getText().toString().trim() != "") {
+        if (!etLastName.getText().toString().trim().equals("")) {
             user.setEmail(etLastName.getText().toString());
         }
 
-        if (etBirthDay.getText().toString().trim() != "") {
+        if (!etBirthDay.getText().toString().trim().equals("")) {
             user.setEmail(etBirthDay.getText().toString());
         }
 
-        if (actvSex.getText().toString().trim() != "") {
+        if (!actvSex.getText().toString().trim().equals("")) {
             user.setEmail(actvSex.getText().toString());
         }
 
@@ -261,6 +267,8 @@ public class MyProfileFragment extends Fragment {
 //    }
 
     private void getProfile() {
+        System.out.printf("GET DATA USER");
+
         dialog.showLoadingDialog("");
         Call<User> call = api.getUser(Common.getToken(this.getContext()));
         call.enqueue(new Callback<User>() {
