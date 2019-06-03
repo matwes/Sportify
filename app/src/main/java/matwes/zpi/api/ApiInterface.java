@@ -75,6 +75,13 @@ public interface ApiInterface {
             @Header("authorization") String token
     );
 
+    @POST("/user")
+    @Headers({"Content-Type: application/json"})
+    Call<ResponseBody> updateUser(
+            @Header("authorization") String token,
+            @Body User user
+    );
+
     @GET("/events")
     Call<List<Event>> getEvents(
             @Header("authorization") String token

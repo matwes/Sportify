@@ -43,6 +43,7 @@ import matwes.zpi.eventDetails.EventDetailsActivity;
 import matwes.zpi.events.AddEventActivity;
 import matwes.zpi.utils.CustomDialog;
 import matwes.zpi.utils.LoadingDialog;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -183,27 +184,81 @@ public class MyProfileFragment extends Fragment {
     }
 
     private void updateEvent() {
-        JSONObject json = new JSONObject();
-        try {
-            json.put("birthday", sDate);
-            json.put("description", etDescription.getText().toString());
-            json.put("firstName", etFirstName.getText().toString());
-            json.put("lastName", etLastName.getText().toString());
-            json.put("sex", getCodeSex(actvSex.getText().toString()));
-        } catch (JSONException e) {
-            e.printStackTrace();
+        dialog.showLoadingDialog("");
+        User user = new User();
+        if (etDescription.getText().toString().trim() != "") {
+            user.setEmail(etDescription.getText().toString());
         }
-        new RequestAPI(getContext(), "PATCH", json.toString(), new AsyncTaskCompleteListener<String>() {
+
+        if (etFirstName.getText().toString().trim() != "") {
+            user.setEmail(etFirstName.getText().toString());
+        }
+
+        if (etLastName.getText().toString().trim() != "") {
+            user.setEmail(etLastName.getText().toString());
+        }
+
+        if (etBirthDay.getText().toString().trim() != "") {
+            user.setEmail(etBirthDay.getText().toString());
+        }
+
+        if (actvSex.getText().toString().trim() != "") {
+            user.setEmail(actvSex.getText().toString());
+        }
+
+        Call<ResponseBody> call = api.updateUser(Common.getToken(this.getContext()), user);
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onTaskComplete(String result) {
-                if (result.equals("200")) {
-                    CustomDialog.showInfo(getContext(), getString(R.string.error_message));
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+
+                dialog.hideLoadingDialog();
+
+                if (response.errorBody() != null) {
+                    try {
+                        String errorMessage = response.errorBody().string();
+                        CustomDialog.showError(MyProfileFragment.this.getContext(), errorMessage);
+                    } catch (IOException e) {
+                        CustomDialog.showError(MyProfileFragment.this.getContext(), getString(R.string.error_message));
+                        e.printStackTrace();
+                    }
+                    dialog.hideLoadingDialog();
+                } else if (response.body() == null) {
+                    CustomDialog.showError(MyProfileFragment.this.getContext(), getString(R.string.error_message));
                 } else {
-                    CustomDialog.showError(getContext(), getString(R.string.error_message));
+                    dialog.hideLoadingDialog();
+                    CustomDialog.showError(MyProfileFragment.this.getContext(), "Profil został zmieniony");
                 }
             }
-        }, true).execute(UPDATE_PROFILE + userId);
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                dialog.hideLoadingDialog();
+                CustomDialog.showError(MyProfileFragment.this.getContext(), getString(R.string.error_message));
+            }
+        });
     }
+//
+//        JSONObject json = new JSONObject();
+//        try {
+//            json.put("birthday", sDate);
+//            json.put("description", etDescription.getText().toString());
+//            json.put("firstName", etFirstName.getText().toString());
+//            json.put("lastName", etLastName.getText().toString());
+//            json.put("sex", getCodeSex(actvSex.getText().toString()));
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        new RequestAPI(getContext(), "PATCH", json.toString(), new AsyncTaskCompleteListener<String>() {
+//            @Override
+//            public void onTaskComplete(String result) {
+//                if (result.equals("200")) {
+//                    CustomDialog.showInfo(getContext(), getString(R.string.error_message));
+//                } else {
+//                    CustomDialog.showError(getContext(), getString(R.string.error_message));
+//                }
+//            }
+//        }, true).execute(UPDATE_PROFILE + userId);
+//    }
 
     private void getProfile() {
         dialog.showLoadingDialog("");
