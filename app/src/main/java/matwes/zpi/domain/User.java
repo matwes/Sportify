@@ -7,8 +7,8 @@ package matwes.zpi.domain;
 public class User {
     private String id;
     private String email;
-    private String firstName;
-    private String lastName;
+    private String name;
+    private String surname;
     private String sex;
     private String birthday;
 
@@ -20,12 +20,12 @@ public class User {
         this.email = email;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
 
     public void setSex(String sex) {
@@ -56,12 +56,12 @@ public class User {
         return email;
     }
 
-    public String getFirstName() {
-        return firstName == null ? "" : firstName;
+    public String getName() {
+        return name == null ? "" : name;
     }
 
-    public String getLastName() {
-        return lastName == null ? "" : lastName;
+    public String getSurname() {
+        return surname == null ? "" : surname;
     }
 
     public String getSex() {
@@ -84,13 +84,13 @@ public class User {
         return birthday == null ? "" : birthday;
     }
 
-    public String getName() {
-        String name = "";
-        if (firstName != null)
-            name += firstName;
-        if (lastName != null)
-            name += (" " + lastName);
-        return name;
+    public String getUserName() {
+        String userName = "";
+        if (name != null)
+            userName += name;
+        if (surname != null)
+            userName += (" " + surname);
+        return userName;
 
     }
 

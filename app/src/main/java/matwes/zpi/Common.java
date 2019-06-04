@@ -83,16 +83,30 @@ public class Common {
     public static String getPolishSex(String sex) {
         String result = "Nie sprecyzowano";
         switch (sex) {
-            case "FEMALE":
+            case "F":
                 result = "Kobieta";
                 break;
-            case "MALE":
+            case "M":
                 result = "Mężczyzna";
                 break;
         }
         return result;
     }
 
+    public static String getSexCode(String sex) {
+        String result;
+        switch (sex) {
+            case "Kobieta":
+                result = "F";
+                break;
+            case "Mężczyzna":
+                result = "M";
+                break;
+            default:
+                result = null;
+        }
+        return result;
+    }
 
     public static List<Event> getMockedEvents(Context context) {
         Gson gson = new GsonBuilder().create();

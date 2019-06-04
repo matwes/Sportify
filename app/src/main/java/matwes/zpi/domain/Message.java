@@ -36,7 +36,7 @@ public class Message {
     }
 
     public String getAuthor() {
-        return author.getName();
+        return author.getUserName();
     }
 
 }

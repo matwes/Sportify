@@ -79,7 +79,7 @@ class MembersListAdapter extends RecyclerView.Adapter<MembersListAdapter.Holder>
 //                    holder.member.setTextColor(Color.RED);
 //                }
 //                try {
-//                    holder.member.setText(member.getUser().getName());
+//                    holder.member.setText(member.getUser().getUserName());
 //                } catch (Exception ignored) {
 //                }
 //            }
@@ -88,7 +88,7 @@ class MembersListAdapter extends RecyclerView.Adapter<MembersListAdapter.Holder>
                 @Override
                 public void onClick(View v) {
                     showAlert(context.getString(R.string.profile),
-                            member.getUser().getName() + "\n" +
+                            member.getUser().getUserName() + "\n" +
                                     Common.getPolishSex(member.getUser().getSex()) + ", " +
                                     getAge(member.getUser().getBirthday()) + "\n\n" +
                                     member.getUser().getDescription());

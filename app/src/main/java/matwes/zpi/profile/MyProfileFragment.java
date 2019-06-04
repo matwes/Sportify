@@ -21,26 +21,13 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
 
-import butterknife.ButterKnife;
-import matwes.zpi.AsyncTaskCompleteListener;
 import matwes.zpi.Common;
-import matwes.zpi.GetMethodAPI;
 import matwes.zpi.R;
-import matwes.zpi.RequestAPI;
 import matwes.zpi.api.ApiInterface;
 import matwes.zpi.api.RestService;
-import matwes.zpi.domain.ReturnEvent;
 import matwes.zpi.domain.User;
-import matwes.zpi.eventDetails.EventDetailsActivity;
-import matwes.zpi.events.AddEventActivity;
 import matwes.zpi.utils.CustomDialog;
 import matwes.zpi.utils.LoadingDialog;
 import okhttp3.ResponseBody;
@@ -197,19 +184,19 @@ public class MyProfileFragment extends Fragment {
         }
 
         if (!etFirstName.getText().toString().trim().equals("")) {
-            user.setEmail(etFirstName.getText().toString());
+            user.setName(etFirstName.getText().toString());
         }
 
         if (!etLastName.getText().toString().trim().equals("")) {
-            user.setEmail(etLastName.getText().toString());
+            user.setSurname(etLastName.getText().toString());
         }
 
         if (!etBirthDay.getText().toString().trim().equals("")) {
-            user.setEmail(etBirthDay.getText().toString());
+            user.setBirthday(etBirthDay.getText().toString());
         }
 
         if (!actvSex.getText().toString().trim().equals("")) {
-            user.setEmail(actvSex.getText().toString());
+            user.setSex(Common.getSexCode(actvSex.getText().toString()));
         }
 
         Call<ResponseBody> call = api.updateUser(Common.getToken(this.getContext()), user);
@@ -232,7 +219,7 @@ public class MyProfileFragment extends Fragment {
                     CustomDialog.showError(MyProfileFragment.this.getContext(), getString(R.string.error_message));
                 } else {
                     dialog.hideLoadingDialog();
-                    CustomDialog.showError(MyProfileFragment.this.getContext(), "Profil został zmieniony");
+                    CustomDialog.showInfo(MyProfileFragment.this.getContext(), "Profil został zmieniony");
                 }
             }
 
@@ -304,16 +291,16 @@ public class MyProfileFragment extends Fragment {
     }
 
     private void setData(User user) {
-        if (user.getFirstName() == null) {
+        if (user.getName() == null) {
             etFirstName.setText("");
         }else {
-            etFirstName.setText(user.getFirstName());
+            etFirstName.setText(user.getName());
         }
 
-        if (user.getLastName() == null) {
+        if (user.getSurname() == null) {
             etLastName.setText("");
         }else {
-            etLastName.setText(user.getLastName());
+            etLastName.setText(user.getSurname());
         }
 
         if (user.getBirthday() == null) {
