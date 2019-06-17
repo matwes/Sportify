@@ -206,6 +206,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
                 if (event == null) {
                     CustomDialog.showError(EventDetailsActivity.this, getString(R.string.error_message));
+                    return;
                 }
 
                 eName.setText(event.getName());
