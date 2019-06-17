@@ -40,11 +40,9 @@ import retrofit2.Response;
  */
 
 public class MyProfileFragment extends Fragment {
-    private static final String UPDATE_PROFILE = Common.URL + "/users/";
     private EditText etFirstName, etLastName, etBirthDay, etDescription;
     private AutoCompleteTextView actvSex;
     private ArrayAdapter<CharSequence> adapter;
-    private String sDate;
     private String userId;
     private ApiInterface api;
     private LoadingDialog dialog;
@@ -90,32 +88,21 @@ public class MyProfileFragment extends Fragment {
             }
         });
 
-//        actvSex.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if (hasFocus) {
-//                    actvSex.setText("");
-//                    actvSex.showDropDown();
-//                }
-//            }
-//        });
-
         final Calendar calendar = Calendar.getInstance();
         final DatePickerDialog.OnDateSetListener datePicker = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
-                sDate = String.format("%02d-%02d-%02d", year, month + 1, day);
-                etBirthDay.setText(day + "-" + (month + 1) + "-" + year);
+                etBirthDay.setText(String.format("%d-%02d-%02d", year, month + 1, day));
             }
         };
 
         etBirthDay.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus)
+                if (hasFocus) {
                     new DatePickerDialog(getContext(), datePicker, calendar.get(Calendar.YEAR),
                             calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+                }
             }
         });
 
@@ -132,10 +119,10 @@ public class MyProfileFragment extends Fragment {
                     setFieldState(false);
                     changePasswordButton.setText("ZMIEŃ HASŁO");
                     isEditEnabled = false;
-                }else {
+                } else {
                     setFieldState(true);
                     ((Button) v).setText("ZAPISZ PROFIL");
-                    changePasswordButton.setText("CANCEL");
+                    changePasswordButton.setText("ANULUJ");
                     changePasswordButton.setVisibility(View.VISIBLE);
                     isEditEnabled = true;
                 }
@@ -151,7 +138,7 @@ public class MyProfileFragment extends Fragment {
                     setFieldState(false);
                     saveProfileButton.setText("EDYTUJ PROFIL");
                     isEditEnabled = false;
-                }else {
+                } else {
                     changePasswordButton.setVisibility(View.GONE);
                     Intent intent = new Intent(getContext(), ChangePasswordActivity.class);
                     intent.putExtra("userId", userId);
@@ -192,7 +179,7 @@ public class MyProfileFragment extends Fragment {
             CustomDialog.showError(MyProfileFragment.this.getContext(), "Imię, nazwisko oraz e-mail są wymagane");
             return;
         }
-        
+
         dialog.showLoadingDialog("");
 
         User user = new User();
@@ -247,28 +234,6 @@ public class MyProfileFragment extends Fragment {
             }
         });
     }
-//
-//        JSONObject json = new JSONObject();
-//        try {
-//            json.put("birthday", sDate);
-//            json.put("description", etDescription.getText().toString());
-//            json.put("firstName", etFirstName.getText().toString());
-//            json.put("lastName", etLastName.getText().toString());
-//            json.put("sex", getCodeSex(actvSex.getText().toString()));
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        new RequestAPI(getContext(), "PATCH", json.toString(), new AsyncTaskCompleteListener<String>() {
-//            @Override
-//            public void onTaskComplete(String result) {
-//                if (result.equals("200")) {
-//                    CustomDialog.showInfo(getContext(), getString(R.string.error_message));
-//                } else {
-//                    CustomDialog.showError(getContext(), getString(R.string.error_message));
-//                }
-//            }
-//        }, true).execute(UPDATE_PROFILE + userId);
-//    }
 
     private void getProfile() {
         System.out.printf("GET DATA USER");
@@ -292,10 +257,8 @@ public class MyProfileFragment extends Fragment {
                 } else if (response.body() == null) {
                     CustomDialog.showError(MyProfileFragment.this.getContext(), getString(R.string.error_message));
                 } else {
-                    if (response.body() != null) {
-                        User user = response.body();
-                        setData(user);
-                    }
+                    User user = response.body();
+                    setData(user);
                 }
             }
 
@@ -310,32 +273,31 @@ public class MyProfileFragment extends Fragment {
     private void setData(User user) {
         if (user.getName() == null) {
             etFirstName.setText("");
-        }else {
+        } else {
             etFirstName.setText(user.getName());
         }
 
         if (user.getSurname() == null) {
             etLastName.setText("");
-        }else {
+        } else {
             etLastName.setText(user.getSurname());
         }
 
         if (user.getBirthday() == null) {
             etBirthDay.setText("");
-        }else {
-            etBirthDay.setText(user.getBirthday());
-            sDate = user.getBirthday();
+        } else {
+            etBirthDay.setText(user.getDateWithTimeString());
         }
 
         if (user.getDescription() == null) {
             etDescription.setText("");
-        }else {
+        } else {
             etDescription.setText(user.getEmail());
         }
 
         if (user.getSex() == null) {
             actvSex.setText("");
-        }else {
+        } else {
             actvSex.setText(Common.getPolishSex(user.getSex()));
         }
     }

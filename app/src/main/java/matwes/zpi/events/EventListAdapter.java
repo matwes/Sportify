@@ -77,10 +77,17 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Holder> {
             }
         });
 
-        if (type == EventFragmentType.blocked) {
-            holder.blockedIcon.setImageResource(R.drawable.blocked_event);
-        } else {
-            holder.blockedIcon.setImageResource(R.drawable.unblocked_event);
+        switch (type){
+            case blocked: holder.blockedIcon.setImageResource(R.drawable.blocked_event); break;
+            case interesting: holder.blockedIcon.setImageResource(R.drawable.unblocked_event); break;
+            case unblocked: {
+                if(event.isInterested()) {
+                    holder.blockedIcon.setImageResource(R.drawable.unblocked_event);
+                } else {
+                    holder.blockedIcon.setImageResource(0);
+                }
+                break;
+            }
         }
     }
 

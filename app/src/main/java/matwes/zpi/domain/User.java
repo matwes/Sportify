@@ -1,5 +1,10 @@
 package matwes.zpi.domain;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by mateu on 19.04.2017.
  */
@@ -92,6 +97,27 @@ public class User {
             userName += (" " + surname);
         return userName;
 
+    }
+
+    public Date getDateObject() {
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.getDefault());
+
+        if (birthday != null) {
+            try {
+                return df.parse(birthday);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return new Date();
+    }
+
+    public String getDateWithTimeString() {
+        Date dateObject = getDateObject();
+
+        DateFormat df = new SimpleDateFormat("YYYY-MM-dd", java.util.Locale.getDefault());
+
+        return df.format(dateObject);
     }
 
     public String getId() {
