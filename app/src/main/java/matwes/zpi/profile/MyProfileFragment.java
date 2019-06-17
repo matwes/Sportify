@@ -76,17 +76,30 @@ public class MyProfileFragment extends Fragment {
         saveProfileButton = view.findViewById(R.id.btnSaveProfile);
         changePasswordButton = view.findViewById(R.id.btnChangePassword);
         saveProfileButton.setText("EDYTUJ PROFIL");
-
+        changePasswordButton.setVisibility(View.GONE);
         adapter = ArrayAdapter.createFromResource(getContext(), R.array.sex_list, R.layout.spinner_item);
         actvSex.setAdapter(adapter);
         actvSex.setKeyListener(null);
         actvSex.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                ((AutoCompleteTextView) v).showDropDown();
+                adapter.getFilter().filter(null);
+//                ((AutoCompleteTextView) v).showDropDown();
+                actvSex.showDropDown();
                 return false;
             }
         });
+
+//        actvSex.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if (hasFocus) {
+//                    actvSex.setText("");
+//                    actvSex.showDropDown();
+//                }
+//            }
+//        });
 
         final Calendar calendar = Calendar.getInstance();
         final DatePickerDialog.OnDateSetListener datePicker = new DatePickerDialog.OnDateSetListener() {
@@ -114,6 +127,7 @@ public class MyProfileFragment extends Fragment {
             public void onClick(View v) {
                 if (isEditEnabled) {
                     updateEvent();
+                    changePasswordButton.setVisibility(View.GONE);
                     ((Button) v).setText("EDYTUJ PROFIL");
                     setFieldState(false);
                     changePasswordButton.setText("ZMIEŃ HASŁO");
@@ -122,6 +136,7 @@ public class MyProfileFragment extends Fragment {
                     setFieldState(true);
                     ((Button) v).setText("ZAPISZ PROFIL");
                     changePasswordButton.setText("CANCEL");
+                    changePasswordButton.setVisibility(View.VISIBLE);
                     isEditEnabled = true;
                 }
             }
@@ -131,11 +146,13 @@ public class MyProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (isEditEnabled) {
+                    changePasswordButton.setVisibility(View.GONE);
                     ((Button) v).setText("ZMIEŃ HASŁO");
                     setFieldState(false);
                     saveProfileButton.setText("EDYTUJ PROFIL");
                     isEditEnabled = false;
                 }else {
+                    changePasswordButton.setVisibility(View.GONE);
                     Intent intent = new Intent(getContext(), ChangePasswordActivity.class);
                     intent.putExtra("userId", userId);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
