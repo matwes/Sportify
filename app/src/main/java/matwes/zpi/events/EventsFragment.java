@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -79,6 +81,12 @@ public class EventsFragment extends MainFragment implements EventListAdapter.Eve
 
     @Override
     void updateList(List<Event> e) {
+        Collections.sort(e, new Comparator<Event>() {
+            @Override
+            public int compare(Event event, Event t1) {
+                return event.getDate().compareToIgnoreCase(t1.getDate());
+            }
+        });
         super.updateList(e);
         adapter.setEvents(e);
         adapter.notifyDataSetChanged();

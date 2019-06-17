@@ -195,7 +195,8 @@ public class EventDetailsActivity extends AppCompatActivity {
     }
 
     private void getEvent(String id) {
-
+        System.out.println("TOKEN!!!");
+        System.out.println(Common.getToken(getApplicationContext()));
         api.getEvent(Common.getToken(getApplicationContext()), id).enqueue(new Callback<Event>() {
             @SuppressLint("SetTextI18n")
             @Override
